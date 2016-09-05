@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:tx="http://www.springframework.org/schema/tx"
+	   xmlns:context="http://www.springframework.org/schema/context"
+	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/data/jpa http://www.springframework.org/schema/data/jpa/spring-jpa.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+
+	<bean id="propertyConfigurer"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:conf/system.properties</value>
+				<value>classpath:conf/jdbc.properties</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"
+		destroy-method="close">
+		<property name="url" value="${jdbc.url}"></property>
+		<property name="username" value="${jdbc.username}"></property>
+		<property name="password" value="${jdbc.password}"></property>
+
+		<!-- 配置初始化大小、最小、最大 -->
+		<property name="initialSize" value="1" />
+		<property name="minIdle" value="1" />
+		<property name="maxActive" value="20" />
+
+		<!-- 配置获取连接等待超时的时间 -->
+		<property name="maxWait" value="60000" />
+
+		<!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+		<property name="timeBetweenEvictionRunsMillis" value="60000" />
+
+		<!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+		<property name="minEvictableIdleTimeMillis" value="300000" />
+
+		<property name="validationQuery" value="SELECT 'x'" />
+		<property name="testWhileIdle" value="true" />
+		<property name="testOnBorrow" value="false" />
+		<property name="testOnReturn" value="false" />
+
+		<!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->
+		<property name="poolPreparedStatements" value="true" />
+		<property name="maxPoolPreparedStatementPerConnectionSize" value="20" />
+
+		<!-- 配置监控统计拦截的filters，去掉后监控界面sql无法统计 -->
+		<property name="filters" value="stat" />
+	</bean>
+
+
+
+	<bean id="entityManagerFactory"
+		class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="packagesToScan" value="com.leoman" />
+		<property name="jpaVendorAdapter">
+			<bean class="org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter">
+				<property name="showSql" value="true" />
+				<!-- <property name="generateDdl" value="true" /> -->
+				<property name="database" value="MYSQL" />
+			</bean>
+		</property>
+		<property name="jpaDialect">
+			<bean
+				class="com.leoman.common.core.jpa.HibernateJpaIsolationSupportDialect" />
+		</property>
+		<property name="jpaProperties">
+			<props>
+				<!-- 缓存 -->
+				<prop key="hibernate.cache.use_second_level_cache">
+					true
+				</prop>
+				<prop key="hibernate.cache.use_query_cache">true</prop>
+				<prop key="hibernate.cache.region.factory_class">
+					org.hibernate.cache.ehcache.EhCacheRegionFactory
+				</prop>
+				<prop key="net.sf.ehcache.configurationResourceName">
+					ehcache-hibernate-local.xml
+				</prop>
+			</props>
+		</property>
+	</bean>
+
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager" class="org.springframework.orm.jpa.JpaTransactionManager">
+		<property name="entityManagerFactory" ref="entityManagerFactory" />
+	</bean>
+
+	<!-- 启用 annotation事务 -->
+	<tx:annotation-driven transaction-manager="transactionManager" />
+	<!-- 配置Spring Data JPA扫描目录 -->
+	<jpa:repositories base-package="com.leoman" />
+
+	<!-- AOP -->
+	<aop:aspectj-autoproxy />
+	<!--<bean name="wxMpConfigStorage" class="me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage">-->
+		<!--<property name="appId" value="${weixin.appId}" />-->
+		<!--<property name="secret" value="${weixin.secret}" />-->
+		<!--<property name="token" value="${weixin.token}" />-->
+		<!--<property name="aesKey" value="${weixin.aesKey}" />-->
+		<!--<property name="partnerId" value="${weixin.partnerId}" />-->
+		<!--<property name="partnerKey" value="${weixin.partnerKey}" />-->
+	<!--</bean>-->
+
+	<!--<bean name="wxMpService" class="me.chanjar.weixin.mp.api.WxMpServiceImpl">-->
+		<!--<property name="wxMpConfigStorage" ref="wxMpConfigStorage"></property>-->
+	<!--</bean>-->
+
+	<!--<bean name="wxMpMessageRouter" class="me.chanjar.weixin.mp.api.WxMpMessageRouter">-->
+		<!--<constructor-arg name="wxMpService" ref="wxMpService" />-->
+	<!--</bean>-->
+
+
+	<context:component-scan base-package="com.leoman">
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation"
+			expression="org.springframework.web.bind.annotation.ControllerAdvice" />
+	</context:component-scan>
+	
+	<bean id="beanUtil" class="com.leoman.utils.BeanUtils"></bean>
+	<!--<bean id="cacheTempCodeServiceImpl" class="com.leoman.cache.CacheTempCodeServiceImpl" />-->
+	<bean id="logService" class="com.leoman.common.log.service.impl.LogServiceImpl" />
+</beans>

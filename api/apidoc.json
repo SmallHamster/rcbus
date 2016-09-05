@@ -1,0 +1,17 @@
+{
+  "name": "亿奇娱乐接口文档",
+  "version": "0.0.1",
+  "description": "",
+  "title": "亿奇娱乐接口文档",
+  "url": "http://4.16.3.22:8888/yqyl_server",
+  "sampleUrl": "http://4.16.3.22:8888/yqyl_server",
+  "header": {
+    "title": "start",
+    "filename": "header.md"
+  },
+  "template": {
+    "forceLanguage": "zh",
+    "withCompare": true,
+    "withGenerator": true
+  }
+}

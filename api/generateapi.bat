@@ -1,0 +1,1 @@
+apidoc -i doc/apidefine -i src/main/java/com/leoman/ -o src/main/webapp/doc/ -t doc/apidoctemplate
