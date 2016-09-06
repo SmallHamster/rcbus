@@ -119,12 +119,14 @@ var $leoman = {
                 jQuery(this).parent().addClass('checked');
                 jQuery(this).parents('tr').addClass('warning');
             });
+            $("#deleteBatch").css('display','block');
         } else {
             ch.each(function () {
                 jQuery(this).removeAttr('checked')
                 jQuery(this).parent().removeClass('checked');
                 jQuery(this).parents('tr').removeClass('warning');
             });
+            $("#deleteBatch").css('display','none');
         }
     },
 
@@ -139,6 +141,11 @@ var $leoman = {
         var checkedsub = parentTable.find('tbody input[type=checkbox]:checked').length; //获取选中的subcheck的个数
         if (checkedsub == chsub) {
             $(".list-parent-check").attr("checked", true);
+        }
+        if(checkedsub>0){
+            $("#deleteBatch").css('display','block');
+        }else{
+            $("#deleteBatch").css('display','none');
         }
     },
 
@@ -269,7 +276,7 @@ $(document).on('click', '.notifyjs-foo-base .yes', function () {
             }
         } else {
             if (checkIds.length == 0) {
-                alert("请选择至少一条记录操作！");
+                //alert("请选择至少一条记录操作！");
                 return false;
             } else {
                 return checkIds;

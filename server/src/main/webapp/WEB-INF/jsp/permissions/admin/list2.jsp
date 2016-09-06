@@ -37,6 +37,9 @@
                     <section class="panel">
                         <header class="panel-heading">
                             管理员列表
+                            <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
+                               <button class="btn btn-info" type="button" onclick="$admin.fn.del();" id="deleteBatch" style="display: none">删除</button>
+                            </span>
                             <span class="tools pull-right">
                                <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
                                <button class="btn btn-info" type="button" onclick="$admin.fn.add();">新增用户</button>
@@ -98,6 +101,7 @@
     </div>
 </section>
 <%@ include file="../../inc/new2/foot.jsp" %>
+<%@ include file="confirm.jsp" %>
 <script>
     $admin = {
         v: {
@@ -178,9 +182,12 @@
                                     var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.add(\'" + data + "\')\">" +
                                             "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
 
+                                    var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.del(\'" + data + "\')\">" +
+                                            "<i class='fa fa-pencil-square-o'></i> 删除</button>";
+
                                     var selectRole = "<button title='赋予角色' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.openModal(\'" + data + "\')\">" +
                                             "<i class='fa fa-exchange'></i> 赋予角色</button>";
-                                    return edit + "&nbsp;" + selectRole;
+                                    return edit  + "&nbsp;" + del;
                                 }
                             }
                         }
@@ -197,25 +204,55 @@
                 }
                 window.location.href = "${contextPath}/admin/admin/add" + params;
             },
-            delete: function () {
+            del: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
                 var ids = checkBox.getInputId();
-                $.ajax({
-                    url: "${contextPath}/admin/cq/deleteBatch",
-                    data: {
-                        "ids": JSON.stringify(ids)
-                    },
-                    type: "post",
-                    dataType: "json",
-                    success: function (result) {
-                        if (!result.status) {
-                            $common.fn.notify(result.msg);
-                            return;
+                $("#confirm").modal("show");
+                $('#showText').html('您确定要彻底删除所选的管理员吗？');
+                $("#determine").off("click");
+                $("#determine").on("click",function(){
+                    $.ajax({
+                        "url": "${contextPath}/admin/admin/del",
+                        "data": {
+                            id:id,
+                            ids:JSON.stringify(ids)
+                        },
+                        "dataType": "json",
+                        "type": "POST",
+                        success: function (result) {
+                            console.log(result);
+                            if (result==0) {
+                                $admin.v.dTable.ajax.reload(null,false);
+                            } if(result==2){
+                                alert("超级管理员无法删除");
+                            }else {
+                                alert("删除错误");
+                            }
+                            $("#confirm").modal("hide");
                         }
-                        $admin.v.dTable.ajax.reload();
-                    }
-                });
+                    });
+                })
             },
+            
+            <%--delete: function () {--%>
+                <%--var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');--%>
+                <%--var ids = checkBox.getInputId();--%>
+                <%--$.ajax({--%>
+                    <%--url: "${contextPath}/admin/cq/deleteBatch",--%>
+                    <%--data: {--%>
+                        <%--"ids": JSON.stringify(ids)--%>
+                    <%--},--%>
+                    <%--type: "post",--%>
+                    <%--dataType: "json",--%>
+                    <%--success: function (result) {--%>
+                        <%--if (!result.status) {--%>
+                            <%--$common.fn.notify(result.msg);--%>
+                            <%--return;--%>
+                        <%--}--%>
+                        <%--$admin.v.dTable.ajax.reload();--%>
+                    <%--}--%>
+                <%--});--%>
+            <%--},--%>
             openModal: function (adminId) {
                 $("#adminId").val(adminId);
                 $('#my_multi_select1').multiSelect('refresh');

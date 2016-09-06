@@ -30,6 +30,8 @@
                             用户基本信息
                         </header>
                         <div class="panel-body">
+                            <input type="hidden" id="role" name="role" value="${roleId}">
+                            <input type="hidden" id="enterprise" name="enterprise" value="${admin.enterprise.id}">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
                                 <input id="id" name="id" type="hidden" value="${admin.id}">
                                 <input id="createDate" name="createDate" type="hidden" value="${admin.createDate}">
@@ -57,6 +59,32 @@
                                         <input type="text" id="mobile" name="mobile" value="${admin.mobile}" class="form-control" required mobile="true"/>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label for="roleId" class="col-sm-1 control-label">权限</label>
+                                    <div class="col-sm-6">
+                                        <select class="form-control input-sm" id="roleId" name="roleId" required>
+                                            <option value="">请选择</option>
+                                            <c:forEach var="v" items="${role}">
+                                                <option value="${v.id}">${v.name}</option>
+                                            </c:forEach>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="div_hidden" id="div_hidden" style="display: none">
+                                            <label for="enterpriseId" class="col-sm-1 control-label">企业</label>
+                                            <div class="col-sm-6">
+                                                <select class="form-control input-sm" id="enterpriseId" name="enterpriseId" required>
+                                                    <option value="">请选择</option>
+                                                    <c:forEach var="v" items="${enterprise}">
+                                                        <option value="${v.id}">${v.name}</option>
+                                                    </c:forEach>
+                                                </select>
+                                            </div>
+                                    </div>
+                                </div>
+
                                 <%--<div class="form-group">--%>
                                     <%--<label for="mobile" class="col-sm-1 control-label">类型</label>--%>
                                     <%--<div class="col-sm-1">--%>
@@ -93,6 +121,30 @@
         },
         fn: {
             init: function () {
+
+                var role = $("#role").val();
+                if(role!=null){
+                    $("#roleId option").each(function(){
+                        if($(this).val() == role){
+                            $(this).attr("selected",true)
+                        }
+                    })
+                }
+                var enterprise = $("#enterprise").val();
+                if(enterprise!=null){
+                    $("#enterpriseId option").each(function(){
+                        if($(this).val() == enterprise){
+                            $(this).attr("selected",true)
+                        }
+                    })
+                }
+                $admin.fn.chk();
+                $("#roleId").change(function(){
+//                    var checkText=$("#role").find("option:selected").text();
+//                    if(checkText=="企业管理员"){
+                    $admin.fn.chk();
+                });
+
                 $("#formId").validate({
                     rules : {
                         username : {
@@ -117,10 +169,15 @@
                     }
                 });
             },
-
+            chk: function(){
+                if($("#roleId").val()==12){
+                    $("#div_hidden").css('display','block');
+                }else {
+                    $("#div_hidden").css('display','none');
+                }
+            },
             save : function() {
                 if(!$("#formId").valid()) return;
-
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/admin/save",
                     type : "POST",

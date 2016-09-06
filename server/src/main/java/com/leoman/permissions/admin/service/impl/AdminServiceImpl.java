@@ -1,9 +1,16 @@
 package com.leoman.permissions.admin.service.impl;
 
+import com.leoman.common.core.Result;
+import com.leoman.pay.util.MD5Util;
 import com.leoman.permissions.admin.dao.AdminDao;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.permissions.admin.service.AdminService;
 import com.leoman.common.service.impl.GenericManagerImpl;
+import com.leoman.permissions.adminrole.entity.AdminRole;
+import com.leoman.permissions.adminrole.service.AdminRoleService;
+import com.leoman.permissions.role.service.RoleService;
+import com.leoman.system.enterprise.entity.Enterprise;
+import com.leoman.system.enterprise.service.EnterpriseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -11,6 +18,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.Transient;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -26,6 +34,12 @@ public class AdminServiceImpl extends GenericManagerImpl<Admin, AdminDao> implem
 
     @Autowired
     private AdminDao adminDao;
+
+    @Autowired
+    private AdminRoleService adminRoleService;
+
+    @Autowired
+    private EnterpriseService enterpriseService;
 
     @Override
     public Admin findByUsername(String username) {
@@ -55,4 +69,38 @@ public class AdminServiceImpl extends GenericManagerImpl<Admin, AdminDao> implem
 
         return page;
     }
+
+    @Override
+    @Transient
+    public Result save(Admin admin, Long enterpriseId, Long roleId) {
+        admin.setLastLoginDate(System.currentTimeMillis());
+        AdminRole adminRole = new AdminRole();
+        try {
+            admin.setPassword(MD5Util.MD5Encode(admin.getPassword(),"UTF-8"));
+
+            if(roleId==12){
+                Enterprise enterprise = enterpriseService.queryByPK(enterpriseId);
+                admin.setEnterprise(enterprise);
+            }
+
+            save(admin);
+
+            adminRole.setAdminId(admin.getId());
+            adminRole.setRoleId(roleId);
+            List<AdminRole> adminRoles = adminRoleService.queryByProperty("adminId",admin.getId());
+            if(!adminRoles.isEmpty() && adminRoles.size()>0){
+                for(AdminRole a : adminRoles){
+                    adminRoleService.delete(a);
+                }
+            }
+            adminRoleService.save(adminRole);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Result.failure();
+        }
+        return Result.success();
+    }
+
+
+
 }

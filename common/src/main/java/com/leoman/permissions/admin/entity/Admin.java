@@ -1,6 +1,6 @@
 package com.leoman.permissions.admin.entity;
 
-import com.leoman.enterprise.entity.Enterprise;
+import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.entity.BaseEntity;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 

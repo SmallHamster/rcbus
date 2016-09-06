@@ -1,4 +1,4 @@
-package com.leoman.enterprise.entity;
+package com.leoman.system.enterprise.entity;
 
 import com.leoman.entity.BaseEntity;
 
