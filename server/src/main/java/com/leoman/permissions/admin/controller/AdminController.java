@@ -43,6 +43,8 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
     @Autowired
     private AdminRoleService adminRoleService;
 
+
+
     /**
      * 列表页面
      */
@@ -63,6 +65,11 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
         query.setPagesize(length);
         query.like("username", username);
         Page<Admin> page = adminService.queryPage(query);
+
+        List<Admin> list = page.getContent();
+        for(Admin a : list){
+            a.setRoleName(roleService.findName(a.getId()));
+        }
 //        try {
 //            page =
 //        } catch (Exception e) {

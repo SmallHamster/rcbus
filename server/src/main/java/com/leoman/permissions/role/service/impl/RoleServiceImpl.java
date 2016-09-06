@@ -40,4 +40,9 @@ public class RoleServiceImpl extends GenericManagerImpl<Role,RoleDao> implements
             roleModuleService.save(roleModule);
         }
     }
+
+    @Override
+    public String findName(Long adminId) {
+        return dao.findName(adminId);
+    }
 }

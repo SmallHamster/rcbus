@@ -53,6 +53,7 @@
                                         <th>创建时间</th>
                                         <th>手机号</th>
                                         <th>最后登录时间</th>
+                                        <th>权限</th>
                                         <th>企业</th>
                                         <th>操作</th>
                                     </tr>
@@ -150,7 +151,19 @@
                             }
                         },
                         {
-                            "data": "enterprise.name"
+                            "data": "roleName",
+                            "sDefaultContent" : ""
+                        },
+                        {
+                            "data": "enterprise.name",
+                            "render" : function(data){
+                              if(data==null){
+                                  return "——";
+                              }else {
+                                  return data;
+                              }
+                            },
+                            "sDefaultContent" : ""
                         },
                         {
                             "data": "id",

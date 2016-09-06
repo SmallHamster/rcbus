@@ -31,6 +31,9 @@ public class Admin extends BaseEntity {
     @Column(name = "last_login_date")
     private Long lastLoginDate;
 
+    @Transient
+    private String roleName;
+
     public String getUsername() {
         return username;
     }
@@ -69,6 +72,14 @@ public class Admin extends BaseEntity {
 
     public void setEnterprise(Enterprise enterprise) {
         this.enterprise = enterprise;
+    }
+
+    public String getRoleName() {
+        return roleName;
+    }
+
+    public void setRoleName(String roleName) {
+        this.roleName = roleName;
     }
 
     @Override
