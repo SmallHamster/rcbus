@@ -220,13 +220,12 @@
                         "dataType": "json",
                         "type": "POST",
                         success: function (result) {
-                            console.log(result);
-                            if (result==0) {
-                                $admin.v.dTable.ajax.reload(null,false);
-                            } if(result==2){
+                            if (result==1) {
+                                alert("删除错误");
+                            }else if(result==2){
                                 alert("超级管理员无法删除");
                             }else {
-                                alert("删除错误");
+                                $admin.v.dTable.ajax.reload(null,false);
                             }
                             $("#confirm").modal("hide");
                         }
