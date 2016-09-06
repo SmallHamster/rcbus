@@ -53,6 +53,7 @@
                                         <th>创建时间</th>
                                         <th>手机号</th>
                                         <th>最后登录时间</th>
+                                        <th>企业</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
@@ -147,6 +148,9 @@
                             "render": function (data) {
                                 return new Date(data).format("yyyy-MM-dd hh:mm:ss");
                             }
+                        },
+                        {
+                            "data": "enterprise.name"
                         },
                         {
                             "data": "id",

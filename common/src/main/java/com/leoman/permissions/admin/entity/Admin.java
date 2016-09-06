@@ -1,5 +1,6 @@
 package com.leoman.permissions.admin.entity;
 
+import com.leoman.enterprise.entity.Enterprise;
 import com.leoman.entity.BaseEntity;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
@@ -25,7 +26,7 @@ public class Admin extends BaseEntity {
 
     @ManyToOne
     @JoinColumn(name = "enterprise_id")
-    private Long enterpriseId;
+    private Enterprise enterprise;
 
     @Column(name = "last_login_date")
     private Long lastLoginDate;
@@ -62,12 +63,12 @@ public class Admin extends BaseEntity {
         this.lastLoginDate = lastLoginDate;
     }
 
-    public Long getEnterpriseId() {
-        return enterpriseId;
+    public Enterprise getEnterprise() {
+        return enterprise;
     }
 
-    public void setEnterpriseId(Long enterpriseId) {
-        this.enterpriseId = enterpriseId;
+    public void setEnterprise(Enterprise enterprise) {
+        this.enterprise = enterprise;
     }
 
     @Override
