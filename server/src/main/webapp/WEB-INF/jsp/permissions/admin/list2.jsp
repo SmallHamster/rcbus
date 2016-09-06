@@ -101,7 +101,7 @@
     </div>
 </section>
 <%@ include file="../../inc/new2/foot.jsp" %>
-<%@ include file="confirm.jsp" %>
+<%@ include file="../../inc/new2/confirm.jsp" %>
 <script>
     $admin = {
         v: {
