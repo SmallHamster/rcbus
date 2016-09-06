@@ -3,9 +3,7 @@ package com.leoman.permissions.admin.entity;
 import com.leoman.entity.BaseEntity;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  *
@@ -25,6 +23,9 @@ public class Admin extends BaseEntity {
     @Column(name = "password")
     private String password = "";
 
+    @ManyToOne
+    @JoinColumn(name = "enterprise_id")
+    private Long enterpriseId;
 
     @Column(name = "last_login_date")
     private Long lastLoginDate;
@@ -59,6 +60,14 @@ public class Admin extends BaseEntity {
 
     public void setLastLoginDate(Long lastLoginDate) {
         this.lastLoginDate = lastLoginDate;
+    }
+
+    public Long getEnterpriseId() {
+        return enterpriseId;
+    }
+
+    public void setEnterpriseId(Long enterpriseId) {
+        this.enterpriseId = enterpriseId;
     }
 
     @Override
