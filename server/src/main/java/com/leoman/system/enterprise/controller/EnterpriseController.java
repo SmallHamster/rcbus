@@ -6,10 +6,13 @@ import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
 import com.leoman.pay.util.MD5Util;
 import com.leoman.permissions.admin.entity.Admin;
+import com.leoman.permissions.adminrole.entity.AdminRole;
 import com.leoman.system.enterprise.dao.EnterpriseDao;
 import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
 import com.leoman.system.enterprise.service.impl.EnterpriseServiceImpl;
+import com.leoman.utils.JsonUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -84,6 +87,33 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
             Result.failure();
         }
         return Result.success();
+    }
+
+    /**
+     * 删除
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/del", method = RequestMethod.POST)
+    @ResponseBody
+    public Integer del(Long id,String ids) {
+        if (id==null && StringUtils.isBlank(ids)){
+            return 1;
+        }
+        try {
+            if(id!=null){
+                enterpriseService.delete(enterpriseService.queryByPK(id));
+            }else {
+                Long[] ss = JsonUtil.json2Obj(ids,Long[].class);
+                for (Long _id : ss) {
+                    enterpriseService.delete(enterpriseService.queryByPK(_id));
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return 1;
+        }
+        return 0;
     }
 
 

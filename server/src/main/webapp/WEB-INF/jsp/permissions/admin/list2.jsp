@@ -225,6 +225,7 @@
                             }else if(result==2){
                                 alert("超级管理员无法删除");
                             }else {
+                                $("#deleteBatch").css('display','none');
                                 $admin.v.dTable.ajax.reload(null,false);
                             }
                             $("#confirm").modal("hide");
