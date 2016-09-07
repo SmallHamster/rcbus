@@ -1,6 +1,7 @@
 package com.leoman.bus.entity;
 
 import com.leoman.entity.BaseEntity;
+import com.leoman.image.entity.Image;
 
 import javax.persistence.*;
 
@@ -44,8 +45,9 @@ public class Bus extends BaseEntity{
     @Column(name = "driver_id_card")
     private String driverIDCard;//司机身份证号
 
-    @Column(name = "img_url")
-    private String imgUrl;//图片
+    @ManyToOne
+    @JoinColumn(name = "image_id")
+    private Image image;//图片
 
     @Column(name = "cur_station_id")
     private String curStationId;//当前所在站
@@ -130,12 +132,12 @@ public class Bus extends BaseEntity{
         this.driverIDCard = driverIDCard;
     }
 
-    public String getImgUrl() {
-        return imgUrl;
+    public Image getImage() {
+        return image;
     }
 
-    public void setImgUrl(String imgUrl) {
-        this.imgUrl = imgUrl;
+    public void setImage(Image image) {
+        this.image = image;
     }
 
     public String getCurStationId() {

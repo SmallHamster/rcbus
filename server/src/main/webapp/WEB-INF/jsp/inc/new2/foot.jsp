@@ -68,6 +68,16 @@
 <script src="${contextPath}/static/js/global.js"></script>
 <script src="${contextPath}/static/js/dataformat.js"></script>
 
+<script src="${contextPath}/static/js/plugins/dropper/jquery.fs.dropper.js"></script>
+
+<!-- alert -->
+<script src="${contextPath}/html/alert/js/classie.js"></script>
+<script src="${contextPath}/html/alert/js/modernizr.custom.js"></script>
+<script src="${contextPath}/html/alert/js/notificationFx.js"></script>
+<script src="${contextPath}/html/alert/js/notify.js"></script>
+
+<script src="${contextPath }/html/datepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="${contextPath }/html/datepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
 
 
 

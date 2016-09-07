@@ -40,11 +40,11 @@
                         <header class="panel-heading">
                             车辆列表
                             <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
-                               <button class="btn btn-info" type="button" onclick="$bus.fn.delete();" id="deleteBatch" style="display: none">删除</button>
+                               <button class="btn btn-info" type="button" onclick="$route.fn.delete();" id="deleteBatch" style="display: none">删除</button>
                             </span>
                             <span class="tools pull-right">
                                <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
-                               <button class="btn btn-info" type="button" onclick="$bus.fn.add();">新增车辆</button>
+                               <button class="btn btn-info" type="button" onclick="$route.fn.add();">新增路线</button>
                             </span>
                         </header>
                         <div class="panel-body">
@@ -77,26 +77,26 @@
 <%@ include file="../inc/new2/foot.jsp" %>
 <%@ include file="../confirm.jsp" %>
 <script>
-    $bus = {
+    $route = {
         v: {
             list: [],
             dTable: null
         },
         fn: {
             init: function () {
-                $bus.fn.dataTableInit();
+                $route.fn.dataTableInit();
                 $("#c_search").click(function () {
-                    $bus.v.dTable.ajax.reload();
+                    $route.v.dTable.ajax.reload();
                 });
             },
             dataTableInit: function () {
-                $bus.v.dTable = $leoman.dataTable($('#dataTables'), {
+                $route.v.dTable = $leoman.dataTable($('#dataTables'), {
                     "processing": true,
                     "serverSide": true,
                     "searching": false,
                     "bSort": false,
                     "ajax": {
-                        "url": "${contextPath}/admin/bus/list",
+                        "url": "${contextPath}/admin/route/list",
                         "type": "POST"
                     },
                     "columns": [
@@ -107,45 +107,35 @@
                                 return checkbox;
                             }
                         },
-                        {"data": "carNo"},
-                        {"data": "brand"},
-                        {"data": "modelNo"},
-                        {"data": "seatNum"},
-                        {"data": "driverName"},
-                        {"data": "driverPhone"},
-                        {"data": "driverIDCard"},
+                        {"data": "routeName"},
+                        {"data": "enterpraise.name"},
+                        {"data": "isShow"},
                         {
-                            "data": "driverSex",
-                            "render": function (data) {
-                                var sex = '-';
-                                if(data == 1){
-                                    sex = '女';
-                                }else if(data == 0){
-                                    sex = '男';
-                                }
-                                return sex;
-                            }
-                        },
-                        {
-                            "data": "id",
+                            "data": "isShow",
                             "render": function (data, type, row, meta) {
 
-                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$bus.fn.detail(\'" + data + "\')\">" +
+                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$route.fn.detail(\'" + data + "\')\">" +
                                         "<i class='fa fa-eye'></i> 查看</button>";
 
-                                var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$bus.fn.add(\'" + data + "\')\">" +
+                                var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$route.fn.add(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
 
-                                var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$bus.fn.delete(\'" + data + "\')\">" +
+                                var txt = "";
+                                if(data == "1"){
+                                    txt = "隐藏";
+                                }else if(data == "0"){
+                                    txt = "显示";
+                                }
+                                var showHide = "<button title='+txt+' class='btn btn-primary btn-circle edit' onclick=\"$route.fn.add(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> '+txt+'</button>";
+
+                                var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$route.fn.delete(\'" + data + "\')\">" +
                                         "<i class='fa fa-minus-circle'></i> 删除</button>";
 
-                                return detail + "&nbsp;" + edit + "&nbsp;"+ del;
+                                return detail + "&nbsp;" + edit + "&nbsp;" + showHide + "&nbsp;"+ del;
                             }
                         }
-                    ],
-                    /*"fnServerParams": function (aoData) {
-                        aoData.username = $("#username").val();
-                    }*/
+                    ]
                 });
             },
             detail: function (id) {
@@ -153,14 +143,14 @@
                 if (id != null && id != '') {
                     params = "?id=" + id;
                 }
-                window.location.href = "${contextPath}/admin/bus/detail" + params;
+                window.location.href = "${contextPath}/admin/route/detail" + params;
             },
             add: function (id) {
                 var params = "";
                 if (id != null && id != '') {
                     params = "?id=" + id;
                 }
-                window.location.href = "${contextPath}/admin/bus/add" + params;
+                window.location.href = "${contextPath}/admin/route/add" + params;
             },
             delete: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
@@ -170,7 +160,7 @@
                 $("#determine").off("click");
                 $("#determine").on("click",function(){
                     $.ajax({
-                        "url": "${contextPath}/admin/bus/delete",
+                        "url": "${contextPath}/admin/route/delete",
                         "data": {
                             ids:JSON.stringify(ids)
                         },
@@ -182,50 +172,19 @@
                             }else if(result==2){
                                 alert("超级管理员无法删除");
                             }else {
-                                $bus.v.dTable.ajax.reload(null,false);
+                                $route.v.dTable.ajax.reload(null,false);
                             }
                             $("#confirm").modal("hide");
                         }
                     });
                 })
             },
-            /*openModal: function (busId) {
-                $("#busId").val(busId);
-                $('#my_multi_select1').multiSelect('refresh');
-                $.ajax({
-                    url: "${contextPath}/admin/admin/role/select",
-                    type: "POST",
-                    data: {
-                        "busId": busId
-                    },
-                    success: function (result) {
-                        var allRole = result.data.object.allRoles;
-                        var hasRole = result.data.object.hasRoels;
-
-                        console.log(hasRole);
-
-                        var allRoleArray = [];
-                        $.each(allRole, function (n, item) {
-                            var option = {
-                                value: item.id,
-                                text: item.name
-                            }
-                            allRoleArray.push(option);
-                        });
-                        $('#my_multi_select1').multiSelect('addOption', allRoleArray);
-                        $('#my_multi_select1').multiSelect('select', hasRole);
-                    }
-
-                });
-
-                $("#myModal").modal("show");
-            },*/
             responseComplete: function (result, action) {
                 if (result.status == "0") {
                     if (action) {
-                        $bus.v.dTable.ajax.reload(null, false);
+                        $route.v.dTable.ajax.reload(null, false);
                     } else {
-                        $bus.v.dTable.ajax.reload();
+                        $route.v.dTable.ajax.reload();
                     }
                     $leoman.notify(result.msg, "success");
                 } else {
@@ -235,7 +194,7 @@
         }
     }
     $(function () {
-        $bus.fn.init();
+        $route.fn.init();
     })
 </script>
 </body>

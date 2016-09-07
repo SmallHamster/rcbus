@@ -9,6 +9,7 @@ import org.springframework.data.jpa.repository.QueryHints;
 import javax.persistence.QueryHint;
 
 /**
+ * 班车
  * Created by Daisy on 2016/9/6.
  */
 public interface BusDao extends IBaseJpaRepository<Bus> {

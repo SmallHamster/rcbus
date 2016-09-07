@@ -40,19 +40,19 @@
                                 <div class="form-group">
                                     <label for="modelNo" class="col-sm-1 control-label" >车型：</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="modelNo" name="modelNo" value="${bus.username}" class="form-control" required minlength="6" maxlength="20"/>
+                                        <input type="text" id="modelNo" name="modelNo" value="${bus.modelNo}" class="form-control" required maxlength="20"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="brand" class="col-sm-1 control-label">品牌：</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="brand" name="brand" value="${bus.mobile}" class="form-control" required/>
+                                        <input type="text" id="brand" name="brand" value="${bus.brand}" class="form-control" required/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="seatNum" class="col-sm-1 control-label">座位数：</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="seatNum" name="seatNum" value="${bus.mobile}" class="form-control" required />
+                                        <input type="text" id="seatNum" name="seatNum" value="${bus.seatNum}" class="form-control" required />
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -89,8 +89,8 @@
                                     <label class="col-sm-1 control-label">司机性别：</label>
                                     <div class="col-sm-1">
                                         <select class="form-control input-sm" name="driverSex">
-                                            <option value="1">男</option>
-                                            <option value="0">女</option>
+                                            <option value="0">男</option>
+                                            <option value="1">女</option>
                                         </select>
                                     </div>
                                 </div>
@@ -102,48 +102,30 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label">图片:</label>
-                                    <div class="col-sm-1">
-                                        <div style="float: left;margin-bottom: 30px;" id="lastImageDiv">
-                                            <a href="javascript:void(0);" onclick="$bus.fn.AddTempImg()">
-                                                <img id="tempPicture" src="${contextPath}/static/images/add.jpg" style="height: 200px; width: 200px; display: inherit; margin-bottom: 6px;" border="1"/>
-                                            </a>
+                                <div class="form-group img_tooltip" >
+                                    <label for="imageId" class="col-sm-1 control-label">图片:</label>
+
+                                    <div class="col-sm-2">
+                                        <input type="hidden" id="imageId" name="image.id" value="${bus.image.id}">
+
+                                        <div class="image_show"  <c:if test="${bus.image==null}"> style="display: none"  </c:if>>
+                                            <img src="${bus.image.path}" class='img-responsive' >
                                         </div>
+                                        <div class="image_handle"  <c:if test="${bus.image!=null}">  style="display: none"  </c:if>data-toggle="tooltip" data-placement="top" title="">
+                                            <div class="dropped"></div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-5">
+                                        <a href="javascript:void(0)" id="removeImg" class="btn btn-info" role="button" >删除图片</a>
                                     </div>
                                 </div>
-                                <%--<div class="col-md-12 m-b-15">
-                                    <label>封面：</label>
-                                    <div class="fileupload fileupload-new" data-provides="fileupload">
-                                        <div class="fileupload-preview thumbnail form-control">
-                                            <img src="">
-                                        </div>
-                                        <div>
-                                <span class="btn btn-file btn-alt btn-sm">
-                                    <span class="fileupload-new">选择图片</span>
-                                    <span class="fileupload-exists">更改</span>
-                                    <input id="imageFile" name="imageFile" type="file"/>
-                                </span>
-                                            <a href="#" class="btn fileupload-exists btn-sm" data-dismiss="fileupload">移除</a>
-                                        </div>
-                                    </div>
-                                </div>--%>
+
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label"></label>
                                     <div class="col-sm-6">
                                         <button type="button" onclick="$bus.fn.save()" class="btn btn-primary">保存</button>
+                                        <button type="button" onclick="$bus.fn.back()" class="btn btn-primary">返回</button>
                                     </div>
-                                </div>
-
-                                <form id="tempImageForm" method="post" action="common/file/save/image" enctype="multipart/form-data" class="form-horizontal" role="form">
-                                    <input type="file" name="file" id="tempImage" data-rule="required" style="display:none;" onchange="$bus.fn.saveTempImage()"/>
-                                </form>
-                                <div id="tempDiv" style="display:none;float: left; height: 210px;width: 200px;margin-right:6px; z-index: 0;margin-bottom: 15px;">
-                                    <img class="imgs" alt="" src="" style="height: 200px;width: 200px; z-index: 1;"/>
-                                    <input name="imageIdTemp" type="hidden"/>
-                                    <a href="javascript:void(0);" style="float: none; z-index: 10; position: relative; bottom: 203px; left: 184px; display: none;" class="axx" onclick="$bus.fn.deleteImage(this)">
-                                        <img id="pic" src="${contextPath}/static/images/xx.png" style="height: 16px; width: 16px; display: inline;" border="1"/>
-                                    </a>
                                 </div>
 
                             </form>
@@ -169,61 +151,57 @@
                 if("${bus.driverSex}" != ''){
                     $("[name=driverSex] option[value='+${bus.driverSex}+']").click();
                 }
+                $bus.fn.dropperInit();//显示图片
+                $("#removeImg").click(function(){
+                    $bus.fn.clearImageView();
+                })
             },
-            AddTempImg: function () {
-                $('#tempImage').click();
+            clearImageView: function(){
+                $("#imageId").val("");
+                $(".image_show").html("");
+                $(".image_handle").show();
+                $(".dropper-input").val("");
             },
-            saveTempImage: function () {
-                $("#tempImageForm").ajaxSubmit({
-                    dataType: "json",
-                    success: function (data) {
-                        if (null != data.path && data.path != '') {
-                            $('#tempAddImageIds').html($('#tempAddImageIds').html() + data.id + ',');
-                            $bus.fn.insertImage(data.path, data.id);
-
-                            $bus.v.imageSize = $bus.v.imageSize + 1;
-                        } else {
-                            $leoman.notify("图片格式不正确", "error");
-                        }
-                    }
-                });
+            viewImage: function (image) {
+                if (image) {
+                    $(".dropper-input").val("");
+                    $(".image_handle").hide();
+                    $(".image_show").show();
+                    $("#imageId").val(image.id);
+                    $(".image_show").html("<img src='" + image.path + "' class='img-responsive' >");
+                }
             },
-            insertImage: function (path, id) {
-                var tempDiv = $("#tempDiv").clone();
-                tempDiv.prop('id', '');
-                tempDiv.css("display", "block");
-                tempDiv.children(":first").prop("src", path);
-                tempDiv.children(":first").next().prop("value", id);
-                tempDiv.children(":first").next().next().next().prop("value", id);
-                tempDiv.insertBefore("#lastImageDiv");
-
-                // 让所有的克隆出来的
-                tempDiv.hover(function () {
-                    $bus.fn.mouseover($(this));
-                }, function () {
-                    $bus.fn.mouseOut($(this));
-                });
+            dropperInit: function () {
+                $(".dropped").dropper({
+                    postKey: "file",
+                    action: "${contextPath}/common/file/save/image",
+                    postData: {thumbSizes: '480x800'},
+                    label: "把图片拖拽到此处",
+                    maxSize: 204857
+                }).on("fileComplete.dropper", $bus.fn.onFileComplete)
+                        .on("fileError.dropper", $bus.fn.onFileError);
             },
-            deleteImage: function (self) {
-                $bus.v.imageSize = $bus.v.imageSize - 1;
-                var imageId = $(self).prev().val();
-                $('#tempDelImageIds').html($('#tempDelImageIds').html() + imageId + ',');
-                $(self).parent().remove();
+            onFileComplete: function (e, file, response) {
+                if (response.status == '0') {
+                    $bus.fn.viewImage(response.data);
+                } else {
+                    $common.fn.notify('error');
+                }
             },
-            mouseover: function (mouse) {
-                $(mouse).children("a").fadeIn(300);
+            onFileError: function (e, file, error) {
+                $common.fn.notify('error');
             },
-            mouseOut: function (mouse) {
-                $(mouse).children("a").fadeOut(300);
+            back : function(){
+                window.location.href = "${contextPath}/admin/bus/index";
             },
             //保存
             save : function() {
                 var flag = true;
                 if(!$("#formId").valid()) return;
 
-                if($('.fileupload-preview img').size()<1 || $('.fileupload-preview img').width()==0){
+                if($("#imageId").val() == ''){
                     flag = false;
-                    $leoman.notify('图片不能为空', "error");
+                    $common.fn.notify('图片不能为空');
                 }
 
                 if(flag){
@@ -235,24 +213,11 @@
                                 window.location.href = "${contextPath}/admin/bus/index";
                             }
                             else {
-                                alert("操作失败");
+                                $common.fn.notify('操作失败');
                             }
                         }
                     });
                 }
-            },
-            initImage : function() {
-                $('#file-fr').fileinput({
-                    language: 'zh',
-                    uploadAsync: false,
-                    showUpload: false, // hide upload button
-                    showRemove: false, // hide remove button
-                    uploadUrl: '#',
-                    minFileCount: 1,
-                    maxFileCount: 3,
-                    msgFilesTooMany:"只能上传三张图片",
-                    allowedFileExtensions : ['jpg', 'png'],
-                });
             }
         }
     }

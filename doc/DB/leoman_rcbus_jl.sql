@@ -1,6 +1,6 @@
 /*
 SQLyog Ultimate v12.09 (64 bit)
-MySQL - 5.6.11 : Database - leoman_framework_demo
+MySQL - 5.6.11 : Database - leoman_rcbus_demo
 *********************************************************************
 */
 

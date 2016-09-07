@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.leoman</groupId>
-    <artifactId>leoman_framework</artifactId>
+    <artifactId>leoman_rcbus</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>api</module>
@@ -337,17 +337,17 @@
                 <pro.jdbc.url>jdbc:mysql://4.16.1.158:3306/leoman_rcbus?characterEncoding=UTF-8</pro.jdbc.url>
                 <pro.jdbc.username>root</pro.jdbc.username>
                 <pro.jdbc.password>root</pro.jdbc.password>
-                <pro.upload.url>http://4.16.3.184:8081/files/upload/</pro.upload.url>
-                <pro.upload.path>D:/server/tomcat-kdxg/webapps/files/upload/</pro.upload.path>
-                <base.url>http://localhost/yqyl/</base.url>
-                <base.domain>http://localhost:8080</base.domain>
+                <pro.upload.url>http://127.0.0.1:8085/files/upload/</pro.upload.url>
+                <pro.upload.path>D:/devsoftware/apache-tomcat-7.0.67/webapps/files/upload/</pro.upload.path>
+                <base.url>http://localhost:8085/rcbus/</base.url>
+                <base.domain>http://localhost:8085/rcbus/</base.domain>
             </properties>
         </profile>
     </profiles>
 
 
     <build>
-        <finalName>leoman_framework</finalName>
+        <finalName>leoman_rcbus</finalName>
         <resources>
             <resource>
                 <directory>src/main/resources</directory>
@@ -371,7 +371,7 @@
                     <artifactId>maven-war-plugin</artifactId>
                     <version>2.3</version>
                     <configuration>
-                        <warName>leoman_framework</warName>
+                        <warName>leoman_rcbus</warName>
                     </configuration>
                 </plugin>
             </plugins>

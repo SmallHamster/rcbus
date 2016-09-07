@@ -30,24 +30,80 @@
                             班车信息
                         </header>
                         <div class="panel-body">
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label" >车型：</label>
-                                <div class="col-sm-6">
-                                    ${bus.modelNo}
+                            <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >车型：</label>
+                                    <div class="col-sm-6">
+                                        ${bus.modelNo}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label" >品牌：</label>
-                                <div class="col-sm-6">
-                                    ${bus.brand}
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >品牌：</label>
+                                    <div class="col-sm-6">
+                                        ${bus.brand}
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="form-group">
-                                <label class="col-sm-1 control-label" >座位数：</label>
-                                <div class="col-sm-6">
-                                    ${bus.seatNum}
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >座位数：</label>
+                                    <div class="col-sm-6">
+                                        ${bus.seatNum}
+                                    </div>
                                 </div>
-                            </div>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >车牌号：</label>
+                                    <div class="col-sm-6">
+                                        ${bus.carNo}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >保险单号：</label>
+                                    <div class="col-sm-6">
+                                        ${bus.policyNo}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >司机姓名：</label>
+                                    <div class="col-sm-6">
+                                        ${bus.driverName}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >司机电话：</label>
+                                    <div class="col-sm-6">
+                                        ${bus.driverPhone}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >司机身份证号：</label>
+                                    <div class="col-sm-6">
+                                        ${bus.driverIDCard}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >司机性别：</label>
+                                    <div class="col-sm-6">
+                                        ${bus.driverSex}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >用车类型：</label>
+                                    <div class="col-sm-6">
+                                        ${bus.carType.name}
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >图片：</label>
+                                    <div class="col-sm-6">
+                                        <img src="${bus.imgUrl}" style="width: 100px; height: 100px;">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label"></label>
+                                    <div class="col-sm-6">
+                                        <button type="button" onclick="$bus.fn.back()" class="btn btn-primary">返回</button>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
                     </section>
                 </div>
@@ -58,6 +114,21 @@
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
 <script>
+
+    $bus = {
+        v: {
+            list: [],
+            chart: null,
+            dTable: null,
+            imageSize: 0
+        },
+        fn: {
+            back: function(){
+                window.location.href = "${contextPath}/admin/bus/index";
+            }
+        }
+    }
+
 </script>
 </body>
 </html>

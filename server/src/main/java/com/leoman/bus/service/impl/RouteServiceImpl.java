@@ -1,8 +1,8 @@
 package com.leoman.bus.service.impl;
 
-import com.leoman.bus.dao.BusDao;
-import com.leoman.bus.entity.Bus;
-import com.leoman.bus.service.BusService;
+import com.leoman.bus.dao.RouteDao;
+import com.leoman.bus.entity.Route;
+import com.leoman.bus.service.RouteService;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,20 +19,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 路线
  * Created by Daisy on 2016/9/6.
  */
 @Service
-public class BusServiceImpl extends GenericManagerImpl<Bus, BusDao> implements BusService {
+public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implements RouteService {
 
     @Autowired
-    private BusDao busDao;
+    private RouteDao routeDao;
 
     @Override
-    public Page<Bus> page(Integer pageNum, Integer pageSize) {
+    public Page<Route> page(Integer pageNum, Integer pageSize) {
         PageRequest pageRequest = new PageRequest(pageNum - 1, pageSize, Sort.Direction.DESC, "id");
-        Page<Bus> page = busDao.findAll(new Specification<Bus>() {
+        Page<Route> page = routeDao.findAll(new Specification<Route>() {
             @Override
-            public Predicate toPredicate(Root<Bus> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
+            public Predicate toPredicate(Root<Route> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
                 Predicate result = null;
                 List<Predicate> predicateList = new ArrayList<Predicate>();
 
