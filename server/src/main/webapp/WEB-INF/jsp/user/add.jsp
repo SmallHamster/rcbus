@@ -35,37 +35,37 @@
                                 <div class="form-group">
                                     <label for="mobile" class="col-sm-1 control-label">手机</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="mobile" name="mobile" value="${userInfo.mobile}" class="form-control" disabled/>
+                                        <input type="text" id="mobile" name="mobile" value="" class="form-control" required mobile="true"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="mobile" class="col-sm-1 control-label">注册时间</label>
+                                    <label for="password" class="col-sm-1 control-label">密码</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="createDate" name="createDate" value="<date:date format='yyyy-MM-dd HH:mm:ss' value='${userInfo.createDate}'></date:date>" class="form-control" disabled/>
+                                        <input type="password" id="password" name="password" class="form-control" required minlength="6"/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="password" class="col-sm-1 control-label">确认密码</label>
+                                    <div class="col-sm-6">
+                                        <input type="password" id="password2" name="password2" class="form-control" required equalTo="#password" required minlength="6"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label for="enterpriseId" class="col-sm-1 control-label">企业</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="enterpriseId" name="enterpriseId" value="${userInfo.enterprise.name}" class="form-control" disabled/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="enterpriseId" class="col-sm-1 control-label">会员类型</label>
-                                    <div class="col-sm-6">
-                                        <input type="text" id="type" name="type" value="<c:if test="${userInfo.type eq 0}">企业管理员</c:if><c:if test="${userInfo.type eq 1}">员工</c:if><c:if test="${userInfo.type eq 2}">普通会员</c:if>" class="form-control" disabled/>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <label for="enterpriseId" class="col-sm-1 control-label">订单信息</label>
-                                    <div class="col-sm-6">
-                                        租车详情(未写)
+                                        <select class="form-control input-sm" id="enterpriseId" name="enterpriseId" required>
+                                            <option value="">请选择</option>
+                                            <c:forEach var="v" items="${enterprise}">
+                                                <option value="${v.id}">${v.name}</option>
+                                            </c:forEach>
+                                        </select>
                                     </div>
                                 </div>
                                 <%--</div>--%>
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label"></label>
                                     <div class="col-sm-6">
+                                        <button type="button" onclick="$admin.fn.save()" class="btn btn-primary">保存</button>
                                         <button type="button" class="btn btn-primary" onclick="history.go(-1);">返回</button>
                                     </div>
                                 </div>

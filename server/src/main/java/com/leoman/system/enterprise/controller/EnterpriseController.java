@@ -41,6 +41,13 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
         return "system/enterprise/list";
     }
 
+    /**
+     * 列表
+     * @param draw
+     * @param start
+     * @param length
+     * @return
+     */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
     public Map<String, Object> list(Integer draw, Integer start, Integer length) {
@@ -52,6 +59,12 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
         return DataTableFactory.fitting(draw, page);
     }
 
+    /**
+     * 跳转新增页面
+     * @param id
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/add")
     public String add(Long id, Model model){
         if(id != null){
@@ -63,7 +76,7 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
 
     /**
      * 保存
-     *
+     * @param id
      * @param name
      * @return
      */
@@ -91,6 +104,7 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
 
     /**
      * 删除
+     * @param id
      * @param ids
      * @return
      */

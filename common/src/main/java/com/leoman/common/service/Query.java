@@ -119,7 +119,21 @@ public class Query implements Serializable {
     public void eq(String propertyName, Object value) {
         if (isNullOrEmpty(value))
             return;
-        this.predicates.add(criteriaBuilder.equal(from.get(propertyName), value));
+
+        String[] names = null;
+        if(propertyName.contains(".")) {
+            names = propertyName.split("\\.");
+        }
+        Path p = null;
+        if(names == null) {
+            p = from.get(propertyName);
+        }
+        else {
+            p = from.get(names[0]).get(names[1]);
+        }
+        this.predicates.add(criteriaBuilder.equal(p,value));
+
+//        this.predicates.add(criteriaBuilder.equal(from.get(propertyName), value));
     }
 
     private boolean isNullOrEmpty(Object value) {
@@ -224,7 +238,21 @@ public class Query implements Serializable {
             return;
         if (value.indexOf("%") < 0)
             value = "%" + value + "%";
-        this.predicates.add(criteriaBuilder.like(from.get(propertyName), value));
+
+        String[] names = null;
+        if(propertyName.contains(".")) {
+            names = propertyName.split("\\.");
+        }
+        Path p = null;
+        if(names == null) {
+            p = from.get(propertyName);
+        }
+        else {
+            p = from.get(names[0]).get(names[1]);
+        }
+        this.predicates.add(criteriaBuilder.like(p,value));
+
+//        this.predicates.add(criteriaBuilder.like(from.get(propertyName), value));
     }
 
     /**

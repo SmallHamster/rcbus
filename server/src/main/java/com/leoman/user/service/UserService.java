@@ -1,8 +1,10 @@
 package com.leoman.user.service;
 
+import com.leoman.common.core.Result;
 import com.leoman.common.service.GenericManager;
 import com.leoman.user.entity.UserInfo;
 import org.springframework.data.domain.Page;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
@@ -11,10 +13,14 @@ import java.util.List;
  */
 public interface UserService extends GenericManager<UserInfo> {
 
-    public Page<UserInfo> page(String mobile, String nickname, Integer gender, Integer status, Integer isCreator, Integer pageNum, Integer pageSize);
+//
+//    public UserInfo findOneByNickname(String nickname);
+//
+//    // 查询新增会员列表
+//    public List<UserInfo> findListNew();
 
-    public UserInfo findOneByNickname(String nickname);
+    public Result save(UserInfo userInfo, Long id, Long enterpriseId);
 
-    // 查询新增会员列表
-    public List<UserInfo> findListNew();
+    public Integer del(Long id,String ids);
+
 }

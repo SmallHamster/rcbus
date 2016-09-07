@@ -4,6 +4,7 @@ import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.user.dao.UserLoginDao;
 import com.leoman.user.entity.UserLogin;
 import com.leoman.user.service.UserLoginService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -11,4 +12,8 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class UserLoginServiceImpl extends GenericManagerImpl<UserLogin, UserLoginDao> implements UserLoginService {
+
+    @Autowired
+    private UserLoginDao userLoginDao;
+
 }

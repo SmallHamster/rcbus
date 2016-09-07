@@ -1,189 +1,111 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="../inc/taglibs.jsp" %>
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0"/>
-    <meta name="format-detection" content="telephone=no">
-    <meta charset="UTF-8">
-    <meta name="description" content="Violate Responsive Admin Template">
-    <meta name="keywords" content="Super Admin, Admin, Template, Bootstrap">
-    <title>Super Admin Responsive Template</title>
-    <!-- CSS -->
-    <%@ include file="../inc/new/css.jsp" %>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="ThemeBucket">
+    <link rel="shortcut icon" href="#" type="image/png">
+    <title>Dynamic Table</title>
+    <%@ include file="../inc/new2/css.jsp" %>
 </head>
-<body id="skin-cloth">
-<%@ include file="../inc/new/header.jsp" %>
-<div class="clearfix"></div>
-<section id="main" class="p-relative" role="main">
-    <%@ include file="../inc/new/menu.jsp" %>
-    <section id="content" class="container">
-        <!-- 查询条件 -->
-        <div class="block-area" id="search">
+<body class="sticky-header">
+<section>
+    <%@ include file="../inc/new2/menu.jsp" %>
+    <!-- main content start-->
+    <div class="main-content">
+        <%@ include file="../inc/new2/header.jsp" %>
+        <!--body wrapper start-->
+        <div class="wrapper">
             <div class="row">
-                <div class="col-md-2 form-group">
-                    <label>手机号：</label>
-                    <input type="text" class="input-sm form-control" id="mobile" name="mobile" placeholder="...">
-                </div>
-                <div class="col-md-2 form-group">
-                    <label>昵称：</label>
-                    <input type="text" class="input-sm form-control" id="nickName" name="nickName" placeholder="...">
-                </div>
-                <div class="col-md-2 form-group">
-                    <label>状态：</label>
-                    <select id="status" name="status" class="select">
-                        <option value="">全部</option>
-                        <option value="0">正常</option>
-                        <option value="1">封禁</option>
-                    </select>
-                </div>
-                <div class="col-md-2 form-group">
-                    <label>性别：</label>
-                    <select id="gender" name="gender" class="select">
-                        <option value="">全部</option>
-                        <option value="0">男</option>
-                        <option value="1">女</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-        <div class="block-area" id="alternative-buttons">
-            <button id="c_search" class="btn btn-alt m-r-5">查询</button>
-        </div>
-        <hr class="whiter m-t-20"/>
-
-        <div class="block-area">
-            <div class="row">
-                <ul class="list-inline list-mass-actions">
-                    <li>
-                        <a href="${contextPath}/admin/user/index" title="刷新" class="tooltips">
-                            <i class="sa-list-refresh"></i>
-                        </a>
-                    </li>
-                    <li class="show-on" style="display: none;">
-                        <a onclick="$user.fn.batchDelete();" title="一键设为主创用户" class="tooltips">
-                            <i class="sa-list-delete"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <hr class="whiter m-t-20"/>
-        <!-- form表格 -->
-        <div class="block-area" id="tableHover">
-            <table class="table table-bordered table-hover tile" id="dataTables" cellspacing="0" width="100%">
-                <thead>
-                <tr>
-                    <th><input type="checkbox" class="pull-left list-parent-check"/></th>
-                    <th>账号</th>
-                    <th>昵称</th>
-                    <th>注册时间</th>
-                    <th>性别</th>
-                    <th>状态</th>
-                    <th>等级</th>
-                    <th>发帖数</th>
-                    <th>操作</th>
-                </tr>
-                </thead>
-            </table>
-        </div>
-
-        <div class="modal fade" id="infoModal" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">送馒头</h4>
-                    </div>
-                    <div class="modal-body">
-                        <form id="infoForm" method="post" class="form-horizontal" role="form">
-                            <input type="hidden" id="hiddenreserveId" name="reserveId"/>
-                            <div class="form-group">
-                                <label class="col-sm-3 control-label">馒头数量:</label>
-                                <div class="col-sm-5">
-                                    <input type="text" class="form-control input-append "
-                                           style="width: 180px;" id="num" name="num" maxlength="20"
-                                           data-rule="required" placeholder="请输入馒头数量"/>
-                                </div>
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <div class="panel-body">
+                            <div class="form-group col-sm-2">
+                                <input type="text" id="mobile" name="mobile" class="form-control" placeholder="手机号">
                             </div>
-                        </form>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                            <button type="button" id="confirmSub" onclick="$user.fn.batchConfirm()"
-                                    class="btn btn-primary">确定
-                            </button>
+                            <div class="form-group col-sm-2">
+                                <select id="type" name="type" class="form-control input-sm">
+                                    <option value="">权限</option>
+                                    <option value="0">企业管理</option>
+                                    <option value="1">员工</option>
+                                    <option value="2">普通会员</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <select class="form-control input-sm" id="enterpriseId" name="enterpriseId" >
+                                    <option value="">企业</option>
+                                    <c:forEach var="v" items="${enterprise}">
+                                        <option value="${v.id}">${v.name}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+
+                            <button id="c_search" class="btn btn-info">搜索</button>
                         </div>
-                    </div>
-                    <!-- /.modal-content -->
+                    </section>
                 </div>
-                <!-- /.modal-dialog -->
+            </div>
+            <div class="row">
+                <div class="col-sm-12">
+                    <section class="panel">
+                        <header class="panel-heading">
+                            会员列表
+                            <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
+                               <button class="btn btn-info" type="button" onclick="$admin.fn.del();" id="deleteBatch" style="display: none">删除</button>
+                            </span>
+                            <span class="tools pull-right">
+                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
+                               <button class="btn btn-info" type="button" onclick="$admin.fn.add();">新增会员</button>
+                            </span>
+                        </header>
+                        <div class="panel-body">
+                            <div class="adv-table">
+                                <table class="display table table-bordered table-striped" id="dataTables" width="100%">
+                                    <thead>
+                                    <tr>
+                                        <th><input type="checkbox" class="list-parent-check"
+                                                   onclick="$leoman.checkAll(this);"/></th>
+                                        <th>手机号码</th>
+                                        <th>注册时间</th>
+                                        <th>企业名称</th>
+                                        <th>账号权限</th>
+                                        <th>优惠券</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+                            </div>
+                        </div>
+                    </section>
+                </div>
             </div>
         </div>
-
-        <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title" id="showText" >确定禁用该账号？</h4>
-                    </div>
-                    <div class="modal-body">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="button" id="confirm" class="btn btn-primary">确定
-                        </button>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-        </div>
-
-        <div class="modal fade" id="creator" tabindex="-1" role="dialog" aria-labelledby="pwdModalLabel"
-             aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                        <h4 class="modal-title">确定设置为主创用户？</h4>
-                    </div>
-                    <div class="modal-body">
-                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                        <button type="button" id="confirmSubs" class="btn btn-primary">确定
-                        </button>
-                    </div>
-                    <!-- /.modal-content -->
-                </div>
-                <!-- /.modal-dialog -->
-            </div>
-        </div>
-    </section>
-    <br/><br/>
+    </div>
 </section>
-<!-- JS -->
-<%@ include file="../inc/new/foot.jsp" %>
-
+<%@ include file="../inc/new2/foot.jsp" %>
+<%@ include file="../inc/new2/confirm.jsp" %>
 <script>
-    $user = {
+    $admin = {
         v: {
             list: [],
-            dTable: null,
-            userId: 0
+            dTable: null
         },
         fn: {
             init: function () {
-                $user.fn.dataTableInit();
-
+                $admin.fn.dataTableInit();
                 $("#c_search").click(function () {
-                    $user.v.dTable.ajax.reload();
+                    $admin.v.dTable.ajax.reload();
                 });
             },
             dataTableInit: function () {
-                $user.v.dTable = $leoman.dataTable($('#dataTables'), {
+                $admin.v.dTable = $leoman.dataTable($('#dataTables'), {
                     "processing": true,
                     "serverSide": true,
                     "searching": false,
+                    "bSort": false,
                     "ajax": {
                         "url": "${contextPath}/admin/user/list",
                         "type": "POST"
@@ -192,192 +114,154 @@
                         {
                             "data": "id",
                             "render": function (data) {
-//                                var checkbox = "<div class=\"icheckbox_minimal\" aria-checked=\"false\" aria-disabled=\"false\" style=\"position: relative;\"><input type=\"checkbox\" value="+ data +" class='pull-left list-check' style=\"position: absolute; top: -20%; left: -20%; display: block; width: 140%; height: 140%; margin: 0px; padding: 0px; border: 0px; opacity: 0; background: rgb(255, 255, 255);\"></div>";
-                                var checkbox = "<input type='checkbox' class='pull-left list-check' value=" + data + ">";
+                                var checkbox = "<input type='checkbox' class='list-check' onclick='$leoman.subSelect(this);' value=" + data + ">";
                                 return checkbox;
                             }
                         },
-                        {"data": "mobile"},
-                        {"data": "nickname"},
+                        {
+                            "data": "mobile",
+                            "sDefaultContent" : ""
+
+                        },
                         {
                             "data": "createDate",
-                            render: function (data) {
-                                return new Date(data).format("yyyy-MM-dd hh:mm:ss")
-                            }
-                        },
-                        {
-                            "data": "gender",
-                            render: function (data) {
-                                if (data == 0) {
-                                    return "男";
-                                } else {
-                                    return "女";
-                                }
-                            }
-                        }, {
-                            "data": "status",
-                            render: function (data) {
-                                if (data == 0) {
-                                    return "正常";
-                                } else {
-                                    return "封禁";
-                                }
-                            }
-                        },
-                        {
-                            "data": "level",
-                            render: function (data) {
-                                if (data == 0) {
-                                    return "非会员";
-                                } else {
-                                    return "Lv" + data;
-                                }
-                            }
-                        },
-                        {"data": "posts"},
-                        {
-                            "data": null,
                             "render": function (data) {
-                                var detail = "<button title='查看' class='btn btn-primary btn-circle detail' onclick='$user.fn.detail(" + data.id + ")'> " +
-                                        "<i class='fa fa-eye'></i></button>&nbsp;&nbsp;";
-                                if (data.status == 1) {
-                                    detail += "<button title='解禁' class='btn btn-primary btn-circle check' onclick='$user.fn.changeStatus(" + data.id + "," + data.status + ")'> " +
-                                            "<i class='fa fa-check'></i></button>&nbsp;&nbsp;";
+                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
+                            },
+                            "sDefaultContent" : ""
+                        },
+                        {
+                            "data": "enterprise.name",
+                            "render": function (data) {
+                                if(data==null){
+                                    return "——";
+                                }else{
+                                    return data;
                                 }
-                                if (data.status == 0) {
-                                    detail += "<button title='禁用' class='btn btn-primary btn-circle check' onclick='$user.fn.changeStatus(" + data.id + "," + data.status + ")'> " +
-                                            "<i class='fa fa-check'></i></button>&nbsp;&nbsp;";
-                                    detail += "<button title='送馒头' class='btn btn-primary btn-circle' onclick='$user.fn.give(" + data.id + ")'> " +
-                                            "<i class='fa fa-briefcase'></i></button>&nbsp;&nbsp;";
-                                    detail += "<button title='设为主创' class='btn btn-primary btn-circle' onclick='$user.fn.setCreator(" + data.id + "," + data.status + ")'> " +
-                                            "<i class='fa fa-bell'></i></button>";
+                            },
+                            "sDefaultContent" : ""
+                        },
+                        {
+                            "data": "type",
+                            "render": function (data) {
+                                if(data==0){
+                                    return "企业管理";
+                                }else if(data==1){
+                                    return "员工";
+                                }else{
+                                    return "普通会员";
                                 }
+                            },
+                            "sDefaultContent" : ""
+                        },
+                        {
+                            "data": "优惠券",
+                            "sDefaultContent" : ""
+                        },
+                        {
+                            "data": "id",
+                            "render": function (data, type, row, meta) {
+                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$admin.fn.detail(\'" + data + "\')\">" +
+                                        "<i class='fa fa-eye'></i> 查看</button>";
 
-                                return detail;
+                                var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.add(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
+
+                                var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.del(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 删除</button>";
+                                var departure = "<button title='离职' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.departure(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 离职</button>";
+
+                                var giving = "<button title='赠送' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.giving(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 赠送</button>";
+
+                                if(row.type==1){
+                                    return giving  + "&nbsp;" + detail  + "&nbsp;" + departure + "&nbsp;" + del;
+                                }else {
+                                    return giving  + "&nbsp;" + detail  + "&nbsp;"  + del;
+                                }
                             }
                         }
                     ],
                     "fnServerParams": function (aoData) {
                         aoData.mobile = $("#mobile").val();
-                        aoData.nickname = $("#nickName").val();
-                        aoData.status = $("#status").val();
-                        aoData.gender = $("#gender").val();
+                        aoData.enterpriseId = $("#enterpriseId").val();
+                        aoData.type = $("#type").val();
                     }
                 });
             },
-            rowCallback: function (row, data) {
-                $('td', row).last().find(".check").click(function () {
-                    var checkbox = $('td', row).first().find("input[type='checkbox']");
-                    $user.fn.give(checkbox, [data.id]);
-                });
-            },
-            "detail": function (userId) {
-                window.location.href = "${contextPath}/admin/user/detail?userId=" + userId;
-            },
-            "changeStatus": function (id, status) {
-
-                if (status == 0) {
-                    $('#showText').html('确定禁用该账号？');
-                } else {
-                    $('#showText').html('确定解封该账号？');
-                }
-
-                $("#delete").modal("show");
-                $('#confirm').click(function () {
-                    var tempStatus = 0;
-                    if (status == 0) {
-                        tempStatus = 1;
-                    }
-
-                    $leoman.ajax("${contextPath}/admin/user/banned", {
-                        "userId": id,
-                        "status": tempStatus
-                    }, function (result) {
-                        if (result == 1) {
-                            $common.fn.notify("操作成功", "success");
-                            $("#delete").modal("hide");
-                            $user.v.dTable.ajax.reload();
-                        } else {
-                            $common.fn.notify("操作失败", "error");
+            departure: function (id){
+                $("#confirm").modal("show");
+                $('#showText').html('您确定要将该会员离职吗？');
+                $("#determine").off("click");
+                $("#determine").on("click",function(){
+                    $.ajax({
+                        "url": "${contextPath}/admin/user/departure",
+                        "data": {
+                            id:id
+                        },
+                        "dataType": "json",
+                        "type": "POST",
+                        success: function (result) {
+                            if (result==1) {
+                                alert("错误");
+                            }else if (result==2) {
+                                alert("所选员工不是一般员工");
+                            }else {
+                                $admin.v.dTable.ajax.reload(null,false);
+                            }
+                            $("#confirm").modal("hide");
                         }
                     });
-                });
+                })
             },
-            "give": function (id) {
-                if (id != null) {
-                    $("#infoModal").modal("show");
-                    $('#num').val(0);
-                    $user.v.userId = id;
+            add: function (id) {
+                var params = "";
+                if (id != null && id != '') {
+                    params = "?id=" + id;
                 }
+                window.location.href = "${contextPath}/admin/user/add" + params;
             },
-            batchConfirm: function () {
-                /*if (!$('#infoForm').isValid()) {
-                 return false;
-                 }*/
-
-                $leoman.ajax("${contextPath}/admin/user/batchConfirm", {
-                    userId: $user.v.userId,
-                    num: $('#num').val(),
-                }, function (result) {
-                    if (result > 0) {
-                        $common.notify("操作成功", "success");
-                        $("#infoModal").modal("hide");
-                        $user.v.dTable.ajax.reload();
-                    } else {
-                        $common.notify("操作失败", "error");
-                    }
-                });
+            detail: function (id) {
+                var params = "";
+                if (id != null && id != '') {
+                    params = "?id=" + id;
+                }
+                window.location.href = "${contextPath}/admin/user/detail" + params;
             },
-            "setCreator": function (id, status) {
-
-                $("#creator").modal("show");
-                $('#confirmSubs').click(function () {
-                    var tempStatus = 0;
-                    if (status == 0) {
-                        tempStatus = 1;
-                    }
-
-                    $leoman.ajax("${contextPath}/admin/user/setCreator", {
-                        "userId": id,
-                        "status": tempStatus
-                    }, function (result) {
-                        if (result == 1) {
-                            $common.fn.notify("操作成功", "success");
-                            $("#creator").modal("hide");
-                            $user.v.dTable.ajax.reload(null, false);
-                        } else {
-                            $common.fn.notify("操作失败", "error");
-                        }
-                    });
-                });
-            },
-            batchDelete: function () {
+            del: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
                 var ids = checkBox.getInputId();
-                $.ajax({
-                    url : "${contextPath}/admin/user/batchSet",
-                    data : {
-                        "ids" : JSON.stringify(ids)
-                    },
-                    type : "post",
-                    dataType : "json",
-                    success : function(result) {
-                        if(result == 1) {
-                            $common.fn.notify("操作成功", "success");
-                            $user.v.dTable.ajax.reload();
-                            return;
-                        } else {
-                            $common.fn.notify("操作失败", "error");
+                $("#confirm").modal("show");
+                $('#showText').html('您确定要彻底删除所选的会员吗？');
+                $("#determine").off("click");
+                $("#determine").on("click",function(){
+                    $.ajax({
+                        "url": "${contextPath}/admin/user/del",
+                        "data": {
+                            id:id,
+                            ids:JSON.stringify(ids)
+                        },
+                        "dataType": "json",
+                        "type": "POST",
+                        success: function (result) {
+                            if (result==1) {
+                                alert("删除错误");
+                            }else {
+                                $("#deleteBatch").css('display','none');
+                                $admin.v.dTable.ajax.reload(null,false);
+                            }
+                            $("#confirm").modal("hide");
                         }
-                    }
-                });
+                    });
+                })
             },
             responseComplete: function (result, action) {
                 if (result.status == "0") {
                     if (action) {
-                        $user.v.dTable.ajax.reload(null, false);
+                        $admin.v.dTable.ajax.reload(null, false);
                     } else {
-                        $user.v.dTable.ajax.reload();
+                        $admin.v.dTable.ajax.reload();
                     }
                     $leoman.notify(result.msg, "success");
                 } else {
@@ -387,23 +271,8 @@
         }
     }
     $(function () {
-        $user.fn.init();
+        $admin.fn.init();
     })
-</script>
-<script>
-    $('.form_datetime').datetimepicker({
-        language: 'zh-CN',
-        weekStart: 1,
-        todayBtn: 1,
-        autoclose: 1,
-        todayHighlight: 1,
-        startView: 2,
-        minView: "2",
-        forceParse: 0,
-        showMeridian: 1,
-        format: 'yyyy-mm-dd'
-    });
 </script>
 </body>
 </html>
-

@@ -50,7 +50,7 @@
                                 <div class="form-group">
                                     <label for="password" class="col-sm-1 control-label">确认密码</label>
                                     <div class="col-sm-6">
-                                        <input type="password" id="password2" name="password2" class="form-control" required equalTo="#password" required minlength="6"/>
+                                        <input type="password" id="password2" name="password2" class="form-control" required equalTo="#password" minlength="6"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -123,7 +123,8 @@
             init: function () {
 
                 var role = $("#role").val();
-                if(role!=null){
+                if(role!=null && role!=""){
+                    $("#roleId").attr("disabled",true);
                     $("#roleId option").each(function(){
                         if($(this).val() == role){
                             $(this).attr("selected",true)
@@ -131,7 +132,8 @@
                     })
                 }
                 var enterprise = $("#enterprise").val();
-                if(enterprise!=null){
+                if(enterprise!=null && enterprise!=""){
+                    $("#enterpriseId").attr("disabled",true);
                     $("#enterpriseId option").each(function(){
                         if($(this).val() == enterprise){
                             $(this).attr("selected",true)

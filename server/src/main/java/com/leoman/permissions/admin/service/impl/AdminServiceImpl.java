@@ -11,6 +11,8 @@ import com.leoman.permissions.adminrole.service.AdminRoleService;
 import com.leoman.permissions.role.service.RoleService;
 import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
+import com.leoman.user.entity.UserInfo;
+import com.leoman.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -37,6 +39,9 @@ public class AdminServiceImpl extends GenericManagerImpl<Admin, AdminDao> implem
 
     @Autowired
     private AdminRoleService adminRoleService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private EnterpriseService enterpriseService;
@@ -75,16 +80,18 @@ public class AdminServiceImpl extends GenericManagerImpl<Admin, AdminDao> implem
     public Result save(Admin admin, Long enterpriseId, Long roleId) {
         admin.setLastLoginDate(System.currentTimeMillis());
         AdminRole adminRole = new AdminRole();
+        UserInfo userInfo = new UserInfo();
         try {
             admin.setPassword(MD5Util.MD5Encode(admin.getPassword(),"UTF-8"));
 
-            if(roleId==12){
+            if(enterpriseId!=null){
                 Enterprise enterprise = enterpriseService.queryByPK(enterpriseId);
                 admin.setEnterprise(enterprise);
             }
 
             save(admin);
 
+            //关联角色
             adminRole.setAdminId(admin.getId());
             adminRole.setRoleId(roleId);
             List<AdminRole> adminRoles = adminRoleService.queryByProperty("adminId",admin.getId());
@@ -94,6 +101,26 @@ public class AdminServiceImpl extends GenericManagerImpl<Admin, AdminDao> implem
                 }
             }
             adminRoleService.save(adminRole);
+
+            //新增一条企业管理员信息
+            if(enterpriseId!=null){
+                List<UserInfo> userInfos = userService.queryByProperty("userId",admin.getId());
+                if(!userInfos.isEmpty() && userInfos.size()>0){
+                    UserInfo _userInfo = userInfos.get(0);
+                    _userInfo.setMobile(admin.getMobile());
+                    _userInfo.setPassword(admin.getPassword());
+                    _userInfo.setEnterprise(admin.getEnterprise());
+                    userService.save(_userInfo);
+                }else {
+                    userInfo.setUserId(admin.getId());
+                    userInfo.setMobile(admin.getMobile());
+                    userInfo.setPassword(admin.getPassword());
+                    userInfo.setEnterprise(admin.getEnterprise());
+                    userInfo.setType(0);
+                    userService.save(userInfo);
+                }
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();

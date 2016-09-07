@@ -1,182 +1,148 @@
-//package com.leoman.user.controller;
-//
-//import com.leoman.address.entity.Address;
-//import com.leoman.address.service.AddressService;
-//import com.leoman.common.controller.common.GenericEntityController;
-//import com.leoman.common.factory.DataTableFactory;
-//import com.leoman.creator.entity.Creator;
-//import com.leoman.creator.service.CreatorService;
-//import com.leoman.exception.GeneralExceptionHandler;
-//import com.leoman.user.entity.UserInfo;
-//import com.leoman.user.service.UserService;
-//import com.leoman.user.service.impl.UserServiceImpl;
-//import com.leoman.utils.JsonUtil;
-//import com.leoman.utils.WebUtil;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.data.domain.Page;
-//import org.springframework.stereotype.Controller;
-//import org.springframework.ui.Model;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestMethod;
-//import org.springframework.web.bind.annotation.ResponseBody;
-//
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
-//import java.util.HashMap;
-//import java.util.List;
-//import java.util.Map;
-//
-///**
-// * Created by Administrator on 2016/6/14 0014.
-// */
-//@Controller
-//@RequestMapping(value = "admin/user")
-//public class UserController extends GenericEntityController<UserInfo, UserInfo, UserServiceImpl> {
-//
-//    @Autowired
-//    private UserService userService;
-//
-//    @Autowired
-//    private AddressService addressService;
-//
-//    @Autowired
-//    private CreatorService creatorService;
-//
-//    /**
-//     * 列表页面
-//     *
-//     * @return
-//     */
-//    @RequestMapping(value = "/index")
-//    public String index() {
-//        return "user/list";
-//    }
-//
-//    /**
-//     * 查询列表
-//     *
-//     */
-//    @RequestMapping(value = "/list")
-//    public void list(HttpServletRequest request,
-//                     HttpServletResponse response,
-//                     String mobile,
-//                     String nickname,
-//                     Integer gender,
-//                     Integer status,
-//                     Integer draw,
-//                     Integer start,
-//                     Integer length) {
-//        try {
-//            int pageNum = getPageNum(start, length);
-//
-//            Page<UserInfo> page = userService.page(mobile, nickname, gender, status, 0, pageNum, length);
-//
-//            Map<String, Object> result = DataTableFactory.fitting(draw, page);
-//            WebUtil.print(response, result);
-//        } catch (Exception e) {
-//            GeneralExceptionHandler.log(e);
-//            WebUtil.print(response, emptyData);
+package com.leoman.user.controller;
+
+import com.leoman.common.controller.common.GenericEntityController;
+import com.leoman.common.core.Result;
+import com.leoman.common.factory.DataTableFactory;
+import com.leoman.common.service.Query;
+import com.leoman.pay.util.MD5Util;
+import com.leoman.system.enterprise.entity.Enterprise;
+import com.leoman.system.enterprise.service.EnterpriseService;
+import com.leoman.user.entity.UserInfo;
+import com.leoman.user.entity.UserLogin;
+import com.leoman.user.service.UserLoginService;
+import com.leoman.user.service.UserService;
+import com.leoman.user.service.impl.UserServiceImpl;
+import com.leoman.utils.JsonUtil;
+import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
+
+/**
+ * 会员
+ * Created by 史龙 on 2016/6/14 0014.
+ */
+@Controller
+@RequestMapping(value = "admin/user")
+public class UserController extends GenericEntityController<UserInfo, UserInfo, UserServiceImpl> {
+
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private EnterpriseService enterpriseService;
+
+    @RequestMapping(value = "/index")
+    public String index(Model model){
+        model.addAttribute("enterprise",enterpriseService.queryAll());
+        return "user/list";
+    }
+
+    /**
+     * 列表
+     * @param draw
+     * @param start
+     * @param length
+     * @return
+     */
+    @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> list(Integer draw, Integer start, Integer length,UserInfo userInfo,Long enterpriseId) {
+        int pagenum = getPageNum(start, length);
+        Query query = Query.forClass(UserInfo.class, userService);
+        query.setPagenum(pagenum);
+        query.setPagesize(length);
+        query.like("mobile",userInfo.getMobile());
+        query.eq("enterprise.id",enterpriseId);
+        query.eq("type",userInfo.getType());
+        Page<UserInfo> page = userService.queryPage(query);
+        return DataTableFactory.fitting(draw, page);
+    }
+
+    /**
+     * 跳转新增页面
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/add")
+    public String add(Long id, Model model){
+//        if(id != null){
+//            model.addAttribute("user",userService.queryByPK(id));
 //        }
-//    }
-//
-//    /**
-//     * 封禁
-//     *
-//     * @param response
-//     * @param userId
-//     * @return
-//     */
-//    @RequestMapping(value = "/banned")
-//    @ResponseBody
-//    public Integer banned(HttpServletResponse response, Long userId, Integer status) {
-//
-//        UserInfo userInfo = userService.queryByPK(userId);
-//        userInfo.setStatus(status);
-//        userService.update(userInfo);
-//
-//        return 1;
-//    }
-//
-//    /**
-//     * 设置为主创
-//     *
-//     * @param response
-//     * @param userId
-//     * @return
-//     */
-//    @RequestMapping(value = "/setCreator")
-//    @ResponseBody
-//    public Integer setCreator(HttpServletResponse response, Long userId, Integer status) {
-//
-//        UserInfo userInfo = userService.queryByPK(userId);
-//        userInfo.setIsCreator(status);
-//
-//        Creator creator = new Creator();
-//        creator.setStatus(0);
-//        creatorService.save(creator);
-//        userInfo.setCreator(creator);
-//
-//        userService.save(userInfo);
-//        userService.update(userInfo);
-//
-//        return 1;
-//    }
-//
-//    /**
-//     * 送馒头确认
-//     *
-//     */
-//    @RequestMapping(value = "/batchConfirm")
-//    @ResponseBody
-//    public Integer batchConfirm(Long userId, Long num) {
-//
-//        UserInfo userInfo = userService.queryByPK(userId);
-//        userInfo.setCoin(userInfo.getCoin() + num);
-//        userService.update(userInfo);
-//
-//        return 1;
-//    }
-//
-//    /**
-//     * 详情
-//     *
-//     * @param userId
-//     * @param model
-//     */
-//    @RequestMapping(value = "/detail")
-//    public String detail(Long userId, Model model) {
-//
-//        UserInfo userInfo = userService.queryByPK(userId);
-//
-//        Map<String, Object> map = new HashMap<String, Object>();
-//        map.put("id", userInfo.getId());
-//        map.put("path", userInfo.getAvater());
-//
-//        List<Address> addressList = addressService.findByUserId(userInfo.getUserLogin().getId());
-//
-//        model.addAttribute("userInfo", userInfo);
-//        model.addAttribute("addressList", addressList);
-//
-//        return "user/detail";
-//    }
-//
-//    @RequestMapping(value = "/batchSet", method = RequestMethod.POST)
-//    @ResponseBody
-//    public Integer batchSet(String ids) {
-//        Long[] arrayId = JsonUtil.json2Obj(ids, Long[].class);
-//        for (Long id : arrayId) {
-//            UserInfo userInfo = userService.queryByPK(id);
-//            userInfo.setIsCreator(1);
-//
-//            Creator creator = new Creator();
-//            creator.setStatus(0);
-//            creatorService.save(creator);
-//            userInfo.setCreator(creator);
-//
-//            userService.save(userInfo);
-//            userService.update(userInfo);
-//        }
-//        return 1;
-//    }
-//
-//}
+        model.addAttribute("enterprise",enterpriseService.queryAll());
+        return "user/add";
+    }
+
+
+    /**
+     * 保存
+     * @param userInfo
+     * @param id
+     * @param enterpriseId
+     * @return
+     */
+    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @ResponseBody
+    public Result save(UserInfo userInfo, Long id, @RequestParam(value = "enterpriseId",required = false) Long enterpriseId) {
+        return userService.save(userInfo,id,enterpriseId);
+    }
+
+    /**
+     * 详情页面
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/detail")
+    public String detail(Long id,Model model){
+        UserInfo userInfo = userService.queryByPK(id);
+        model.addAttribute("userInfo",userInfo);
+        return "user/detail";
+    }
+
+    /**
+     * 删除
+     * @param id
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/del", method = RequestMethod.POST)
+    @ResponseBody
+    public Integer del(Long id,String ids) {
+        return userService.del(id,ids);
+    }
+
+    @RequestMapping(value = "/departure",method = RequestMethod.POST)
+    @ResponseBody
+    public Integer departure(Long id){
+        if(id==null) return 1;
+
+        try{
+
+            UserInfo userInfo = userService.queryByPK(id);
+            if(userInfo.getType()==1){
+                userInfo.setType(2);
+                userInfo.setEnterprise(null);
+                userService.save(userInfo);
+            }else {
+                return 2;
+            }
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return 1;
+        }
+        return 0;
+
+    }
+
+
+
+}

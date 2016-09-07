@@ -1,5 +1,6 @@
 package com.leoman.common.interceptor;
 
+import com.leoman.common.log.service.LogService;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.common.log.entity.Log;
 import com.leoman.common.log.entity.LogEntity;
@@ -35,7 +36,7 @@ public class LogInterceptor extends HandlerInterceptorAdapter {
                     String message = log.message();
                     MessageFormat mf = new MessageFormat(message);
                     String result = mf.format(new Object[]{admin.getUsername()});
-                    LogServiceImpl logService = (LogServiceImpl) BeanUtils.getBean("logService");
+                    LogService logService = (LogService) BeanUtils.getBean("logService");
                     LogEntity logEntity = new LogEntity();
                     logEntity.setMessage(result);
                     logEntity.setUserId(admin.getId());
