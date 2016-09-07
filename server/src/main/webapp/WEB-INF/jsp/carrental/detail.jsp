@@ -109,6 +109,22 @@
                                         <input type="text" id="mobile" name="mobile" value="${carRental.order.mobile}" class="form-control" disabled/>
                                     </div>
                                 </div>
+
+                                <c:if test="${carRental.order.status ne 0}">
+                                    <header class="panel-heading">
+                                        车辆信息
+                                    </header>
+                                    <div style="margin-top: 15px"></div>
+                                    <div style="border: solid;border-width: 4px;border-color: #00cfbe">
+                                        <div class="form-group" >
+                                            <label for="userName" class="col-sm-1 control-label">用车联系人</label>
+                                            <div class="col-sm-6">
+                                                <input type="text" id="2" name="2" value="" class="form-control" disabled/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </c:if>
+
                                 <%--</div>--%>
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label"></label>

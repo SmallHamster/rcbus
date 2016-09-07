@@ -1,5 +1,7 @@
 package com.leoman.carrental.controller;
 
+import com.leoman.bussend.entity.BusSend;
+import com.leoman.bussend.service.BusSendService;
 import com.leoman.carrental.entity.CarRental;
 import com.leoman.carrental.service.CarRentalService;
 import com.leoman.carrental.service.impl.CarRentalServiceImpl;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -26,6 +29,8 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
 
     @Autowired
     private CarRentalService carRentalService;
+    @Autowired
+    private BusSendService busSendService;
 
     @RequestMapping(value = "/index")
     public String index(){
@@ -53,6 +58,8 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
     @RequestMapping(value = "/detail")
     public String detail(Long id, Model model){
         model.addAttribute("carRental",carRentalService.queryByPK(id));
+        List<BusSend> list =  busSendService.findRental(id);
+        model.addAttribute("busSend",list);
         return "carrental/detail";
     }
 
