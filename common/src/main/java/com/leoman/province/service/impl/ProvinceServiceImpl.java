@@ -39,7 +39,7 @@ public class ProvinceServiceImpl extends GenericManagerImpl<Province, ProvinceDa
             provinceVo = new ProvinceVo();
             provinceVo.setId(province.getId());
             provinceVo.setName(province.getName());
-            provinceVo.setCityList(cityDao.findById(province.getId()));
+//            provinceVo.setCityList(cityDao.findById(province.getId()));
 
             list.add(provinceVo);
         }

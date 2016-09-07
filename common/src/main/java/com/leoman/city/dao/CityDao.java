@@ -11,6 +11,4 @@ import java.util.List;
  */
 public interface CityDao extends IBaseJpaRepository<City> {
 
-    @Query("select a from City a where a.province.id = ?1 ")
-    public List<City> findById(Long provinceId);
 }

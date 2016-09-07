@@ -18,10 +18,6 @@ public class City {
     @Column(name = "name")
     private String name = "";
 
-    @ManyToOne
-    @JoinColumn(name = "provinceId")
-    private Province province;
-
     public Long getId() {
         return id;
     }
@@ -36,13 +32,5 @@ public class City {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public Province getProvince() {
-        return province;
-    }
-
-    public void setProvince(Province province) {
-        this.province = province;
     }
 }

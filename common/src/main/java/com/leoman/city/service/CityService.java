@@ -10,5 +10,4 @@ import java.util.List;
  */
 public interface CityService extends GenericManager<City>{
 
-    public List<City> findById(Long provinceId);
 }

@@ -18,8 +18,4 @@ public class CityServiceImpl  extends GenericManagerImpl<City, CityDao> implemen
     @Autowired
     private CityDao cityDao;
 
-    @Override
-    public List<City> findById(Long provinceId) {
-        return cityDao.findById(provinceId);
-    }
 }
