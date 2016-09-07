@@ -49,15 +49,8 @@
                                     </div>
                                     &nbsp;&nbsp;<button type="button" id="importBtn" class="btn btn-info">导入</button>
                                 </div>
-                                <div class="form-group">
-                                    <div>
-                                        <label class="col-sm-1 control-label">发车时间:</label>
-                                        <div class="col-sm-2">
-                                            <input type="text" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="">
-                                        </div>
-                                        <button type="button" onclick="$route.fn.addRow(this)" class="btn btn-primary"><i class='fa fa-plus-circle'></i></button>
-                                        <button type="button" onclick="$route.fn.removeRow(this)" class="btn btn-primary"><i class='fa fa-minus-circle'></i></button>
-                                    </div>
+                                <div class="form-group" id="timeDiv">
+
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label">车辆指派：</label>
@@ -129,16 +122,13 @@
     </div>
 
     <!-- 发车时间模板 -->
-    <div id="timeModel" style="display: none;">
-        <div>
-            <label class="col-sm-1 control-label">发车时间:</label>
-            <div class="col-sm-2">
-                <input type="text" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="">
-            </div>
-            <button type="button" onclick="$route.fn.save()" class="btn btn-primary"><i class='fa fa-plus-circle'></i></button>
-            <button type="button" onclick="$route.fn.save()" class="btn btn-primary"><i class='fa fa-minus-circle'></i></button>
+    <div id="timeModel" style="display: none;margin-bottom: 10px;">
+        <label class="col-sm-1 control-label">发车时间:</label>
+        <div class="col-sm-2">
+            <input type="text" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="">
         </div>
-        <br>
+        <button type="button" onclick="$route.fn.addRow(this)" class="btn btn-primary"><i class='fa fa-plus-circle'></i></button>
+        <button type="button" onclick="$route.fn.removeRow(this)" class="btn btn-primary"><i class='fa fa-minus-circle'></i></button>
     </div>
 
     <!-- main content end-->
@@ -210,7 +200,10 @@
                 });
             },
             timeInit : function(){
-
+                var model = $("#timeModel").clone().removeAttr("id");
+                model.find(".fa-minus-circle").parents("button").hide();
+                model.show();
+                $("#timeDiv").append(model);
             },
             back : function(){
                 window.location.href = "${contextPath}/admin/route/index";
@@ -219,16 +212,16 @@
 
             },
             addRow : function(obj){
-                var model = $("#timeModel").children().clone().removeAttr("id");
-                console.info(model);
+                var model = $("#timeModel").clone().removeAttr("id");
                 model.find("label").text("");
+                model.find(".fa-plus-circle").parents("button").hide();
+                model.show();
                 $(obj).parents(".form-group").append(model);
             },
             //保存
             save : function() {
                 var flag = true;
                 if(!$("#formId").valid()) return;
-
 
                 if(flag){
                     $("#formId").ajaxSubmit({

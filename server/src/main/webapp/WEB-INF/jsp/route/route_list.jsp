@@ -38,7 +38,7 @@
                 <div class="col-sm-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            车辆列表
+                            路线列表
                             <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
                                <button class="btn btn-info" type="button" onclick="$route.fn.delete();" id="deleteBatch" style="display: none">删除</button>
                             </span>
@@ -54,14 +54,9 @@
                                     <tr>
                                         <th><input type="checkbox" class="list-parent-check"
                                                    onclick="$leoman.checkAll(this);"/></th>
-                                        <th>车牌号</th>
-                                        <th>品牌</th>
-                                        <th>车型</th>
-                                        <th>座位数</th>
-                                        <th>司机姓名</th>
-                                        <th>司机联系电话</th>
-                                        <th>司机身份证号</th>
-                                        <th>司机性别</th>
+                                        <th>路线起始</th>
+                                        <th>所属企业</th>
+                                        <th>状态</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>

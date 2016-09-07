@@ -28,9 +28,6 @@ public class Route extends BaseEntity{
     @JoinColumn(name = "enterprise_id")
     private Enterprise enterprise;//所属企业
 
-    @Column(name = "is_sepecial")
-    private Integer isSepecial;//是否为专线：在这里特指永旺专线（1-是，0-否）
-
     @Column(name = "is_show")
     private Integer isShow;//是否显示（1-是，0-否）
 
@@ -68,14 +65,6 @@ public class Route extends BaseEntity{
 
     public void setEnterprise(Enterprise enterprise) {
         this.enterprise = enterprise;
-    }
-
-    public Integer getIsSepecial() {
-        return isSepecial;
-    }
-
-    public void setIsSepecial(Integer isSepecial) {
-        this.isSepecial = isSepecial;
     }
 
     public Integer getIsShow() {
