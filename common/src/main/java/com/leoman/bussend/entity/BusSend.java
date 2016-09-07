@@ -15,7 +15,7 @@ public class BusSend extends BaseEntity{
 
     //关联id
     @Column(name = "contact_id")
-    private Long contact_id;
+    private Long contactId;
 
     //巴士id
     @ManyToOne
@@ -26,12 +26,12 @@ public class BusSend extends BaseEntity{
     @Column(name = "type")
     private Integer type;
 
-    public Long getContact_id() {
-        return contact_id;
+    public Long getContactId() {
+        return contactId;
     }
 
-    public void setContact_id(Long contact_id) {
-        this.contact_id = contact_id;
+    public void setContactId(Long contactId) {
+        this.contactId = contactId;
     }
 
     public Bus getBus() {
