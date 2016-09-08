@@ -13,4 +13,6 @@ public interface RouteService extends GenericManager<Route> {
 
     public Page<Route> page(Integer pageNum, Integer pageSize);
 
+    public void saveRoute(Route route, String departTimes, String backTimes, String busIds);
+
 }

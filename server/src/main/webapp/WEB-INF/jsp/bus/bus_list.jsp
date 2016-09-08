@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>Dynamic Table</title>
+    <title>车辆列表</title>
     <%@ include file="../inc/new2/css.jsp" %>
 </head>
 <body class="sticky-header">
@@ -24,12 +24,16 @@
                     <section class="panel">
                         <div class="panel-body">
                             <div class="form-group col-sm-2">
-                                <input type="text" name="carNo" class="form-control" placeholder="车牌号">
+                                <input type="text" id="carNo" class="form-control" placeholder="车牌号">
                             </div>
                             <div class="form-group col-sm-2">
-                                <input type="text" name="brand" class="form-control" placeholder="品牌">
+                                <input type="text" id="modelNo" class="form-control" placeholder="车型">
                             </div>
-                            <button id="c_search" class="btn btn-info">搜索</button>
+                            <div class="form-group col-sm-2">
+                                <input type="text" id="driverName" class="form-control" placeholder="司机姓名">
+                            </div>
+                            <button id="c_search" class="btn btn-info"><i class="fa fa-search"></i> 搜索</button>
+                            <button id="c_clear" class="btn btn-info"><i class="fa fa-recycle"></i> 清空</button>
                         </div>
                     </section>
                 </div>
@@ -40,11 +44,12 @@
                         <header class="panel-heading">
                             车辆列表
                             <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
-                               <button class="btn btn-info" type="button" onclick="$bus.fn.delete();" id="deleteBatch" style="display: none">删除</button>
+                               <button class="btn btn-info" type="button" onclick="$bus.fn.delete();" id="deleteBatch" style="display: none">
+                                   <i class="fa fa-trash-o"></i> 删除</button>
                             </span>
                             <span class="tools pull-right">
-                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
-                               <button class="btn btn-info" type="button" onclick="$bus.fn.add();">新增车辆</button>
+                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i> 刷新</button>
+                               <button class="btn btn-info" type="button" onclick="$bus.fn.add();"><i class="fa fa-plus"></i> 新增车辆</button>
                             </span>
                         </header>
                         <div class="panel-body">
@@ -87,6 +92,9 @@
                 $bus.fn.dataTableInit();
                 $("#c_search").click(function () {
                     $bus.v.dTable.ajax.reload();
+                });
+                $("#c_clear").click(function () {
+                    $(this).parents(".panel-body").find("input,select").val("");
                 });
             },
             dataTableInit: function () {
@@ -137,15 +145,17 @@
                                         "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
 
                                 var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$bus.fn.delete(\'" + data + "\')\">" +
-                                        "<i class='fa fa-minus-circle'></i> 删除</button>";
+                                        "<i class='fa fa-trash-o'></i> 删除</button>";
 
                                 return detail + "&nbsp;" + edit + "&nbsp;"+ del;
                             }
                         }
                     ],
-                    /*"fnServerParams": function (aoData) {
-                        aoData.username = $("#username").val();
-                    }*/
+                    "fnServerParams": function (aoData) {
+                        aoData.carNo = $("#carNo").val();//车牌号
+                        aoData.modelNo = $("#modelNo").val();//车型
+                        aoData.driverName = $("#driverName").val();//车型
+                    }
                 });
             },
             detail: function (id) {
@@ -189,37 +199,6 @@
                     });
                 })
             },
-            /*openModal: function (busId) {
-                $("#busId").val(busId);
-                $('#my_multi_select1').multiSelect('refresh');
-                $.ajax({
-                    url: "${contextPath}/admin/admin/role/select",
-                    type: "POST",
-                    data: {
-                        "busId": busId
-                    },
-                    success: function (result) {
-                        var allRole = result.data.object.allRoles;
-                        var hasRole = result.data.object.hasRoels;
-
-                        console.log(hasRole);
-
-                        var allRoleArray = [];
-                        $.each(allRole, function (n, item) {
-                            var option = {
-                                value: item.id,
-                                text: item.name
-                            }
-                            allRoleArray.push(option);
-                        });
-                        $('#my_multi_select1').multiSelect('addOption', allRoleArray);
-                        $('#my_multi_select1').multiSelect('select', hasRole);
-                    }
-
-                });
-
-                $("#myModal").modal("show");
-            },*/
             responseComplete: function (result, action) {
                 if (result.status == "0") {
                     if (action) {

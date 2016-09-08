@@ -17,6 +17,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -40,7 +43,7 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
 
     /**
      * 获取列表
-     * @param username
+     * @param bus
      * @param draw
      * @param start
      * @param length
@@ -48,12 +51,14 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(String username, Integer draw, Integer start, Integer length) {
-        int pagenum = getPageNum(start, length);
+    public Map<String, Object> list(Bus bus, Integer draw, Integer start, Integer length) {
+        int pageNum = getPageNum(start, length);
         Query query = Query.forClass(Bus.class, busService);
-        query.setPagenum(pagenum);
+        query.setPagenum(pageNum);
         query.setPagesize(length);
-        //query.like("username", username);
+        query.like("carNo",bus.getCarNo());
+        query.like("modelNo",bus.getModelNo());
+        query.like("driverName",bus.getDriverName());
         Page<Bus> page = busService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
     }
@@ -126,6 +131,47 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
             Result.failure();
         }
         return Result.success();
+    }
+
+    /**
+     * 获取弹出框列表
+     * @param bus
+     * @param busIds
+     * @param inOrNot
+     * @param draw
+     * @param start
+     * @param length
+     * @return
+     */
+    @RequestMapping(value = "/getSelect", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> getSelect(Bus bus,String busIds,String inOrNot, Integer draw, Integer start, Integer length) {
+        int pageNum = getPageNum(start, length);
+        Query query = Query.forClass(Bus.class, busService);
+        query.setPagenum(pageNum);
+        query.setPagesize(length);
+        query.like("carNo",bus.getCarNo());
+        query.like("modelNo",bus.getModelNo());
+        query.like("driverName",bus.getDriverName());
+
+        List list = new ArrayList();
+        if(!StringUtils.isEmpty(busIds)){
+            String [] busIdArr = busIds.split("\\,");
+            for (String busId:busIdArr) {
+                Long id = Long.valueOf(busId);
+                list.add(id);
+            }
+            if("not".endsWith(inOrNot)){
+                query.notIn("id", list);
+            }
+        }
+
+        if("in".endsWith(inOrNot)){
+            list.add(-1l);
+            query.in("id", list);
+        }
+        Page<Bus> page = busService.queryPage(query);
+        return DataTableFactory.fitting(draw, page);
     }
 
 }

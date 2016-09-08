@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>Form Layouts</title>
+    <title>新增车辆</title>
     <%@ include file="../inc/new2/css.jsp" %>
 </head>
 
@@ -27,18 +27,14 @@
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            添加班车
+                            新增车辆
                         </header>
                         <div class="panel-body">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post"  enctype="multipart/form-data">
                                 <input id="id" name="id" type="hidden" value="${bus.id}">
-                                <input type="hidden" id="addImageIds" name="tempAddImageIds">
-                                <input type="hidden" id="delImageIds" name="tempDelImageIds">
-                                <span id="tempAddImageIds" style="display: none"></span>
-                                <span id="tempDelImageIds" style="display: none"></span>
 
                                 <div class="form-group">
-                                    <label for="modelNo" class="col-sm-1 control-label" >车型：</label>
+                                    <label for="modelNo" class="col-sm-1 control-label" ><span style="color: red;">* </span>车型：</label>
                                     <div class="col-sm-6">
                                         <input type="text" id="modelNo" name="modelNo" value="${bus.modelNo}" class="form-control" required maxlength="20"/>
                                     </div>
