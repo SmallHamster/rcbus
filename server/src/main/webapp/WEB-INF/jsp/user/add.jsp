@@ -47,7 +47,7 @@
                                 <div class="form-group">
                                     <label for="password" class="col-sm-1 control-label">确认密码</label>
                                     <div class="col-sm-6">
-                                        <input type="password" id="password2" name="password2" class="form-control" required equalTo="#password" required minlength="6"/>
+                                        <input type="password" id="password2" name="password2" class="form-control" required equalTo="#password" minlength="6"/>
                                     </div>
                                 </div>
                                 <div class="form-group">

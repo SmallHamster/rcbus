@@ -187,7 +187,7 @@
                                 var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$carRental.fn.detail(\'" + data + "\')\">" +
                                         "<i class='fa fa-eye'></i> 查看</button>";
 
-                                var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$carRental.fn.add(\'" + data + "\')\">" +
+                                var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$carRental.fn.edit(\'" + data + "\',\'" + row.order.status + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
 
                                 var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$carRental.fn.del(\'" + data + "\')\">" +
@@ -207,12 +207,12 @@
                     }
                 });
             },
-            add: function (id) {
+            edit: function (id,status) {
                 var params = "";
                 if (id != null && id != '') {
-                    params = "?id=" + id;
+                    params = "?id=" + id +"&status="+status;
                 }
-                window.location.href = "${contextPath}/admin/carRental/add" + params;
+                window.location.href = "${contextPath}/admin/carRental/edit" + params;
             },
             detail: function (id) {
                 var params = "";

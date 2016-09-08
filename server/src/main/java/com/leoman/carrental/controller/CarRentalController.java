@@ -1,10 +1,14 @@
 package com.leoman.carrental.controller;
 
+import com.leoman.bus.entity.CarType;
 import com.leoman.bussend.entity.BusSend;
 import com.leoman.bussend.service.BusSendService;
 import com.leoman.carrental.entity.CarRental;
+import com.leoman.carrental.service.CarRentalOfferService;
 import com.leoman.carrental.service.CarRentalService;
 import com.leoman.carrental.service.impl.CarRentalServiceImpl;
+import com.leoman.city.entity.City;
+import com.leoman.city.service.CityService;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
@@ -31,6 +35,12 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
     private CarRentalService carRentalService;
     @Autowired
     private BusSendService busSendService;
+    @Autowired
+    private CarRentalOfferService carRentalOfferService;
+    @Autowired
+    private CityService cityService;
+    @Autowired
+    private CarType carType;
 
     @RequestMapping(value = "/index")
     public String index(){
@@ -57,10 +67,27 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
 
     @RequestMapping(value = "/detail")
     public String detail(Long id, Model model){
+        //租车
         model.addAttribute("carRental",carRentalService.queryByPK(id));
-        List<BusSend> list =  busSendService.findRental(id);
-        model.addAttribute("busSend",list);
+        //巴士
+        model.addAttribute("busSend",busSendService.findRental(id));
+        //报价
+        model.addAttribute("carRentalOffer",carRentalOfferService.queryByProperty("rentalId",id));
+
         return "carrental/detail";
+    }
+
+    @RequestMapping(value = "/edit")
+    private String edit(Long id, Model model,Integer status){
+        //租车
+        model.addAttribute("carRental",carRentalService.queryByPK(id));
+        model.addAttribute("city",cityService.queryAll());
+
+        if(status==0){
+            return "carrental/edit1";
+        }else{
+            return "carrental/edit2";
+        }
     }
 
 }
