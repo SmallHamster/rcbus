@@ -1,6 +1,7 @@
 package com.leoman.carrental.controller;
 
 import com.leoman.bus.entity.CarType;
+import com.leoman.bus.service.CarTypeService;
 import com.leoman.bussend.entity.BusSend;
 import com.leoman.bussend.service.BusSendService;
 import com.leoman.carrental.entity.CarRental;
@@ -40,7 +41,7 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
     @Autowired
     private CityService cityService;
     @Autowired
-    private CarType carType;
+    private CarTypeService carTypeService;
 
     @RequestMapping(value = "/index")
     public String index(){
@@ -82,6 +83,7 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
         //租车
         model.addAttribute("carRental",carRentalService.queryByPK(id));
         model.addAttribute("city",cityService.queryAll());
+        model.addAttribute("carType",carTypeService.queryAll());
 
         if(status==0){
             return "carrental/edit1";
