@@ -79,5 +79,13 @@
 <script src="${contextPath }/html/datepicker/js/bootstrap-datetimepicker.js"></script>
 <script src="${contextPath }/html/datepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
 
+<!-- select -->
+<script src="${contextPath}/html/js/bootstrap-select-1.11.0/dist/js/bootstrap-select.min.js"></script>
+<%--<script src="${contextPath}/html/js/bootstrap-select-1.11.0/dist/js/i18n/defaults-*.min.js"></script>--%>
+
+<!--icheck -->
+<script src="${contextPath}/static/html/js/iCheck/jquery.icheck.js"></script>
+<script src="${contextPath}/static/html/js/icheck-init.js"></script>
+
 
 

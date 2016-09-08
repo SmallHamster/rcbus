@@ -1,6 +1,7 @@
 package com.leoman.carrental.controller;
 
 import com.leoman.bus.entity.CarType;
+import com.leoman.bus.service.CarTypeService;
 import com.leoman.bussend.entity.BusSend;
 import com.leoman.bussend.service.BusSendService;
 import com.leoman.carrental.entity.CarRental;
