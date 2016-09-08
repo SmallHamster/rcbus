@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>Form Layouts</title>
+    <title>车辆信息</title>
     <%@ include file="../inc/new2/css.jsp" %>
 </head>
 

@@ -12,7 +12,7 @@ import javax.persistence.*;
  */
 @Entity
 @Table(name = "t_route_time")
-public class RoutetTime extends BaseEntity{
+public class RouteTime extends BaseEntity{
 
     @Column(name = "depart_time")
     private String depart_time;//出发时间

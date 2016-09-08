@@ -88,9 +88,9 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Result save(Route route) {
+    public Result save(Route route, String departTimes, String backTimes, String busIds) {
         try {
-            routeService.save(route);
+            routeService.saveRoute(route,departTimes,backTimes,busIds);
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();
@@ -120,6 +120,27 @@ public class RouteController extends GenericEntityController<Route, Route, Route
     @RequestMapping(value = "/delete", method = RequestMethod.POST)
     @ResponseBody
     public Result delete(String ids) {
+        try {
+            String [] idArr = ids.split("\\,");
+            for (String id:idArr) {
+                Integer routeId = Integer.valueOf(id);
+                routeService.deleteByPK(routeId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Result.failure();
+        }
+        return Result.success();
+    }
+
+    /**
+     * 派遣
+     * @param ids
+     * @return
+     */
+    @RequestMapping(value = "/dispatch", method = RequestMethod.POST)
+    @ResponseBody
+    public Result dispatch(String ids) {
         try {
             String [] idArr = ids.split("\\,");
             for (String id:idArr) {

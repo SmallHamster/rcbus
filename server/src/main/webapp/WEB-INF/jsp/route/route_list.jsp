@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>Dynamic Table</title>
+    <title>路线列表</title>
     <%@ include file="../inc/new2/css.jsp" %>
 </head>
 <body class="sticky-header">
@@ -29,7 +29,8 @@
                             <div class="form-group col-sm-2">
                                 <input type="text" name="brand" class="form-control" placeholder="品牌">
                             </div>
-                            <button id="c_search" class="btn btn-info">搜索</button>
+                            <button id="c_search" class="btn btn-info"><i class="fa fa-search"></i> 搜索</button>
+                            <button id="c_clear" class="btn btn-info"><i class="fa fa-recycle"></i> 清空</button>
                         </div>
                     </section>
                 </div>
@@ -43,8 +44,8 @@
                                <button class="btn btn-info" type="button" onclick="$route.fn.delete();" id="deleteBatch" style="display: none">删除</button>
                             </span>
                             <span class="tools pull-right">
-                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
-                               <button class="btn btn-info" type="button" onclick="$route.fn.add();">新增路线</button>
+                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i> 刷新</button>
+                                <button class="btn btn-info" type="button" onclick="$route.fn.add();"><i class="fa fa-plus"></i> 新增路线</button>
                             </span>
                         </header>
                         <div class="panel-body">

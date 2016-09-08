@@ -33,7 +33,7 @@ public class Route extends BaseEntity{
 
     @OneToMany
     @JoinColumn(name = "route_id")
-    private List<RoutetTime> times;//该路线所有的时间
+    private List<RouteTime> times;//该路线所有的时间
 
     public String getStartStation() {
         return startStation;
@@ -75,11 +75,11 @@ public class Route extends BaseEntity{
         this.isShow = isShow;
     }
 
-    public List<RoutetTime> getTimes() {
+    public List<RouteTime> getTimes() {
         return times;
     }
 
-    public void setTimes(List<RoutetTime> times) {
+    public void setTimes(List<RouteTime> times) {
         this.times = times;
     }
 }
