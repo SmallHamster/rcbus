@@ -82,8 +82,14 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
         //巴士
         model.addAttribute("busSend",busSendService.findBus(id,2));
         //报价
-        model.addAttribute("carRentalOffer",carRentalOfferService.queryByProperty("rentalId",id));
-
+        List<CarRentalOffer> carRentalOffer = carRentalOfferService.queryByProperty("rentalId",id);
+        model.addAttribute("carRentalOffer",carRentalOffer);
+        //金额
+        Double totalAmount = 0.0;
+        for(CarRentalOffer c : carRentalOffer){
+            totalAmount += c.getAmount();
+        }
+        model.addAttribute("totalAmount",totalAmount);
         return "carrental/detail";
     }
 
@@ -96,9 +102,16 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
 
         model.addAttribute("carType",carTypeService.queryAll());
         //报价
-        model.addAttribute("carRentalOffer",carRentalOfferService.queryByProperty("rentalId",id));
+        List<CarRentalOffer> carRentalOffer = carRentalOfferService.queryByProperty("rentalId",id);
+        model.addAttribute("carRentalOffer",carRentalOffer);
         //巴士
         model.addAttribute("busSend",busSendService.findBus(id,2));
+        //金额
+        Double totalAmount = 0.0;
+        for(CarRentalOffer c : carRentalOffer){
+            totalAmount += c.getAmount();
+        }
+        model.addAttribute("totalAmount",totalAmount);
         if(status==0){
             return "carrental/edit1";
         }else{
@@ -147,12 +160,48 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
 
     }
 
+    /**
+     * 重新派车
+     * @param id
+     * @param dispatch
+     * @return
+     */
     @RequestMapping(value = "/saveDispatch")
     @ResponseBody
     public Integer saveDispatch(Long id,String dispatch){
 
-        return 1;
+        return carRentalService.saveDispatch(id,dispatch);
 
+    }
+
+    /**
+     * 删除
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/del", method = RequestMethod.POST)
+    @ResponseBody
+    public Integer del(Long id) {
+        return carRentalService.del(id);
+    }
+
+
+    @RequestMapping(value = "/history/index")
+    public String historyIndex(){
+//        return "carrental/history/list";
+        return "";
+    }
+
+
+    @RequestMapping(value = "/history/list")
+    @ResponseBody
+    public Map<String, Object> historyList(Integer draw, Integer start, Integer length, CarRental carRental) {
+        int pagenum = getPageNum(start, length);
+        Query query = Query.forClass(CarRental.class, carRentalService);
+        query.setPagenum(pagenum);
+        query.setPagesize(length);
+        Page<CarRental> page = carRentalService.queryPage(query);
+        return DataTableFactory.fitting(draw, page);
     }
 
 }

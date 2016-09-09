@@ -1,5 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="../inc/taglibs.jsp" %>
+<%@ include file="../../inc/taglibs.jsp" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,14 +9,14 @@
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
     <title>Dynamic Table</title>
-    <%@ include file="../inc/new2/css.jsp" %>
+    <%@ include file="../../inc/new2/css.jsp" %>
 </head>
 <body class="sticky-header">
 <section>
-    <%@ include file="../inc/new2/menu.jsp" %>
+    <%@ include file="../../inc/new2/menu.jsp" %>
     <!-- main content start-->
     <div class="main-content">
-        <%@ include file="../inc/new2/header.jsp" %>
+        <%@ include file="../../inc/new2/header.jsp" %>
         <!--body wrapper start-->
         <div class="wrapper">
             <div class="row">
@@ -56,9 +56,6 @@
                     <section class="panel">
                         <header class="panel-heading">
                             会员列表
-                            <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
-                               <button class="btn btn-info" type="button" onclick="$carRental.fn.del();" id="deleteBatch" style="display: none">删除</button>
-                            </span>
                             <span class="tools pull-right">
                                <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
                             </span>
@@ -71,13 +68,15 @@
                                         <th><input type="checkbox" class="list-parent-check"
                                                    onclick="$leoman.checkAll(this);"/></th>
                                         <th>订单号</th>
-                                        <th>客人姓名</th>
-                                        <th>联系电话</th>
-                                        <th>出行时间</th>
-                                        <th>出发城市</th>
-                                        <th>包车方式</th>
-                                        <th>订单状态</th>
-                                        <th>操作</th>
+                                        <th>路线起始</th>
+                                        <th>客人名称</th>
+                                        <th>发车时间</th>
+                                        <th>车牌号码</th>
+                                        <th>司机名称</th>
+                                        <th>司机服务</th>
+                                        <th>乘车环境</th>
+                                        <th>安全驾驶</th>
+                                        <th>准时到达</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -89,8 +88,8 @@
         </div>
     </div>
 </section>
-<%@ include file="../inc/new2/foot.jsp" %>
-<%@ include file="../inc/new2/confirm.jsp" %>
+<%@ include file="../../inc/new2/foot.jsp" %>
+<%@ include file="../../inc/new2/confirm.jsp" %>
 <script>
     $carRental = {
         v: {
@@ -123,19 +122,16 @@
                             }
                         },
                         {
-                            "data": "order.orderNo",
+                            "data": "",
+                            "render": function (data, type, row, meta) {
+                                return row.startPoint+"————>"+row.endPoint
+                            },
                             "sDefaultContent" : ""
 
                         },
                         {
                             "data": "order.userName",
                             "sDefaultContent" : ""
-
-                        },
-                        {
-                            "data": "order.mobile",
-                            "sDefaultContent" : ""
-
                         },
                         {
                             "data": "startDate",
@@ -179,43 +175,6 @@
                                 }
                             },
                             "sDefaultContent" : ""
-                        },
-
-                        {
-                            "data": "id",
-                            "render": function (data, type, row, meta) {
-                                var timestamp=new Date().getTime();  //获取当前时间
-                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$carRental.fn.detail(\'" + data + "\')\">" +
-                                        "<i class='fa fa-eye'></i> 查看</button>";
-
-                                var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$carRental.fn.edit(\'" + data + "\',\'" + row.order.status + "\')\">" +
-                                        "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
-
-                                var again = "<button title='重新派车' class='btn btn-primary btn-circle edit' onclick=\"$carRental.fn.edit(\'" + data + "\',\'" + row.order.status + "\')\">" +
-                                        "<i class='fa fa-pencil-square-o'></i> 重新派车</button>";
-
-                                var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$carRental.fn.del(\'" + data + "\')\">" +
-                                        "<i class='fa fa-pencil-square-o'></i> 删除</button>";
-                                var departure = "<button title='离职' class='btn btn-primary btn-circle edit' onclick=\"$carRental.fn.departure(\'" + data + "\')\">" +
-                                        "<i class='fa fa-pencil-square-o'></i> 离职</button>";
-
-                                if(row.order.status==0){
-                                    return  detail  + "&nbsp;" + edit + "&nbsp;" + del;
-                                }else if(row.order.status==1){
-                                    return  detail  + "&nbsp;" + again + "&nbsp;" + del;
-                                }else if(row.order.status==2){
-                                    if(row.startDate > timestamp){
-                                        return  detail  + "&nbsp;" + again ;
-                                    }else {
-                                        return  detail  + "&nbsp;*车辆已开始服务，不能继续派车";
-                                    }
-                                }else if(row.order.status==3){
-                                    return  detail ;
-                                }else {
-                                    return  detail  + "&nbsp;" + del;
-                                }
-
-                            }
                         }
                     ],
                     "fnServerParams": function (aoData) {

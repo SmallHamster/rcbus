@@ -13,6 +13,7 @@ import com.leoman.city.service.CityService;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.order.entity.Order;
 import com.leoman.order.service.OrderService;
+import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.DateUtils;
 import com.leoman.utils.JsonUtil;
 import org.apache.commons.lang.StringUtils;
@@ -56,7 +57,7 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
         String[] amounts = JsonUtil.json2Obj(offter_amount, String[].class);
         Long[] busIds = JsonUtil.json2Obj(dispatch, Long[].class);
 
-        if(StringUtils.isNotBlank(names[0])){
+        if(names!=null && StringUtils.isNotBlank(names[0])){
 
             List<CarRentalOffer> carRentalOfferList = carRentalOfferService.queryByProperty("rentalId",id);
             for(CarRentalOffer c : carRentalOfferList){
@@ -140,6 +141,35 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
                 this.DOsave(id,dispatch,null,null,carRental);
             }
         }catch (Exception e){
+            e.printStackTrace();
+            return 1;
+        }
+        return 0;
+    }
+
+    @Override
+    @Transactional
+    public Integer del(Long id) {
+        if (id==null){
+            return 1;
+        }
+        try {
+
+            delete(queryByPK(id));
+
+            //删除派遣车辆
+            List<BusSend> busSendList = busSendService.queryByProperty("contactId",id);
+            for (BusSend busSend : busSendList){
+                busSendService.delete(busSend);
+            }
+
+            //删除租车订单报价
+            List<CarRentalOffer> carRentalOfferList = carRentalOfferService.queryByProperty("rentalId",id);
+            for (CarRentalOffer carRentalOffer : carRentalOfferList){
+                carRentalOfferService.delete(carRentalOffer);
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
             return 1;
         }

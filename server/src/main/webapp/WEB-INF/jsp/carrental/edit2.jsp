@@ -57,7 +57,7 @@
                         </header>
                         <div class="panel-body">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
-                                <input id="id" name="id" type="hidden" value="">
+                                <input id="id" name="id" type="hidden" value="${carRental.id}">
                                 <header class="panel-heading">
                                     出发信息
                                 </header>
@@ -151,6 +151,14 @@
                                         </div>
                                     </div>
                                 </c:forEach>
+                                <c:if test="${carRentalOffer ne null}">
+                                    <div class="form-group">
+                                        <label for="mobile" class="col-sm-2 control-label">总金额</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" id="totalAmount" name="totalAmount" value="${totalAmount}" class="form-control" disabled/>
+                                        </div>
+                                    </div>
+                                </c:if>
                                 <c:if test="${carRental.order.status eq 4}">
                                     <div class="form-group">
                                         <label for="mobile" class="col-sm-2 control-label">取消原因</label>
@@ -312,6 +320,7 @@
                 $("#myModal").modal("show");
             },
             save : function() {
+                console.log(111)
                 if(!$("#formId").valid()) return;
                 //参数
                 var id = $("#id").val();

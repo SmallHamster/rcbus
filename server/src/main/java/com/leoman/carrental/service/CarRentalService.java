@@ -12,4 +12,6 @@ public interface CarRentalService extends GenericManager<CarRental> {
 
     public Integer saveDispatch(Long id,String dispatch);
 
+    public Integer del(Long id);
+
 }
