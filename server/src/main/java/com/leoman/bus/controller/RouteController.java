@@ -1,15 +1,19 @@
-package com.leoman.route.controller;
+package com.leoman.bus.controller;
 
 import com.leoman.bus.entity.Route;
 import com.leoman.bus.service.RouteService;
 import com.leoman.bus.service.impl.RouteServiceImpl;
+import com.leoman.bussend.entity.BusSend;
+import com.leoman.bussend.service.BusSendService;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
-import com.leoman.entity.Configue;
+import com.leoman.order.entity.Order;
+import com.leoman.order.service.OrderService;
 import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
+import com.leoman.utils.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -35,17 +39,27 @@ public class RouteController extends GenericEntityController<Route, Route, Route
     @Autowired
     private EnterpriseService enterpriseService;
 
+    @Autowired
+    private BusSendService busSendService;
+
+    @Autowired
+    private OrderService orderService;
+
     /**
      * 列表页面
      */
     @RequestMapping(value = "/index")
     public String index(Model model) {
+        //获取所有企业
+        List<Enterprise> enterpriseList = enterpriseService.queryAll();
+
+        model.addAttribute("enterpriseList", enterpriseList);
         return "route/route_list";
     }
 
     /**
      * 获取列表
-     * @param username
+     * @param route
      * @param draw
      * @param start
      * @param length
@@ -53,11 +67,18 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(String username, Integer draw, Integer start, Integer length) {
+    public Map<String, Object> list(Route route,Long enterpriseId, Integer draw, Integer start, Integer length) {
         int pagenum = getPageNum(start, length);
         Query query = Query.forClass(Route.class, routeService);
         query.setPagenum(pagenum);
         query.setPagesize(length);
+        query.like("startStation",route.getStartStation());
+        query.like("endStation",route.getEndStation());
+        if(enterpriseId != null && enterpriseId != 0){
+            Enterprise enterprise = new Enterprise();
+            enterprise.setId(enterpriseId);
+            query.eq("enterprise",enterprise);
+        }
         Page<Route> page = routeService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
     }
@@ -72,11 +93,21 @@ public class RouteController extends GenericEntityController<Route, Route, Route
     public String add(Long id, Model model) {
         if (id != null) {
             Route route = routeService.queryByPK(id);
-            model.addAttribute("route", route);
+
+            model.addAttribute("route", route);//路线
+            model.addAttribute("timeJson", JsonUtil.obj2Json(route.getTimes()));//路线时间
+
+            StringBuffer busIds = new StringBuffer();
+            List<BusSend> bsList = busSendService.findBus(route.getId(),1);
+            for (BusSend bs:bsList) {
+                Long busId = bs.getBus().getId();
+                busIds.append(busId+",");
+            }
+            model.addAttribute("busIds",busIds.toString().substring(0,busIds.toString().length()-1));
+
         }
         //获取所有企业
         List<Enterprise> enterpriseList = enterpriseService.queryAll();
-
         model.addAttribute("enterpriseList", enterpriseList);
         return "route/route_add";
     }
@@ -107,7 +138,9 @@ public class RouteController extends GenericEntityController<Route, Route, Route
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public String info(Long id, Model model) {
         if (id != null) {
-            model.addAttribute("route", routeService.queryByPK(id));
+            Route route = routeService.queryByPK(id);
+            model.addAttribute("route", route);//路线
+            model.addAttribute("timeJson", JsonUtil.obj2Json(route.getTimes()));//路线时间
         }
         return "route/route_info";
     }
@@ -147,6 +180,53 @@ public class RouteController extends GenericEntityController<Route, Route, Route
                 Integer routeId = Integer.valueOf(id);
                 routeService.deleteByPK(routeId);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Result.failure();
+        }
+        return Result.success();
+    }
+
+    @RequestMapping(value = "/updateIsShow", method = RequestMethod.POST)
+    @ResponseBody
+    public Result updateIsShow(Route route) {
+        try {
+            routeService.update(route);
+        } catch (Exception e) {
+            e.printStackTrace();
+            Result.failure();
+        }
+        return Result.success();
+    }
+
+    @RequestMapping(value = "/order/index")
+    public String orderIndex(Model model) {
+        //获取所有企业
+        List<Enterprise> enterpriseList = enterpriseService.queryAll();
+
+        model.addAttribute("enterpriseList", enterpriseList);
+        return "route/route_order_list";
+    }
+
+    @RequestMapping(value = "/order/list", method = RequestMethod.POST)
+    @ResponseBody
+    public Map<String, Object> list(Route route, Integer draw, Integer start, Integer length) {
+        int pagenum = getPageNum(start, length);
+        Query query = Query.forClass(Route.class, routeService);
+        query.setPagenum(pagenum);
+        query.setPagesize(length);
+        query.eq("type",1);//班车订单
+//        query.like("startStation",route.getStartStation());
+//        query.like("endStation",route.getEndStation());
+        Page<Order> page = orderService.queryPage(query);
+        return DataTableFactory.fitting(draw, page);
+    }
+
+    @RequestMapping(value = "/saveOrder", method = RequestMethod.POST)
+    @ResponseBody
+    public Result saveOrder(Route route, Long timeId) {
+        try {
+            routeService.saveOrder(route, timeId);
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();

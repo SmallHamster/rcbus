@@ -15,24 +15,24 @@ import javax.persistence.*;
 public class RouteTime extends BaseEntity{
 
     @Column(name = "depart_time")
-    private String depart_time;//出发时间
+    private String departTime;//出发时间
 
     @Column(name = "route_id")
-    private Long route_id;//路线id
+    private Long routeId;//路线id
 
-    public String getDepart_time() {
-        return depart_time;
+    public String getDepartTime() {
+        return departTime;
     }
 
-    public void setDepart_time(String depart_time) {
-        this.depart_time = depart_time;
+    public void setDepartTime(String departTime) {
+        this.departTime = departTime;
     }
 
-    public Long getRoute_id() {
-        return route_id;
+    public Long getRouteId() {
+        return routeId;
     }
 
-    public void setRoute_id(Long route_id) {
-        this.route_id = route_id;
+    public void setRouteId(Long routeId) {
+        this.routeId = routeId;
     }
 }

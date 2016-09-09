@@ -147,4 +147,10 @@ public class Bus extends BaseEntity{
     public void setCurStationId(String curStationId) {
         this.curStationId = curStationId;
     }
+
+    public Bus(){}
+
+    public Bus(Long id) {
+        this.setId(id);
+    }
 }

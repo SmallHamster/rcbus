@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>路线列表</title>
+    <title>通勤巴士历史记录</title>
     <%@ include file="../inc/new2/css.jsp" %>
 </head>
 <body class="sticky-header">
@@ -99,19 +99,6 @@
                 $("#c_clear").click(function () {
                     $(this).parents(".panel-body").find("input,select").val("");
                 });
-                /*$.ajax({
-                    "url": "${contextPath}/admin/route/saveOrder",
-                    "data": {
-                        'type':'1',
-                        'userInfo.id':1,
-                        'timeId':8
-                    },
-                    "dataType": "json",
-                    "type": "POST",
-                    success: function (result) {
-                        console.info("success");
-                    }
-                });*/
             },
             dataTableInit: function () {
                 $route.v.dTable = $leoman.dataTable($('#dataTables'), {
@@ -120,7 +107,7 @@
                     "searching": false,
                     "bSort": false,
                     "ajax": {
-                        "url": "${contextPath}/admin/route/list",
+                        "url": "${contextPath}/admin/route/order/list",
                         "type": "POST"
                     },
                     "columns": [
@@ -131,8 +118,9 @@
                                 return checkbox;
                             }
                         },
-                        {
-                            "data": "enterprise.type",
+                        {"data": "orderNo"},
+                        /*{
+                            "data": "order.enterprise.type",
                             "render": function (data, type, row, meta) {
 
                                 var routeName = "";
@@ -146,7 +134,7 @@
                                 }
                                 return routeName;
                             }
-                        },
+                        },*/
                         {"data": "enterprise.name"},
                         {
                             "data": "isShow",

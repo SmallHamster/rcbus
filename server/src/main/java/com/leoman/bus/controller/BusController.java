@@ -160,8 +160,10 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
         if(!StringUtils.isEmpty(busIds)){
             String [] busIdArr = busIds.split("\\,");
             for (String busId:busIdArr) {
-                Long id = Long.valueOf(busId);
-                list.add(id);
+                if(!StringUtils.isEmpty(busId)){
+                    Long id = Long.valueOf(busId);
+                    list.add(id);
+                }
             }
             if("not".endsWith(inOrNot)){
                 query.notIn("id", list);

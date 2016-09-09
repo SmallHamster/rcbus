@@ -34,7 +34,7 @@
                                 <input type="hidden" id="routeId" name="route.id" value="${route.id}">
                                 <input type="hidden" name="departTimes" value="">
                                 <input type="hidden" name="backTimes" value="">
-                                <input type="hidden" id="busIds" name="busIds" value="${busIds}">
+                                <input type="hidden" id="busIds" name="busIds" value="">
                                 <input type="hidden" id="enterpriseType" name="enterprise.type" value="">
 
                                 <div class="form-group">

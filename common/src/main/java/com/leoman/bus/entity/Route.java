@@ -31,7 +31,7 @@ public class Route extends BaseEntity{
     @Column(name = "is_show")
     private Integer isShow;//是否显示（1-是，0-否）
 
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "route_id")
     private List<RouteTime> times;//该路线所有的时间
 
