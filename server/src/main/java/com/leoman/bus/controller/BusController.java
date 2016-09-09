@@ -15,6 +15,7 @@ import org.springframework.ui.Model;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.ArrayList;
@@ -51,7 +52,7 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(Bus bus, Integer draw, Integer start, Integer length) {
+    public Map<String, Object> list(Bus bus, Integer draw, Integer start, Integer length, @RequestParam(value = "carType1" , required = false)Long carType) {
         int pageNum = getPageNum(start, length);
         Query query = Query.forClass(Bus.class, busService);
         query.setPagenum(pageNum);
@@ -59,6 +60,7 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
         query.like("carNo",bus.getCarNo());
         query.like("modelNo",bus.getModelNo());
         query.like("driverName",bus.getDriverName());
+        query.eq("carType.id",carType);
         Page<Bus> page = busService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
     }
