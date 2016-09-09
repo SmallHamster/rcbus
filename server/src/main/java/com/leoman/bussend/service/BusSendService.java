@@ -10,6 +10,6 @@ import java.util.List;
  */
 public interface BusSendService extends GenericManager<BusSend> {
 
-    public List<BusSend> findRental(Long id);
+    public List<BusSend> findBus(Long id,Integer type);
 
 }

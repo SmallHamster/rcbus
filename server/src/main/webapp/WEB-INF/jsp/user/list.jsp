@@ -57,7 +57,7 @@
                                <button class="btn btn-info" type="button" onclick="$admin.fn.del();" id="deleteBatch" style="display: none">删除</button>
                             </span>
                             <span class="tools pull-right">
-                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
+                               <button class="btn btn-default " type="button" id="refresh"><i class="fa fa-refresh"></i>刷新</button>
                                <button class="btn btn-info" type="button" onclick="$admin.fn.add();">新增会员</button>
                             </span>
                         </header>
@@ -96,6 +96,7 @@
         fn: {
             init: function () {
                 $admin.fn.dataTableInit();
+
                 $("#c_search").click(function () {
                     $admin.v.dTable.ajax.reload();
                 });

@@ -139,56 +139,54 @@
                                     </div>
                                 </div>
 
-                                <c:if test="${carRental.order.status ne 0}">
-                                    <header class="panel-heading">
-                                        车辆信息
-                                    </header>
-                                    <div style="margin-top: 15px"></div>
-                                        <div class="row">
-                                            <c:forEach items="${busSend}" var="v">
-                                                <div class="col-md-6">
-                                                    <div class="border">
-                                                        <div style="float: left">
-                                                            <p class="pl">车牌号：${v.bus.carNo}</p>
-                                                            <p class="pl">座位数：${v.bus.seatNum}</p>
-                                                            <p class="pl">司机姓名：${v.bus.driverName}</p>
-                                                            <p class="pl">性别：<c:if test="${v.bus.driverSex eq 0}">男</c:if><c:if test="${v.bus.driverSex eq 1}">女</c:if></p>
-                                                        </div>
-                                                        <div style="float: right">
-                                                            <p class="pr">车型：${v.bus.modelNo}</p>
-                                                            <p class="pr">品牌：${v.bus.brand}</p>
-                                                            <p class="pr">身份证：${v.bus.driverIDCard}</p>
-                                                            <p class="pr">联系方式：${v.bus.driverPhone}</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </c:forEach>
+                                <header class="panel-heading">
+                                    报价信息
+                                </header>
+                                <div style="margin-top: 15px"></div>
+                                <c:forEach var="v" items="${carRentalOffer}">
+                                    <div class="form-group">
+                                        <label for="mobile" class="col-sm-2 control-label">${v.name}</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" id="offter" name="offter" value="${v.amount}" class="form-control" disabled/>
                                         </div>
-                                    <header class="panel-heading">
-                                        报价信息
-                                    </header>
-                                    <div style="margin-top: 15px"></div>
-                                    <c:forEach var="v" items="${carRentalOffer}">
-                                        <div class="form-group">
-                                            <label for="mobile" class="col-sm-2 control-label">${v.name}</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" id="offter" name="offter" value="${v.amount}" class="form-control" disabled/>
+                                    </div>
+                                </c:forEach>
+                                <c:if test="${carRental.order.status eq 4}">
+                                    <div class="form-group">
+                                        <label for="mobile" class="col-sm-2 control-label">取消原因</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" id="unsubscribe" name="unsubscribe" value="${carRental.unsubscribe}" class="form-control" disabled/>
+                                        </div>
+                                    </div>
+                                </c:if>
+
+
+                                <header class="panel-heading">
+                                    车辆信息
+                                </header>
+                                <div style="margin-top: 15px" id="car_rental">
+                                    <c:forEach items="${busSend}" var="v">
+                                        <div class='form-group'>
+                                            <input type='hidden' value='${v.bus.id}' name='dispatch'>
+                                            <label class='col-sm-2 control-label'></label>
+                                            <div class='col-sm-3'>
+                                                <input type='text' id='d' name='d' value='&nbsp;${v.bus.driverName}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${v.bus.carNo}&nbsp;&nbsp;&nbsp;&nbsp;${v.bus.seatNum}座' class='form-control' disabled />
                                             </div>
+                                            <button type='button' onclick='$admin.fn.delDispatch(this)' class='btn btn-primary'><i class='fa fa-minus-circle'></i></button>
                                         </div>
                                     </c:forEach>
-                                    <c:if test="${carRental.order.status eq 4}">
-                                        <div class="form-group">
-                                            <label for="mobile" class="col-sm-2 control-label">取消原因</label>
-                                            <div class="col-sm-6">
-                                                <input type="text" id="unsubscribe" name="unsubscribe" value="${carRental.unsubscribe}" class="form-control" disabled/>
-                                            </div>
-                                        </div>
-                                    </c:if>
-                                </c:if>
-                            <%--</div>--%>
+                                </div>
+                                <div class="form-group" style="margin-top: 15px">
+                                    <label class="col-sm-2 control-label"></label>
+                                    <div class="col-sm-6">
+                                        <button type="button" onclick="$admin.fn.openDispatch()" class="btn btn-info"><i class='fa fa-plus'></i> 新增派遣车辆</button>
+                                    </div>
+                                </div>
+                                <%--</div>--%>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label"></label>
                                     <div class="col-sm-6">
+                                        <button type="button" onclick="$admin.fn.save()" class="btn btn-primary">保存</button>
                                         <button type="button" class="btn btn-primary" onclick="history.go(-1);">返回</button>
                                     </div>
                                 </div>
@@ -202,17 +200,138 @@
     <!-- main content end-->
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
+<%@ include file="carRental.jsp" %>
 <script>
     $admin = {
         v: {
             list: [],
+            dispatch: [],
             chart: null,
             dTable: null
         },
         fn: {
             init: function () {
                 $("#formId").validate();
+                //表格初始化
+                $admin.fn.dataTableInit();
+
+                //搜索
+                $("#c_search").on("click",function () {
+                    $admin.v.dTable.ajax.reload(null,false);
+                });
+                //清空
+                $("#c_clear").click(function () {
+                    $(this).parents(".modal-body").find("input,select").val("");
+                });
+
+                $admin.v.dispatch = [];
+                $("#car_rental input[name=dispatch]").each(function(){
+                    $admin.v.dispatch.push($(this).val());
+                });
+
             },
+            dataTableInit: function () {
+                $admin.v.dTable = $leoman.dataTable($('#dataTables'), {
+                    "processing": true,
+                    "serverSide": true,
+                    "searching": false,
+                    "bSort": false,
+                    "ajax": {
+                        "url": "${contextPath}/admin/bus/list",
+                        "type": "POST"
+                    },
+                    "columns": [
+                        {
+                            "data": "id",
+                            "render": function (data) {
+                                var checkbox = "<input type='checkbox' class='list-check' onclick='$leoman.subSelect(this);' value=" + data + ">";
+                                return checkbox;
+                            }
+                        },
+                        {"data": "carNo"},
+                        {"data": "driverName"},
+                        {"data": "modelNo"},
+                        {"data": "carType.name"},
+                        {
+                            "data": "id",
+                            "render": function (data, type, row, meta) {
+
+                                var dispatch = "<button title='派遣' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.dispatch(\'" + row.driverName + "\',\'" + row.carNo + "\',\'" + row.seatNum + "\',\'" + data + "\')\">" +
+                                        "<i class='fa fa-check'></i> 派遣</button>";
+
+                                return dispatch;
+                            }
+                        }
+                    ],
+                    "fnServerParams": function (aoData) {
+                        aoData.carNo = $("#carNo").val();
+                        aoData.driverName = $("#driverName").val();
+                        aoData.carType1 = $("#carType1").val();
+                    }
+                });
+            },
+            dispatch: function (driverName,carNo,seatNum,id) {
+
+                var dispatchs = $admin.v.dispatch;
+                for(var i=0;i<dispatchs.length;i++){
+                    if(dispatchs[i] == id){
+                        alert("不能多次派遣同一辆车!");
+                        return;
+                    }
+                }
+
+                var html = "";
+                html += " <div class='form-group'>																																							";
+                html += " <input type='hidden' value='"+id+"' name='dispatch'>																																							";
+                html += " 	<label class='col-sm-2 control-label'></label>                                                                                                                     ";
+                html += " 	<div class='col-sm-3'>                                                                                                                                                          ";
+                html += " 		<input type='text' id='d' name='d' value='&nbsp;"+driverName+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+carNo+"&nbsp;&nbsp;&nbsp;&nbsp;"+seatNum+"座' class='form-control' disabled />  ";
+                html += " 	</div>                                                                                                                                                                          ";
+                html += " 	<button type='button' onclick='$admin.fn.delDispatch(this)' class='btn btn-primary'><i class='fa fa-minus-circle'></i></button>                                                   ";
+                html += " </div>                                                                                                                                                                            ";
+
+                $("#car_rental").append(html);
+
+                $admin.v.dispatch = [];
+                $("#car_rental input[name=dispatch]").each(function(){
+                    $admin.v.dispatch.push($(this).val());
+                });
+
+            },
+            delDispatch: function(data) {
+                var id = $(data).parent().find('input').eq(0).val();
+                var dispatchs = $admin.v.dispatch;
+                for(var i=0;i<dispatchs.length;i++){
+                    if(dispatchs[i]==id){
+                        $admin.v.dispatch.splice(i, 1);
+                    }
+                }
+                $(data).parent().remove();
+            },
+            openDispatch: function () {
+                $("#myModal").modal("show");
+            },
+            save : function() {
+                if(!$("#formId").valid()) return;
+                //参数
+                var id = $("#id").val();
+                $.ajax({
+                    url : "${contextPath}/admin/carRental/saveDispatch",
+                    data: {
+                        "id" : id ,
+                        "dispatch": JSON.stringify($admin.v.dispatch)
+                    },
+                    type : "POST",
+                    success : function(result) {
+                        if(result == 0) {
+                            window.location.href = "${contextPath}/admin/carRental/index";
+                        }
+                        else {
+                            alert("操作失败");
+                        }
+                    }
+                });
+            }
         }
     };
     $(function () {

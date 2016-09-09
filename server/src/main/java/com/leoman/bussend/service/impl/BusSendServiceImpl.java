@@ -20,7 +20,7 @@ public class BusSendServiceImpl extends GenericManagerImpl<BusSend,BusSendDao> i
 
 
     @Override
-    public List<BusSend> findRental(Long id) {
-        return busSendDao.findRental(id);
+    public List<BusSend> findBus(Long id,Integer type) {
+        return busSendDao.findBus(id,type);
     }
 }

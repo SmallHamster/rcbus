@@ -10,6 +10,32 @@
     <link rel="shortcut icon" href="#" type="image/png">
     <title>Form Layouts</title>
     <%@ include file="../inc/new2/css.jsp" %>
+    <style type="text/css">
+
+        .border{
+            background-color: #EEE;
+            margin:20px 0px 20px 120px;
+            width:500px;
+            height:50px;
+            border:1px solid #CCCCCC;
+            -moz-border-radius: 15px;
+            -webkit-border-radius: 15px;
+            border-radius:15px;
+            float: left;
+        }
+        .pl{
+            margin-left: 20px;
+            margin-top: 15px;
+            font-size: 20px
+        }
+        .pr{
+            margin-right: 20px;
+            margin-top: 15px;
+            font-size: 20px
+        }
+
+
+    </style>
 </head>
 
 <body class="sticky-header">
@@ -33,18 +59,18 @@
                             <input type="hidden" id="rwType" value="${carRental.rentalWay}">
                             <input type="hidden" id="isInvoice" value="${carRental.isInvoice}">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
-                                <input id="id" name="id" type="hidden" value="">
+                                <input id="id" name="id" type="hidden" value="${carRental.id}">
                                 <header class="panel-heading">
                                     客人信息
                                 </header>
                                 <div class="form-group" style="margin-top: 15px">
-                                    <label for="userName" class="col-sm-2 control-label">用车联系人</label>
+                                    <label class="col-sm-2 control-label">用车联系人</label>
                                     <div class="col-sm-6">
                                         <input type="text" id="userName" name="userName" value="${carRental.order.userName}" class="form-control" disabled/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="mobile" class="col-sm-2 control-label">联系电话</label>
+                                    <label class="col-sm-2 control-label">联系电话</label>
                                     <div class="col-sm-6">
                                         <input type="text" id="mobile" name="mobile" value="${carRental.order.mobile}" class="form-control" disabled/>
                                     </div>
@@ -53,9 +79,9 @@
                                     出发信息
                                 </header>
                                 <div class="form-group" style="margin-top: 15px">
-                                    <label for="city" class="col-sm-2 control-label">出发城市</label>
+                                    <label for="cityId" class="col-sm-2 control-label">出发城市</label>
                                     <div class="col-sm-6">
-                                        <select class="selectpicker show-tick form-control" data-live-search="true" id="city" name="city" required>
+                                        <select class="selectpicker show-tick form-control" data-live-search="true" id="cityId" name="cityId" required>
                                             <c:forEach items="${city}" var="v">
                                                 <option value="${v.id}">${v.name}</option>
                                             </c:forEach>
@@ -101,21 +127,21 @@
                                 <div class="form-group">
                                     <label for="startDate" class="col-sm-2 control-label">出发时间</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="startDate" name="startDate" value="<date:date format='yyyy-MM-dd HH:mm:ss' value='${carRental.startDate}'></date:date>" class="form-control" required/>
+                                        <input type="text" id="startDate" name="startDate" value="<date:date format='yyyy-MM-dd HH:mm' value='${carRental.startDate}'></date:date>" class="form-control input-append date form_datetime" required/>
                                     </div>
                                 </div>
 
                                 <div class="form-group" id="endDate_hidden" style="display: none">
                                     <label for="endDate" class="col-sm-2 control-label">回城时间</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="endDate" name="endDate" value="<date:date format='yyyy-MM-dd HH:mm:ss' value='${carRental.endDate}'></date:date>" class="form-control" required/>
+                                        <input type="text" id="endDate" name="endDate" value="<date:date format='yyyy-MM-dd HH:mm' value='${carRental.endDate}'></date:date>" class="form-control input-append date form_datetime" required/>
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label for="carType" class="col-sm-2 control-label">车型</label>
+                                    <label for="carTypeId" class="col-sm-2 control-label">车型</label>
                                     <div class="col-sm-6">
-                                        <select id="carType" name="carType" class="form-control input-sm" required >
+                                        <select id="carTypeId" name="carTypeId" class="form-control input-sm" required >
                                             <c:forEach items="${carType}" var="v">
                                                 <option value="${v.id}">${v.name}</option>
                                             </c:forEach>
@@ -164,46 +190,30 @@
                                     报价信息
                                 </header>
                                 <div style="margin-top: 15px"></div>
-                                <div class="form-group">
-                                    <label for="mobile" class="col-sm-2 control-label">收费名称</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" id="offter_name" name="offter_name" value="" class="form-control" />
-                                    </div>
-                                    <button type="button" onclick="$admin.fn.addOffter()" class="btn btn-primary"><i class='fa fa-plus-circle'></i></button>
-                                </div>
-                                <div class="form-group">
-                                    <label for="mobile" class="col-sm-2 control-label">金额</label>
-                                    <div class="col-sm-3">
-                                        <input type="text" id="offter_amount" name="offter_amount" value="" class="form-control" />
-                                    </div>
-                                </div>
                                 <div id="offterDiv" >
-
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">收费名称</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" id="offter_name" name="offter_name" value="" class="form-control" />
+                                        </div>
+                                        <button type="button" onclick="$admin.fn.addOffter()" class="btn btn-primary"><i class='fa fa-plus-circle'></i></button>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-2 control-label">金额</label>
+                                        <div class="col-sm-3">
+                                            <input type="text" id="offter_amount" name="offter_amount" value="" class="form-control" />
+                                        </div>
+                                    </div>
                                 </div>
                                 <header class="panel-heading">
                                     车辆派遣
                                 </header>
-                                <div style="margin-top: 15px"></div>
-                                <div class="form-group">
-                                    <label class="col-sm-1 control-label"></label>
+                                <div style="margin-top: 15px" id="car_rental">
+                                </div>
+                                <div class="form-group" style="margin-top: 15px">
+                                    <label class="col-sm-2 control-label"></label>
                                     <div class="col-sm-6">
-                                        <div class="form-group col-sm-2">
-                                            <input type="text" id="a" name="mobile" class="form-control" placeholder="手机号">
-                                        </div>
-                                        <button id="c_search" class="btn btn-info" style="float: right">搜索</button>
-                                        <div class="adv-table">
-                                            <table class="display table table-bordered table-striped" id="dataTables" width="100%">
-                                                <thead>
-                                                <tr>
-                                                    <th>车牌号</th>
-                                                    <th>司机姓名</th>
-                                                    <th>车型</th>
-                                                    <th>用车类型</th>
-                                                    <th>操作</th>
-                                                </tr>
-                                                </thead>
-                                            </table>
-                                        </div>
+                                        <button type="button" onclick="$admin.fn.openDispatch()" class="btn btn-info"><i class='fa fa-plus'></i> 新增派遣车辆</button>
                                     </div>
                                 </div>
                                 <%--</div>--%>
@@ -222,40 +232,81 @@
         </section>
     </div>
     <!-- main content end-->
-
-
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
+<%@ include file="carRental.jsp" %>
 
 <script>
     $admin = {
         v: {
             list: [],
+            dispatch: [],
+            offter_name: [],
+            offter_amount: [],
             chart: null,
             dTable: null
         },
         fn: {
             init: function () {
 
+                //时间控件初始化
+                $('.form_datetime').datetimepicker({
+                    language: 'zh-CN',
+                    weekStart: 1,
+                    todayBtn: 1,
+                    autoclose: 1,
+//                    todayHighlight: 1,
+//                    startView: 'hour',
+                    forceParse: 0,
+                    showMeridian: false,
+                    format: 'yyyy-mm-dd hh:ii'
+                });
+
+                //表格初始化
+                $admin.fn.dataTableInit();
+
+                //搜索
+                $("#c_search").on("click",function () {
+                    $admin.v.dTable.ajax.reload(null,false);
+                });
+                //清空
+                $("#c_clear").click(function () {
+                    $(this).parents(".modal-body").find("input,select").val("");
+                });
+
                 $("#formId").validate();
+
                 //下拉框
                 $('#city').selectpicker();
 
+                //包车
                 $("#rw .iCheck-helper").click(function(){
                     $admin.fn.endDateChk($("input[name='rwType']:checked").val());
                 });
+                $("input[name='rwType']").each(function(){
+                    var rwType = $("#rwType").val();
+                    if(rwType == $(this).val()){
+                        $(this).iCheck("check");
+                    }
+                });
 
+                //发票
                 $("#inv .iCheck-helper").click(function(){
                     $admin.fn.invoiceChk($("input[name='isInvoice']:checked").val());
                 });
 
+                $("input[name='isInvoice']").each(function(){
+                    var isInvoice = $("#isInvoice").val();
+                    if(isInvoice == $(this).val()){
+                        $(this).iCheck("check");
+                    }
+                });
                 $admin.fn.endDateChk($("#rwType").val());
-
 
                 $admin.fn.invoiceChk($("#invoice").val());
             },
             dataTableInit: function () {
-                $route.v.dTable = $leoman.dataTable($('#dataTables'), {
+                $admin.v.dTable = $leoman.dataTable($('#dataTables'), {
                     "processing": true,
                     "serverSide": true,
                     "searching": false,
@@ -265,6 +316,13 @@
                         "type": "POST"
                     },
                     "columns": [
+                        {
+                            "data": "id",
+                            "render": function (data) {
+                                var checkbox = "<input type='checkbox' class='list-check' onclick='$leoman.subSelect(this);' value=" + data + ">";
+                                return checkbox;
+                            }
+                        },
                         {"data": "carNo"},
                         {"data": "driverName"},
                         {"data": "modelNo"},
@@ -273,27 +331,73 @@
                             "data": "id",
                             "render": function (data, type, row, meta) {
 
-                                var dispatch = "<button title='派遣' class='btn btn-primary btn-circle edit' onclick=\"$route.fn.dispatch(\'" + data + "\')\">" +
+                                var dispatch = "<button title='派遣' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.dispatch(\'" + row.driverName + "\',\'" + row.carNo + "\',\'" + row.seatNum + "\',\'" + data + "\')\">" +
                                         "<i class='fa fa-check'></i> 派遣</button>";
 
                                 return dispatch;
                             }
                         }
-                    ]
+                    ],
+                    "fnServerParams": function (aoData) {
+                        aoData.carNo = $("#carNo").val();
+                        aoData.driverName = $("#driverName").val();
+                        aoData.carType1 = $("#carType1").val();
+                    }
                 });
+            },
+            dispatch: function (driverName,carNo,seatNum,id) {
+
+                var dispatchs = $admin.v.dispatch;
+                for(var i=0;i<dispatchs.length;i++){
+                    if(dispatchs[i] == id){
+                        alert("不能多次派遣同一辆车!");
+                        return;
+                    }
+                }
+
+                var html = "";
+                html += " <div class='form-group'>																																							";
+                html += " <input type='hidden' value='"+id+"' name='dispatch'>																																							";
+                html += " 	<label class='col-sm-2 control-label'></label>                                                                                                                     ";
+                html += " 	<div class='col-sm-3'>                                                                                                                                                          ";
+                html += " 		<input type='text' id='d' name='d' value='&nbsp;"+driverName+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+carNo+"&nbsp;&nbsp;&nbsp;&nbsp;"+seatNum+"座' class='form-control' disabled />  ";
+                html += " 	</div>                                                                                                                                                                          ";
+                html += " 	<button type='button' onclick='$admin.fn.delDispatch(this)' class='btn btn-primary'><i class='fa fa-minus-circle'></i></button>                                                   ";
+                html += " </div>                                                                                                                                                                            ";
+
+                $("#car_rental").append(html);
+
+                $admin.v.dispatch = [];
+                $("#car_rental input[name=dispatch]").each(function(){
+                    $admin.v.dispatch.push($(this).val());
+                });
+
+            },
+            delDispatch: function(data) {
+                var id = $(data).parent().find('input').eq(0).val();
+                var dispatchs = $admin.v.dispatch;
+                for(var i=0;i<dispatchs.length;i++){
+                    if(dispatchs[i]==id){
+                        $admin.v.dispatch.splice(i, 1);
+                    }
+                }
+                $(data).parent().remove();
+            },
+            openDispatch: function () {
+                $("#myModal").modal("show");
             },
             addOffter: function(){
                 var html = "";
                 html += " <div style='margin-bottom: 30px'>																											 ";
                 html += " <div class='form-group'>																											 ";
-                html += " 	<label for='mobile' class='col-sm-2 control-label'>收费名称</label>                                                              ";
+                html += " 	<label class='col-sm-2 control-label'>收费名称</label>                                                              ";
                 html += " 	<div class='col-sm-3'>                                                                                                           ";
                 html += " 		<input type='text' id='offter_name' name='offter_name' value='' class='form-control' />                                      ";
                 html += " 	</div>                                                                                                                           ";
                 html += " 	<button type='button' onclick='$admin.fn.delOffter(this)' class='btn btn-primary'><i class='fa fa-minus-circle'></i></button>     ";
                 html += " </div>                                                                                                                              ";
                 html += " <div class='form-group'>                                                                                                            ";
-                html += " 	<label for='mobile' class='col-sm-2 control-label'>金额</label>                                                                  ";
+                html += " 	<label class='col-sm-2 control-label'>金额</label>                                                                  ";
                 html += " 	<div class='col-sm-3'>                                                                                                           ";
                 html += " 		<input type='text' id='offter_amount' name='offter_amount' value='' class='form-control' />                                  ";
                 html += " 	</div>                                                                                                                           ";
@@ -319,13 +423,55 @@
                 }
             },
             save : function() {
+
+                $admin.v.offter_name = [];
+                $("#offterDiv input[name=offter_name]").each(function(){
+                    $admin.v.offter_name.push($(this).val());
+                });
+
+                $admin.v.offter_amount = [];
+                $("#offterDiv input[name=offter_amount]").each(function(){
+                    $admin.v.offter_amount.push($(this).val());
+                });
+
                 if(!$("#formId").valid()) return;
-                $("#formId").ajaxSubmit({
-                    url : "${contextPath}/admin/carrental/save",
+
+                //参数
+                var id = $("#id").val();
+                var cityId = $("#cityId").val();
+                var rwType = $("input[name='rwType']:checked").val();
+                var startPoint = $("#startPoint").val();
+                var endPoint = $("#endPoint").val();
+                var startDate = $("#startDate").val();
+                var endDate = $("#endDate").val();
+                var carTypeId = $("#carTypeId").val();
+                var totalNumber = $("#totalNumber").val();
+                var busNum = $("#busNum").val();
+                var isInvoice = $("input[name='isInvoice']:checked").val();
+                var invoice = $("#invoice").val();
+                $.ajax({
+                    url : "${contextPath}/admin/carRental/save",
+                    data: {
+                        "id" : id ,
+                        "cityId" : cityId ,
+                        "rwType" : rwType ,
+                        "startPoint" : startPoint ,
+                        "endPoint" : endPoint ,
+                        "startDate" : startDate ,
+                        "endDate" : endDate ,
+                        "carTypeId" : carTypeId ,
+                        "totalNumber" : totalNumber ,
+                        "busNum" : busNum ,
+                        "isInvoice" : isInvoice ,
+                        "invoice" : invoice ,
+                        "dispatch": JSON.stringify($admin.v.dispatch),
+                        "offter_name": JSON.stringify($admin.v.offter_name),
+                        "offter_amount": JSON.stringify($admin.v.offter_amount)
+                    },
                     type : "POST",
                     success : function(result) {
-                        if(result.status == 0) {
-                            window.location.href = "${contextPath}/admin/carrental/index";
+                        if(result == 0) {
+                            window.location.href = "${contextPath}/admin/carRental/index";
                         }
                         else {
                             alert("操作失败");
@@ -334,7 +480,7 @@
                 });
             }
         }
-    }
+    };
     $(function () {
         $admin.fn.init();
     })
