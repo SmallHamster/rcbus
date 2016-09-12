@@ -70,7 +70,7 @@
                                 <div class="form-group">
                                     <label for="rentalWay" class="col-sm-2 control-label">包车方式</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="rentalWay" name="rentalWay" value="${carRental.rentalWay}" class="form-control" disabled/>
+                                        <input type="text" id="rentalWay" name="rentalWay" value="<c:if test="${carRental.rentalWay eq 0}">单程</c:if><c:if test="${carRental.rentalWay eq 1}">返程</c:if><c:if test="${carRental.rentalWay eq 2}">往返</c:if>" class="form-control" disabled/>
                                     </div>
                                 </div>
                                 <div class="form-group">

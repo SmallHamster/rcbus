@@ -154,7 +154,6 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
             return 1;
         }
         try {
-
             delete(queryByPK(id));
 
             //删除派遣车辆

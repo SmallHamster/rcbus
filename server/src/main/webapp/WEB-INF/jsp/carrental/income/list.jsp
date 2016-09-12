@@ -31,7 +31,7 @@
                             </div>
 
                             <div class="form-group col-sm-2">
-                                <input type="text" id="userName" name="userName" class="form-control" placeholder="客人姓名">
+                                <input type="text" id="carNo" name="carNo" class="form-control" placeholder="车牌号码">
                             </div>
 
                             <div class="form-group col-sm-2">
@@ -52,7 +52,7 @@
                 <div class="col-sm-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            会员列表
+                            收入明细
                             <span class="tools pull-right">
                                <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
                             </span>
@@ -65,9 +65,12 @@
                                         <th><input type="checkbox" class="list-parent-check"
                                                    onclick="$leoman.checkAll(this);"/></th>
                                         <th>订单号</th>
-                                        <th>路线起始</th>
-                                        <th>客人名称</th>
                                         <th>发车时间</th>
+                                        <th>客人名称</th>
+                                        <th>客人手机</th>
+                                        <th>订单金额</th>
+                                        <th>已收金额</th>
+                                        <th>退款金额</th>
                                         <th>巴士数量</th>
                                         <th>详情</th>
                                     </tr>
@@ -84,16 +87,16 @@
 <%@ include file="../../inc/new2/foot.jsp" %>
 <%@ include file="../../inc/new2/confirm.jsp" %>
 <script>
-    $carRental = {
+    $income = {
         v: {
             list: [],
             dTable: null
         },
         fn: {
             init: function () {
-                $carRental.fn.dataTableInit();
+                $income.fn.dataTableInit();
                 $("#c_search").click(function () {
-                    $carRental.v.dTable.ajax.reload();
+                    $income.v.dTable.ajax.reload();
                 });
                 //清空
                 $("#c_clear").click(function () {
@@ -110,7 +113,7 @@
                 });
             },
             dataTableInit: function () {
-                $carRental.v.dTable = $leoman.dataTable($('#dataTables'), {
+                $income.v.dTable = $leoman.dataTable($('#dataTables'), {
                     "processing": true,
                     "serverSide": true,
                     "searching": false,
@@ -132,22 +135,30 @@
                             "sDefaultContent" : ""
                         },
                         {
-                            "data": "",
-                            "render": function (data, type, row, meta) {
-                                return row.startPoint+"————>"+row.endPoint
+                            "data": "startDate",
+                            "render": function (data) {
+                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
                             },
                             "sDefaultContent" : ""
-
                         },
                         {
                             "data": "order.userName",
                             "sDefaultContent" : ""
                         },
                         {
-                            "data": "startDate",
-                            "render": function (data) {
-                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
-                            },
+                            "data": "order.mobile",
+                            "sDefaultContent" : ""
+                        },
+                        {
+                            "data": "totalAmount",
+                            "sDefaultContent" : ""
+                        },
+                        {
+                            "data": "income",
+                            "sDefaultContent" : ""
+                        },
+                        {
+                            "data": "refund",
                             "sDefaultContent" : ""
                         },
                         {
@@ -158,7 +169,7 @@
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {
-                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$carRental.fn.detail(\'" + data + "\')\">" +
+                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$income.fn.detail(\'" + data + "\')\">" +
                                         "<i class='fa fa-eye'></i> 查看</button>";
                                 return  detail ;
                             }
@@ -168,11 +179,9 @@
                     "fnServerParams": function (aoData) {
                         aoData.orderNo = $("#orderNo").val();
                         aoData.driverName = $("#driverName").val();
-                        aoData.userName = $("#userName").val();
+                        aoData.carNo = $("#carNo").val();
                         aoData.Dstart = $("#start").val();
                         aoData.Dend = $("#end").val();
-                        //只显示已完成的
-                        aoData.orderStatus = 3;
                     }
                 });
             },
@@ -181,15 +190,15 @@
                 if (id != null && id != '') {
                     params = "?id=" + id;
                 }
-                window.location.href = "${contextPath}/admin/carRental/history/detail" + params;
+                window.location.href = "${contextPath}/admin/carRental/income/detail" + params;
             },
 
             responseComplete: function (result, action) {
                 if (result.status == "0") {
                     if (action) {
-                        $carRental.v.dTable.ajax.reload(null, false);
+                        $income.v.dTable.ajax.reload(null, false);
                     } else {
-                        $carRental.v.dTable.ajax.reload();
+                        $income.v.dTable.ajax.reload();
                     }
                     $leoman.notify(result.msg, "success");
                 } else {
@@ -199,7 +208,7 @@
         }
     }
     $(function () {
-        $carRental.fn.init();
+        $income.fn.init();
     })
 </script>
 </body>

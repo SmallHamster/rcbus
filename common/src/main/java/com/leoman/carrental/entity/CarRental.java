@@ -6,6 +6,7 @@ import com.leoman.entity.BaseEntity;
 import com.leoman.order.entity.Order;
 
 import javax.persistence.*;
+import java.util.Set;
 
 /**
  * 租车
@@ -69,6 +70,40 @@ public class CarRental extends BaseEntity{
     //退订原因
     @Column(name= "unsubscribe")
     private String unsubscribe;
+
+    //已收金额
+    @Column(name= "income")
+    private Double income;
+
+    //退款金额
+    @Column(name= "refund")
+    private Double refund;
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "rental_id")
+    private Set<CarRentalOffer> carRentalOffers;
+
+    @Transient
+    private Double totalAmount = 0.0;
+
+    public Double getTotalAmount() {
+        for(CarRentalOffer c : carRentalOffers){
+            totalAmount += c.getAmount();
+        }
+        return totalAmount;
+    }
+
+    public void setTotalAmount(Double totalAmount) {
+        this.totalAmount = totalAmount;
+    }
+
+    public Set<CarRentalOffer> getCarRentalOffers() {
+        return carRentalOffers;
+    }
+
+    public void setCarRentalOffers(Set<CarRentalOffer> carRentalOffers) {
+        this.carRentalOffers = carRentalOffers;
+    }
 
     public Order getOrder() {
         return order;
@@ -172,5 +207,21 @@ public class CarRental extends BaseEntity{
 
     public void setUnsubscribe(String unsubscribe) {
         this.unsubscribe = unsubscribe;
+    }
+
+    public Double getIncome() {
+        return income;
+    }
+
+    public void setIncome(Double income) {
+        this.income = income;
+    }
+
+    public Double getRefund() {
+        return refund;
+    }
+
+    public void setRefund(Double refund) {
+        this.refund = refund;
     }
 }

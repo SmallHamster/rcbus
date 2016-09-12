@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="../../inc/taglibs.jsp" %>
+<%@ include file="../inc/taglibs.jsp" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,14 +10,14 @@
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
     <title>Dynamic Table</title>
-    <%@ include file="../../inc/new2/css.jsp" %>
+    <%@ include file="../inc/new2/css.jsp" %>
 </head>
 <body class="sticky-header">
 <section>
-    <%@ include file="../../inc/new2/menu.jsp" %>
+    <%@ include file="../inc/new2/menu.jsp" %>
     <!-- main content start-->
     <div class="main-content">
-        <%@ include file="../../inc/new2/header.jsp" %>
+        <%@ include file="../inc/new2/header.jsp" %>
         <!--body wrapper start-->
         <div class="wrapper">
             <div class="row">
@@ -24,21 +25,17 @@
                     <section class="panel">
                         <div class="panel-body">
                             <div class="form-group col-sm-2">
-                                <input type="text" id="orderNo" name="orderNo" class="form-control" placeholder="订单号">
+                                <input type="text" id="userName" name="userName" class="form-control" placeholder="申请人">
                             </div>
                             <div class="form-group col-sm-2">
-                                <input type="text" id="driverName" name="driverName" class="form-control" placeholder="司机姓名">
-                            </div>
-
-                            <div class="form-group col-sm-2">
-                                <input type="text" id="userName" name="userName" class="form-control" placeholder="客人姓名">
+                                <input type="text" id="mobile" name="mobile" class="form-control" placeholder="联系方式">
                             </div>
 
                             <div class="form-group col-sm-2">
-                                <input type="text" id="start" name="start" class="form-control input-append date form_datetime" placeholder="发车时间(大于)">
+                                <input type="text" id="startPoint" name="startPoint" class="form-control input-append date form_datetime" placeholder="出发点">
                             </div>
                             <div class="form-group col-sm-2">
-                                <input type="text" id="end" name="end" class="form-control input-append date form_datetime" placeholder="发车时间(小于)">
+                                <input type="text" id="endPoint" name="endPoint" class="form-control input-append date form_datetime" placeholder="目的地">
                             </div>
                             <div class="form-group col-sm-2">
                                 <button id="c_search" class="btn btn-info">搜索</button>
@@ -52,7 +49,7 @@
                 <div class="col-sm-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            会员列表
+                            收入明细
                             <span class="tools pull-right">
                                <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
                             </span>
@@ -64,12 +61,15 @@
                                     <tr>
                                         <th><input type="checkbox" class="list-parent-check"
                                                    onclick="$leoman.checkAll(this);"/></th>
-                                        <th>订单号</th>
-                                        <th>路线起始</th>
-                                        <th>客人名称</th>
-                                        <th>发车时间</th>
-                                        <th>巴士数量</th>
-                                        <th>详情</th>
+                                        <th>申请人</th>
+                                        <th>联系方式</th>
+                                        <th>出发地</th>
+                                        <th>目的地</th>
+                                        <th>出行人数</th>
+                                        <th>出发时间</th>
+                                        <th>到达时间</th>
+                                        <th>返程时间</th>
+                                        <th>通勤方式</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -81,19 +81,18 @@
         </div>
     </div>
 </section>
-<%@ include file="../../inc/new2/foot.jsp" %>
-<%@ include file="../../inc/new2/confirm.jsp" %>
+<%@ include file="../inc/new2/foot.jsp" %>
 <script>
-    $carRental = {
+    $carTravel = {
         v: {
             list: [],
             dTable: null
         },
         fn: {
             init: function () {
-                $carRental.fn.dataTableInit();
+                $carTravel.fn.dataTableInit();
                 $("#c_search").click(function () {
-                    $carRental.v.dTable.ajax.reload();
+                    $carTravel.v.dTable.ajax.reload();
                 });
                 //清空
                 $("#c_clear").click(function () {
@@ -110,13 +109,13 @@
                 });
             },
             dataTableInit: function () {
-                $carRental.v.dTable = $leoman.dataTable($('#dataTables'), {
+                $carTravel.v.dTable = $leoman.dataTable($('#dataTables'), {
                     "processing": true,
                     "serverSide": true,
                     "searching": false,
                     "bSort": false,
                     "ajax": {
-                        "url": "${contextPath}/admin/carRental/list",
+                        "url": "${contextPath}/admin/commuting/list",
                         "type": "POST"
                     },
                     "columns": [
@@ -128,19 +127,23 @@
                             }
                         },
                         {
-                            "data": "order.orderNo",
+                            "data": "userName",
                             "sDefaultContent" : ""
                         },
                         {
-                            "data": "",
-                            "render": function (data, type, row, meta) {
-                                return row.startPoint+"————>"+row.endPoint
-                            },
+                            "data": "mobile",
                             "sDefaultContent" : ""
-
                         },
                         {
-                            "data": "order.userName",
+                            "data": "startPoint",
+                            "sDefaultContent" : ""
+                        },
+                        {
+                            "data": "endPoint",
+                            "sDefaultContent" : ""
+                        },
+                        {
+                            "data": "num",
                             "sDefaultContent" : ""
                         },
                         {
@@ -151,45 +154,49 @@
                             "sDefaultContent" : ""
                         },
                         {
-                            "data": "busNum",
+                            "data": "endDate",
+                            "render": function (data) {
+                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
+                            },
                             "sDefaultContent" : ""
-
                         },
                         {
-                            "data": "id",
-                            "render": function (data, type, row, meta) {
-                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$carRental.fn.detail(\'" + data + "\')\">" +
-                                        "<i class='fa fa-eye'></i> 查看</button>";
-                                return  detail ;
-                            }
+                            "data": "returnDate",
+                            "render": function (data) {
+                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
+                            },
+                            "sDefaultContent" : ""
+                        },
+                        {
+                            "data": "status",
+                            "render": function (data) {
+                                if(data = 0){
+                                    return "每天";
+                                }else if(data = 1){
+                                    return "工作日";
+                                }else{
+                                    return "周末";
+                                }
+                            },
+                            "sDefaultContent" : ""
                         }
+
 
                     ],
                     "fnServerParams": function (aoData) {
-                        aoData.orderNo = $("#orderNo").val();
-                        aoData.driverName = $("#driverName").val();
                         aoData.userName = $("#userName").val();
-                        aoData.Dstart = $("#start").val();
-                        aoData.Dend = $("#end").val();
-                        //只显示已完成的
-                        aoData.orderStatus = 3;
+                        aoData.mobile = $("#mobile").val();
+                        aoData.startPoint = $("#startPoint").val();
+                        aoData.endPoint = $("#endPoint").val();
                     }
                 });
             },
-            detail: function (id) {
-                var params = "";
-                if (id != null && id != '') {
-                    params = "?id=" + id;
-                }
-                window.location.href = "${contextPath}/admin/carRental/history/detail" + params;
-            },
-
             responseComplete: function (result, action) {
                 if (result.status == "0") {
                     if (action) {
-                        $carRental.v.dTable.ajax.reload(null, false);
+                        $carTravel.v.dTable.ajax.reload(null, false);
                     } else {
-                        $carRental.v.dTable.ajax.reload();
+                        $carTravel.v.dTable.ajax.reload();
                     }
                     $leoman.notify(result.msg, "success");
                 } else {
@@ -199,7 +206,7 @@
         }
     }
     $(function () {
-        $carRental.fn.init();
+        $carTravel.fn.init();
     })
 </script>
 </body>

@@ -12,4 +12,6 @@ public interface BusSendService extends GenericManager<BusSend> {
 
     public List<BusSend> findBus(Long id,Integer type);
 
+    public List<Long> findIds(String carNo,String driverName);
+
 }

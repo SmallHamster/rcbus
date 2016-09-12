@@ -24,29 +24,36 @@
                     <section class="panel">
                         <div class="panel-body">
                             <div class="form-group col-sm-2">
-                                <input type="text" id="mobile" name="mobile" class="form-control" placeholder="订单号">
+                                <input type="text" id="orderNo" name="orderNo" class="form-control" placeholder="订单号">
                             </div>
-                            <%--<div class="form-group col-sm-2">--%>
-                                <%--<select id="type" name="type" class="form-control input-sm">--%>
-                                    <%--<option value="">订单状态</option>--%>
-                                    <%--<option value="0">企业管理</option>--%>
-                                    <%--<option value="1">员工</option>--%>
-                                    <%--<option value="2">普通会员</option>--%>
-                                <%--</select>--%>
-                            <%--</div>--%>
-                            <%--<div class="form-group col-sm-2">--%>
-                                <%--<input type="text" id="1" name="1" class="form-control" placeholder="车牌号码">--%>
-                            <%--</div>--%>
+                            <div class="form-group col-sm-2">
+                                <select id="orderStatus" name="orderStatus" class="form-control input-sm">
+                                    <option value="">订单状态</option>
+                                    <option value="0">待审核</option>
+                                    <option value="1">待付款</option>
+                                    <option value="2">进行中</option>
+                                    <option value="3">已完成</option>
+                                    <option value="4">已取消</option>
+                                </select>
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <input type="text" id="carNo" name="carNo" class="form-control" placeholder="车牌号码">
+                            </div>
 
-                            <%--<div class="form-group col-sm-2">--%>
-                                <%--<input type="text" id="userName" name="userName" class="form-control" placeholder="客人姓名">--%>
-                            <%--</div>--%>
+                            <div class="form-group col-sm-2">
+                                <input type="text" id="userName" name="userName" class="form-control" placeholder="客人姓名">
+                            </div>
 
-                            <%--<div class="form-group col-sm-2">--%>
-                                <%--<input type="text" id="2" name="2" class="form-control" placeholder="出行日期">--%>
-                            <%--</div>--%>
-
-                            <button id="c_search" class="btn btn-info">搜索</button>
+                            <div class="form-group col-sm-2">
+                                <input type="text" id="start" name="start" class="form-control input-append date form_datetime" placeholder="发车时间(大于)">
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <input type="text" id="end" name="end" class="form-control input-append date form_datetime" placeholder="发车时间(小于)">
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <button id="c_search" class="btn btn-info">搜索</button>
+                                <button id="c_clear" class="btn btn-info"><i class="fa fa-recycle"></i> 清空</button>
+                            </div>
                         </div>
                     </section>
                 </div>
@@ -56,9 +63,6 @@
                     <section class="panel">
                         <header class="panel-heading">
                             会员列表
-                            <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
-                               <button class="btn btn-info" type="button" onclick="$carRental.fn.del();" id="deleteBatch" style="display: none">删除</button>
-                            </span>
                             <span class="tools pull-right">
                                <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
                             </span>
@@ -73,7 +77,7 @@
                                         <th>订单号</th>
                                         <th>客人姓名</th>
                                         <th>联系电话</th>
-                                        <th>出行时间</th>
+                                        <th>发车时间</th>
                                         <th>出发城市</th>
                                         <th>包车方式</th>
                                         <th>订单状态</th>
@@ -102,6 +106,21 @@
                 $carRental.fn.dataTableInit();
                 $("#c_search").click(function () {
                     $carRental.v.dTable.ajax.reload();
+                });
+                //清空
+                $("#c_clear").click(function () {
+                    $(this).parents(".panel-body").find("input,select").val("");
+                });
+                //时间控件初始化
+                $('.form_datetime').datetimepicker({
+                    language: 'zh-CN',
+                    weekStart: 1,
+                    todayBtn: 1,
+                    autoclose: 1,
+//                    forceParse: 1,
+//                    showMeridian: false,
+                    minView: "month",
+                    format: 'yyyy-mm-dd'
                 });
             },
             dataTableInit: function () {
@@ -219,9 +238,12 @@
                         }
                     ],
                     "fnServerParams": function (aoData) {
-//                        aoData.mobile = $("#mobile").val();
-//                        aoData.enterpriseId = $("#enterpriseId").val();
-//                        aoData.type = $("#type").val();
+                        aoData.orderNo = $("#orderNo").val();
+                        aoData.orderStatus = $("#orderStatus").val();
+                        aoData.carNo = $("#carNo").val();
+                        aoData.userName = $("#userName").val();
+                        aoData.Dstart = $("#start").val();
+                        aoData.Dend = $("#end").val();
                     }
                 });
             },
@@ -240,8 +262,6 @@
                 window.location.href = "${contextPath}/admin/carRental/detail" + params;
             },
             del: function (id) {
-                var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
-                var ids = checkBox.getInputId();
                 $("#confirm").modal("show");
                 $('#showText').html('您确定要彻底删除所选的订单吗？');
                 $("#determine").off("click");
@@ -250,7 +270,6 @@
                         "url": "${contextPath}/admin/carRental/del",
                         "data": {
                             id:id,
-                            ids:JSON.stringify(ids)
                         },
                         "dataType": "json",
                         "type": "POST",

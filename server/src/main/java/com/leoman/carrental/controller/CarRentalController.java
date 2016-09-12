@@ -1,5 +1,6 @@
 package com.leoman.carrental.controller;
 
+import com.leoman.bus.entity.Bus;
 import com.leoman.bus.entity.CarType;
 import com.leoman.bus.service.BusService;
 import com.leoman.bus.service.CarTypeService;
@@ -24,11 +25,16 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -66,11 +72,42 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Map<String, Object> list(Integer draw, Integer start, Integer length, CarRental carRental) {
+    public Map<String, Object> list(Integer draw, Integer start, Integer length, String orderNo,Integer orderStatus,String carNo,String driverName,String userName,String Dstart,String Dend) throws ParseException {
         int pagenum = getPageNum(start, length);
         Query query = Query.forClass(CarRental.class, carRentalService);
         query.setPagenum(pagenum);
         query.setPagesize(length);
+
+        if(StringUtils.isNotBlank(orderNo)){
+            query.like("order.orderNo",orderNo);
+        }
+
+        if(orderStatus!=null){
+            query.eq("order.status",orderStatus);
+        }
+
+        if(StringUtils.isNotBlank(userName)){
+            query.like("order.userName",userName);
+        }
+
+        if(StringUtils.isNotBlank(Dstart)){
+            query.ge("startDate",DateUtils.stringToLong(Dstart,"yyyy-MM-dd"));
+        }
+        if( StringUtils.isNotBlank(Dend)){
+            query.le("startDate",DateUtils.stringToLong(Dend,"yyyy-MM-dd"));
+        }
+
+
+        if(StringUtils.isNotBlank(carNo) || StringUtils.isNotBlank(driverName)){
+            List<Long> ids = busSendService.findIds(carNo,driverName);
+            if(!ids.isEmpty()){
+                query.in("id",ids);
+            }else {
+                //没有查询到任何相关信息
+                query.eq("id",0);
+            }
+        }
+
         Page<CarRental> page = carRentalService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
     }
@@ -186,22 +223,60 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
     }
 
 
+    //历史记录
+    /**
+     * 跳转历史记录
+     * @return
+     */
     @RequestMapping(value = "/history/index")
     public String historyIndex(){
-//        return "carrental/history/list";
-        return "";
+        return "carrental/history/list";
+    }
+
+    /**
+     * 历史详情
+     * @param id
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/history/detail")
+    public String historyDetail(Long id, Model model){
+
+        model.addAttribute("carRental",carRentalService.queryByPK(id));
+        //巴士
+        model.addAttribute("busSend",busSendService.findBus(id,2));
+
+        return "carrental/history/detail";
     }
 
 
-    @RequestMapping(value = "/history/list")
-    @ResponseBody
-    public Map<String, Object> historyList(Integer draw, Integer start, Integer length, CarRental carRental) {
-        int pagenum = getPageNum(start, length);
-        Query query = Query.forClass(CarRental.class, carRentalService);
-        query.setPagenum(pagenum);
-        query.setPagesize(length);
-        Page<CarRental> page = carRentalService.queryPage(query);
-        return DataTableFactory.fitting(draw, page);
+
+    //收入明细
+    @RequestMapping(value = "/income/index")
+    public String incomeIndex(){
+        return "carrental/income/list";
     }
+
+
+    @RequestMapping(value = "/income/detail")
+    public String incomeDetail(Long id, Model model){
+
+        model.addAttribute("carRental",carRentalService.queryByPK(id));
+        //巴士
+        model.addAttribute("busSend",busSendService.findBus(id,2));
+        //报价
+        List<CarRentalOffer> carRentalOffer = carRentalOfferService.queryByProperty("rentalId",id);
+        model.addAttribute("carRentalOffer",carRentalOffer);
+
+        return "carrental/income/detail";
+    }
+
+//    @RequestMapping(value = {"/exportFeedback"})
+//    public void exportFeedback(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> map, Integer type) throws Exception {
+//        List<Map<String, Object>> list = questionService.pageToExcel(map,type);
+//        ExcelUtil.createExcel(USER_TEMPLATE, USER_FIELD, list, tempFilePath);
+//        download(request, response, USER_EXCEL_NAME);
+//    }
+
 
 }
