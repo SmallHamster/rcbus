@@ -62,6 +62,9 @@ public class Order extends BaseEntity{
     @Column(name = "is_comment")
     private Integer isComment;
 
+    @Column(name = "comment_time")
+    private Long commentTime;
+
     public Integer getType() {
         return type;
     }
@@ -156,5 +159,13 @@ public class Order extends BaseEntity{
 
     public void setIsComment(Integer isComment) {
         this.isComment = isComment;
+    }
+
+    public Long getCommentTime() {
+        return commentTime;
+    }
+
+    public void setCommentTime(Long commentTime) {
+        this.commentTime = commentTime;
     }
 }
