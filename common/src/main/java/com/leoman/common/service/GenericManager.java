@@ -271,4 +271,6 @@ public interface GenericManager<T> {
     public Integer updateBySql(String sql);
 
     public Page queryPageByJpql(String jpql, int pageNo, int rowsPerPage);
+
+    public Page queryPageBySql(String sql, int pageNo, int rowsPerPage);
 }

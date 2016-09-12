@@ -460,4 +460,31 @@ public class GenericManagerImpl<E, D extends IBaseJpaRepository<E>> implements G
                 .getResultList();
         return new PageImpl<E>(result, new PageRequest(pageNo - 1, rowsPerPage), totalPageCount == 0 ? 1 : totalPageCount);
     }
+
+    @Override
+    public Page queryPageBySql(String sql, int pageNo, int rowsPerPage) {
+        if (pageNo <= 0)
+            pageNo = 1;
+        if (rowsPerPage <= 0)
+            rowsPerPage = 7;
+
+        String countSql = "select count(*) from (" + sql + ") as countNum";
+        int count = getCountSql(countSql).intValue();
+
+        // 当把最后一页数据删除以后,页码会停留在最后一个上必须减一
+        int totalPageCount = count / rowsPerPage;
+        if (pageNo > totalPageCount && (count % rowsPerPage == 0)) {
+            pageNo = totalPageCount;
+        }
+        if (pageNo - totalPageCount > 2) {
+            pageNo = totalPageCount + 1;
+        }
+        int firstResult = (pageNo - 1) * rowsPerPage;
+        if (firstResult < 0) {
+            firstResult = 0;
+        }
+        List result = getEntityManager().createNativeQuery(sql).setFirstResult(firstResult).setMaxResults(rowsPerPage)
+                .getResultList();
+        return new PageImpl<E>(result, new PageRequest(pageNo - 1, rowsPerPage), totalPageCount == 0 ? 1 : totalPageCount);
+    }
 }

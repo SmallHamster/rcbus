@@ -12,6 +12,7 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * xml������
@@ -102,6 +103,8 @@ public class XMLUtil {
 		in.close();
 		return (String)doc.getProperty("encoding");
 	}
+
+
 	
 	
 }

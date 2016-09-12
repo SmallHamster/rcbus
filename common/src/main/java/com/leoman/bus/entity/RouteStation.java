@@ -21,10 +21,10 @@ public class RouteStation extends BaseEntity{
     private String stationName;//站点名称
 
     @Column(name = "lng")
-    private BigDecimal lng;//经度
+    private Double lng;//经度
 
     @Column(name = "lat")
-    private BigDecimal lat;//纬度
+    private Double lat;//纬度
 
     @Column(name = "station_order")
     private Integer stationOrder;//站点顺序
@@ -40,19 +40,19 @@ public class RouteStation extends BaseEntity{
         this.stationName = stationName;
     }
 
-    public BigDecimal getLng() {
+    public Double getLng() {
         return lng;
     }
 
-    public void setLng(BigDecimal lng) {
+    public void setLng(Double lng) {
         this.lng = lng;
     }
 
-    public BigDecimal getLat() {
+    public Double getLat() {
         return lat;
     }
 
-    public void setLat(BigDecimal lat) {
+    public void setLat(Double lat) {
         this.lat = lat;
     }
 

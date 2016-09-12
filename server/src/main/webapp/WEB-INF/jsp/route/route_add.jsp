@@ -30,7 +30,7 @@
                             新增/编辑路线
                         </header>
                         <div class="panel-body">
-                            <form class="cmxform form-horizontal adminex-form" id="formId" method="post">
+                            <form class="cmxform form-horizontal adminex-form" id="formId" method="post" enctype="multipart/form-data">
                                 <input type="hidden" id="routeId" name="route.id" value="${route.id}">
                                 <input type="hidden" name="departTimes" value="">
                                 <input type="hidden" name="backTimes" value="">
@@ -47,6 +47,19 @@
                                         </select>
                                     </div>
                                 </div>
+
+                                <c:if test="${route.id == null}">
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" >是否有返程：</label>
+                                    <div class="col-sm-1">
+                                        <select class="form-control input-sm" name="isRoundTrip" onchange="$route.fn.tripChange(this)">
+                                            <option value="0">否</option>
+                                            <option value="1">是</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                </c:if>
+
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label">线路添加：</label>
@@ -277,9 +290,18 @@
             //企业下拉框改变事件
             enterpriseChange : function (obj){
                 //如果企业类型为专线，则需要填写返程时间，不需要分派车辆
-                var type = $(obj).find("option:checked").attr("type");
+                /*var type = $(obj).find("option:checked").attr("type");
                 $("#enterpriseType").val(type);
                 if( type == '1' && $("#routeId").val() ==''){
+                    $("#backTimeDiv").show();
+                }
+                //如果企业类型为一般，则不需要填写返程时间，但是需要分派车辆
+                else{
+                    $("#backTimeDiv").hide();
+                }*/
+            },
+            tripChange :function(obj){
+                if( $(obj).val() == 1 && $("#routeId").val() ==''){
                     $("#backTimeDiv").show();
                 }
                 //如果企业类型为一般，则不需要填写返程时间，但是需要分派车辆
@@ -432,10 +454,10 @@
             save : function() {
                 var flag = true;
 
-                if($("#busIds").val() == ''){
+                /*if($("#busIds").val() == ''){
                     flag = false;
                     $common.fn.notify('请至少派遣一辆车');
-                }
+                }*/
 
                 if(flag){
                     $("#formId").ajaxSubmit({
@@ -443,7 +465,7 @@
                         type : "POST",
                         success : function(result) {
                             if(result.status == 0) {
-                                window.location.href = "${contextPath}/admin/route/index";
+                                <%--window.location.href = "${contextPath}/admin/route/index";--%>
                             }
                             else {
                                 $common.fn.notify('操作失败');

@@ -103,8 +103,8 @@
                     "url": "${contextPath}/admin/route/saveOrder",
                     "data": {
                         'type':'1',
-                        'userInfo.id':1,
-                        'timeId':8
+                        'userId':5,
+                        'timeId':9
                     },
                     "dataType": "json",
                     "type": "POST",
@@ -172,13 +172,16 @@
                                         "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
 
                                 var txt = "";
+                                var icon = "";
                                 if(row.isShow == 1){
-                                    txt = "隐藏";
+                                    txt = " 隐藏";
+                                    icon = "<i class='fa fa-circle-o'></i>";
                                 }else if(row.isShow == 0){
-                                    txt = "显示";
+                                    txt = " 显示";
+                                    icon = "<i class='fa fa-circle'></i>";
                                 }
                                 var showHide = "<button title='+txt+' class='btn btn-primary btn-circle edit' onclick=\"$route.fn.showHide(\'" + data + "\',\'" + row.isShow + "\')\">" +
-                                        "<i class='fa fa-pencil-square-o'></i> "+txt+"</button>";
+                                        icon + txt + "</button>";
 
                                 var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$route.fn.delete(\'" + data + "\')\">" +
                                         "<i class='fa fa-trash-o'></i> 删除</button>";
@@ -247,7 +250,7 @@
                 $("#determine").off("click");
                 $("#determine").on("click",function(){
                     $.ajax({
-                        "url": "${contextPath}/admin/route/uodateIsShow",
+                        "url": "${contextPath}/admin/route/updateIsShow",
                         "data": {
                             id:id,
                             isShow:oper

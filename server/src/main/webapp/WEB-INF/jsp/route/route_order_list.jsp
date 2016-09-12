@@ -23,12 +23,6 @@
                 <div class="col-sm-12">
                     <section class="panel">
                         <div class="panel-body">
-                            <div class="form-group col-sm-2">
-                                <input type="text" id="startStation" class="form-control" placeholder="始发站">
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <input type="text" id="endStation" class="form-control" placeholder="终点站">
-                            </div>
                             <div class="form-group col-sm-2" style="width: 100px;margin-top: 5px;">
                                 所属企业：
                             </div>
@@ -39,6 +33,18 @@
                                         <option value="${enterprise.id}">${enterprise.name}</option>
                                     </c:forEach>
                                 </select>
+                            </div>
+                            <div class="form-group col-sm-2" style="width: 100px;margin-top: 5px;">
+                                从：
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <input type="text" id="startTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="" placeholder="请选择起始时间">
+                            </div>
+                            <div class="form-group col-sm-2" style="width: 100px;margin-top: 5px;">
+                                至：
+                            </div>
+                            <div class="form-group col-sm-2">
+                                <input type="text" id="endTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="" placeholder="请选择结束时间">
                             </div>
 
                             <button id="c_search" class="btn btn-info"><i class="fa fa-search"></i> 搜索</button>
@@ -68,9 +74,10 @@
                                         <th><input type="checkbox" class="list-parent-check"
                                                    onclick="$leoman.checkAll(this);"/></th>
                                         <th>路线起始</th>
-                                        <th>所属企业</th>
-                                        <th>状态</th>
-                                        <th>操作</th>
+                                        <th>公司名称</th>
+                                        <th>发车时间</th>
+                                        <th>人数</th>
+                                        <th>司机评价</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -99,6 +106,17 @@
                 $("#c_clear").click(function () {
                     $(this).parents(".panel-body").find("input,select").val("");
                 });
+                $('.form_datetime').datetimepicker({
+                    language: 'zh-CN',
+                    weekStart: 1,
+                    todayBtn: 1,
+                    autoclose: 1,
+                    todayHighlight: 1,
+                    startView: 'hour',
+                    forceParse: 0,
+                    showMeridian: false,
+                    format: 'hh:ii'
+                });
             },
             dataTableInit: function () {
                 $route.v.dTable = $leoman.dataTable($('#dataTables'), {
@@ -113,65 +131,51 @@
                     "columns": [
                         {
                             "data": "id",
-                            "render": function (data) {
+                            "render": function (data, type, row, meta) {
                                 var checkbox = "<input type='checkbox' class='list-check' onclick='$leoman.subSelect(this);' value=" + data + ">";
                                 return checkbox;
                             }
                         },
-                        {"data": "orderNo"},
-                        /*{
-                            "data": "order.enterprise.type",
-                            "render": function (data, type, row, meta) {
-
-                                var routeName = "";
-                                //企业
-                                if(data == '0'){
-                                    routeName = row.startStation + " ------> " +row.endStation;
-                                }
-                                //专线
-                                else{
-                                    routeName = row.routeName;
-                                }
-                                return routeName;
-                            }
-                        },*/
-                        {"data": "enterprise.name"},
                         {
-                            "data": "isShow",
+                            "data": "id",//起点站--终点站
                             "render": function (data, type, row, meta) {
-
-                                var status = "";
-                                if(data == 0){
-                                    status = "隐藏";
-                                }else{
-                                    status = "显示";
+                                var str = "";
+                                //企业类型为普通企业
+                                if(row[5] == '0'){
+                                    str = row[1]+" ------> "+row[2];
                                 }
-                                return status;
+                                //企业类型为专线
+                                else if(row[5] == '1'){
+                                    str = row[3];
+                                }
+                                return str;
+                            }
+                        },
+                        {
+                            "data": "id",
+                            "render": function (data, type, row, meta) {
+                                return row[2];
+                            }
+                        },
+                        {
+                            "data": "rideTime",//发车时间
+                            "render": function (data, type, row, meta) {
+                                return row[0];
+                            }
+                        },
+                        {
+                            "data": "peopleNum",//乘车人数
+                            "render": function (data, type, row, meta) {
+                                return row[6];
                             }
                         },
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {
 
-                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$route.fn.detail(\'" + data + "\')\">" +
+                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$route.fn.orderComment(\'" + row[7] + "\',\'" + row[0] + "\')\">" +
                                         "<i class='fa fa-eye'></i> 查看</button>";
-
-                                var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$route.fn.add(\'" + data + "\')\">" +
-                                        "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
-
-                                var txt = "";
-                                if(row.isShow == 1){
-                                    txt = "隐藏";
-                                }else if(row.isShow == 0){
-                                    txt = "显示";
-                                }
-                                var showHide = "<button title='+txt+' class='btn btn-primary btn-circle edit' onclick=\"$route.fn.showHide(\'" + data + "\',\'" + row.isShow + "\')\">" +
-                                        "<i class='fa fa-pencil-square-o'></i> "+txt+"</button>";
-
-                                var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$route.fn.delete(\'" + data + "\')\">" +
-                                        "<i class='fa fa-trash-o'></i> 删除</button>";
-
-                                return detail + "&nbsp;" + edit + "&nbsp;" + showHide + "&nbsp;"+ del;
+                                return detail;
                             }
                         }
                     ],
@@ -182,78 +186,13 @@
                     }
                 });
             },
-            detail: function (id) {
+            //查看司机评价
+            orderComment: function (routeTimeId, routeTime) {
                 var params = "";
-                if (id != null && id != '') {
-                    params = "?id=" + id;
+                if (routeTimeId != null && routeTimeId != '') {
+                    params = "?routeTimeId=" + routeTimeId+"&routeTime="+routeTime;
                 }
-                window.location.href = "${contextPath}/admin/route/detail" + params;
-            },
-            add: function (id) {
-                var params = "";
-                if (id != null && id != '') {
-                    params = "?id=" + id;
-                }
-                window.location.href = "${contextPath}/admin/route/add" + params;
-            },
-            delete: function (id) {
-                var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
-                var ids = checkBox.getInputId();
-                $("#confirm").modal("show");
-                $('#showText').html('您确定要删除吗？');
-                $("#determine").off("click");
-                $("#determine").on("click",function(){
-                    $.ajax({
-                        "url": "${contextPath}/admin/route/delete",
-                        "data": {
-                            ids:JSON.stringify(ids)
-                        },
-                        "dataType": "json",
-                        "type": "POST",
-                        success: function (result) {
-                            if (result==1) {
-                                alert("删除错误");
-                            }else if(result==2){
-                                alert("超级管理员无法删除");
-                            }else {
-                                $route.v.dTable.ajax.reload(null,false);
-                            }
-                            $("#confirm").modal("hide");
-                        }
-                    });
-                })
-            },
-            showHide : function(id,isShow){
-                $("#confirm").modal("show");
-                var oper = "";
-                if(isShow == 1){
-                    oper = 0;
-                }else if(isShow == 0){
-                    oper = 1;
-                }
-                $('#showText').html('您确定要执行此操作吗？');
-                $("#determine").off("click");
-                $("#determine").on("click",function(){
-                    $.ajax({
-                        "url": "${contextPath}/admin/route/uodateIsShow",
-                        "data": {
-                            id:id,
-                            isShow:oper
-                        },
-                        "dataType": "json",
-                        "type": "POST",
-                        success: function (result) {
-                            if (result==1) {
-                                alert("删除错误");
-                            }else if(result==2){
-                                alert("超级管理员无法删除");
-                            }else {
-                                $route.v.dTable.ajax.reload(null,false);
-                            }
-                            $("#confirm").modal("hide");
-                        }
-                    });
-                })
+                window.location.href = "${contextPath}/admin/order/comment" + params;
             },
             responseComplete: function (result, action) {
                 if (result.status == "0") {
