@@ -59,6 +59,8 @@ public class Order extends BaseEntity{
     @Column(name = "arrive_time")
     private Integer arriveTime;
 
+    @Column(name = "is_comment")
+    private Integer isComment;
 
     public Integer getType() {
         return type;
@@ -146,5 +148,13 @@ public class Order extends BaseEntity{
 
     public void setArriveTime(Integer arriveTime) {
         this.arriveTime = arriveTime;
+    }
+
+    public Integer getIsComment() {
+        return isComment;
+    }
+
+    public void setIsComment(Integer isComment) {
+        this.isComment = isComment;
     }
 }
