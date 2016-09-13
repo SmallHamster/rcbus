@@ -38,10 +38,6 @@ public class Order extends BaseEntity{
     @Column(name = "mobile")
     private String mobile;
 
-    //路线时间点id
-    @Column(name = "route_time_id")
-    private Long routeTimeId;
-
     //* 1-5星 评价
     //司机服务(*)
     @Column(name = "driver_service")
@@ -113,14 +109,6 @@ public class Order extends BaseEntity{
         this.mobile = mobile;
     }
 
-    public Long getRouteTimeId() {
-        return routeTimeId;
-    }
-
-    public void setRouteTimeId(Long routeTimeId) {
-        this.routeTimeId = routeTimeId;
-    }
-
     public Integer getDriverService() {
         return driverService;
     }
@@ -167,5 +155,11 @@ public class Order extends BaseEntity{
 
     public void setCommentTime(Long commentTime) {
         this.commentTime = commentTime;
+    }
+
+    public Order(){}
+
+    public Order(Long id) {
+        super.setId(id);
     }
 }
