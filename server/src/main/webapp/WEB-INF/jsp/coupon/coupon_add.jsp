@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>新增车辆</title>
+    <title>编辑礼券</title>
     <%@ include file="../inc/new2/css.jsp" %>
 </head>
 
@@ -27,7 +27,7 @@
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            新增车辆
+                            编辑礼券
                         </header>
                         <div class="panel-body">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post"  enctype="multipart/form-data">

@@ -82,7 +82,8 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >司机性别：</label>
                                     <div class="col-sm-6">
-                                        ${bus.driverSex}
+                                        <c:if test="${bus.driverSex == 0}">男</c:if>
+                                        <c:if test="${bus.driverSex == 1}">女</c:if>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -94,7 +95,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >图片：</label>
                                     <div class="col-sm-6">
-                                        <img src="${bus.imgUrl}" style="width: 100px; height: 100px;">
+                                        <img src="${bus.image.path}" style="width: 100px; height: 100px;">
                                     </div>
                                 </div>
                                 <div class="form-group">

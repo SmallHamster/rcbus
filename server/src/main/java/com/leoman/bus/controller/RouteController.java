@@ -1,7 +1,12 @@
 package com.leoman.bus.controller;
 
+import com.leoman.bus.dao.RouteStationDao;
 import com.leoman.bus.entity.Route;
+import com.leoman.bus.entity.RouteOrder;
+import com.leoman.bus.entity.RouteStation;
+import com.leoman.bus.service.RouteOrderService;
 import com.leoman.bus.service.RouteService;
+import com.leoman.bus.service.RouteStationService;
 import com.leoman.bus.service.RouteTimeService;
 import com.leoman.bus.service.impl.RouteServiceImpl;
 import com.leoman.bussend.entity.BusSend;
@@ -19,10 +24,12 @@ import com.leoman.user.service.UserService;
 import com.leoman.utils.ClassUtil;
 import com.leoman.utils.JsonUtil;
 import org.jdom.JDOMException;
+import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -67,7 +74,10 @@ public class RouteController extends GenericEntityController<Route, Route, Route
     private UserService userService;
 
     @Autowired
-    private RouteTimeService routeTimeService;
+    private RouteOrderService routeOrderService;
+
+    @Autowired
+    private RouteStationService routeStationService;
 
     /**
      * 列表页面
@@ -118,16 +128,32 @@ public class RouteController extends GenericEntityController<Route, Route, Route
         if (id != null) {
             Route route = routeService.queryByPK(id);
 
+            //路线时间
             model.addAttribute("route", route);//路线
-            model.addAttribute("timeJson", JsonUtil.obj2Json(route.getTimes()));//路线时间
+            model.addAttribute("timeJson", JsonUtil.obj2Json(route.getTimes()));
 
+            //已派遣的班车ids
+            String busIdsStr = "";
             StringBuffer busIds = new StringBuffer();
             List<BusSend> bsList = busSendService.findBus(route.getId(),1);
             for (BusSend bs:bsList) {
                 Long busId = bs.getBus().getId();
                 busIds.append(busId+",");
+                busIdsStr = busIds.toString().substring(0,busIds.toString().length()-1);
             }
-            model.addAttribute("busIds",busIds.toString().substring(0,busIds.toString().length()-1));
+            model.addAttribute("busIds",busIdsStr);
+
+            //显示已有的路线
+            StringBuffer stationSb = new StringBuffer();
+            List<RouteStation> stationList = routeStationService.findByRouteId(id);
+            for (RouteStation rs:stationList) {
+                stationSb.append(rs.getStationName()+"-->");
+            }
+            String stationStr = "";
+            if(stationSb.length()>0){
+                stationStr = stationSb.toString().substring(0,stationSb.toString().length()-3);
+            }
+            model.addAttribute("stationStr",stationStr);
 
         }
         //获取所有企业
@@ -145,51 +171,16 @@ public class RouteController extends GenericEntityController<Route, Route, Route
     @ResponseBody
     public Result save(Route route, String departTimes, String backTimes, String busIds, Integer isRoundTrip, MultipartFile file) {
         try {
-            List<Map> list = this.doXMLParse(file);//解析xml
+            List<Map> list = null;
+            if(file != null){
+                list = this.doXMLParse(file);//解析xml
+            }
             routeService.saveRoute(route,departTimes,backTimes,busIds,isRoundTrip, list);
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();
         }
         return Result.success();
-    }
-
-    /**
-     * 解析xml
-     * @param file
-     * @return
-     * @throws JDOMException
-     * @throws IOException
-     */
-    private List<Map> doXMLParse(MultipartFile file) throws JDOMException, IOException, ParserConfigurationException, SAXException {
-        List<Map> list = new ArrayList<>();
-        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = builderFactory.newDocumentBuilder();
-        InputStream in = file.getInputStream();
-        Document doc = builder.parse(in);
-        doc.getDocumentElement().normalize();
-        NodeList nList = doc.getElementsByTagName("wpt");
-
-
-        for(int i = 0 ; i<nList.getLength();i++) {
-            Node node = nList.item(i);
-            System.out.println("Node name: " + node.getNodeName());
-            Element ele = (Element) node;
-            System.out.println("----------------------------");
-            if (node.getNodeType() == Element.ELEMENT_NODE) {
-                System.out.println("wpt lat: " + ele.getAttribute("lat"));
-                System.out.println("wpt lon: " + ele.getAttribute("lon"));
-                System.out.println("wpt name: " + ele.getElementsByTagName("name").item(0).getTextContent());
-                System.out.println("-------------------------");
-                Map map = new HashMap();
-                map.put("lat",ele.getAttribute("lat"));
-                map.put("lon",ele.getAttribute("lon"));
-                map.put("name",ele.getElementsByTagName("name").item(0).getTextContent());
-                list.add(map);
-            }
-        }
-        in.close();
-        return list;
     }
 
     /**
@@ -204,6 +195,29 @@ public class RouteController extends GenericEntityController<Route, Route, Route
             Route route = routeService.queryByPK(id);
             model.addAttribute("route", route);//路线
             model.addAttribute("timeJson", JsonUtil.obj2Json(route.getTimes()));//路线时间
+
+            //已派遣的班车ids
+            String busIdsStr = "";
+            StringBuffer busIds = new StringBuffer();
+            List<BusSend> bsList = busSendService.findBus(route.getId(),1);
+            for (BusSend bs:bsList) {
+                Long busId = bs.getBus().getId();
+                busIds.append(busId+",");
+                busIdsStr = busIds.toString().substring(0,busIds.toString().length()-1);
+            }
+            model.addAttribute("busIds",busIdsStr);
+
+            //显示已有的路线
+            StringBuffer stationSb = new StringBuffer();
+            List<RouteStation> stationList = routeStationService.findByRouteId(id);
+            for (RouteStation rs:stationList) {
+                stationSb.append(rs.getStationName()+"-->");
+            }
+            String stationStr = "";
+            if(stationSb.length()>0){
+                stationStr = stationSb.toString().substring(0,stationSb.toString().length()-3);
+            }
+            model.addAttribute("stationStr",stationStr);
         }
         return "route/route_info";
     }
@@ -217,10 +231,11 @@ public class RouteController extends GenericEntityController<Route, Route, Route
     @ResponseBody
     public Result delete(String ids) {
         try {
-            String [] idArr = ids.split("\\,");
+            String[] idArr = JsonUtil.json2Obj(ids, String[].class);
             for (String id:idArr) {
-                Integer routeId = Integer.valueOf(id);
-                routeService.deleteByPK(routeId);
+                if(!StringUtils.isEmpty(id)){
+                    routeService.deleteRoute(Long.valueOf(id));
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -296,34 +311,39 @@ public class RouteController extends GenericEntityController<Route, Route, Route
     public Map<String, Object> list(Route route, Integer draw, Integer start, Integer length) {
         int pagenum = getPageNum(start, length);
         String sql = "SELECT \n" +
-                " CONCAT( FROM_UNIXTIME(o.`create_date`/1000,'%Y-%m-%d'),' ',rt.`depart_time`) AS rideTime,  \n" +
-                " r.`start_station` AS startStation,\n" +
-                " r.`end_station` AS endStation,\n" +
-                " r.`route_name` AS routeName,\n" +
-                " e.`name` AS enterpriseName, \n" +
-                " e.`type` AS enterpriseType,  \n" +
-                " COUNT(o.`user_id`) AS peopleNum, \n" +
-                " o.`route_time_id` AS routeTimeId  \n" +
+                "  CONCAT(FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d'),' ',ro.`depart_time`) AS rideTime,\n" +//0
+                "  ro.`start_station` AS startStation,\n" +//1
+                "  ro.`end_station` AS endStation,\n" +//2
+                "  ro.`depart_time` AS departTime,\n" +//3
+                "  e.`name` AS enterpriseName,\n" +//4
+                "  COUNT(o.`user_id`) AS peopleNum, \n" +//5
+                "  ro.`route_id` AS routeId\n" +//6
                 "FROM\n" +
-                "  t_order o\n" +
-                "  LEFT JOIN t_route_time rt \n" +
-                "  ON rt.`id` = o.`route_time_id`\n" +
-                "  LEFT JOIN t_route r\n" +
-                "  ON r.`id` = rt.`route_id`\n" +
-                "  LEFT JOIN t_enterprise e\n" +
-                "  ON e.`id` = r.`enterprise_id`\n" +
-                "WHERE o.`type` = 1 \n" +
-                " GROUP BY FROM_UNIXTIME(o.`create_date`/1000,'%Y-%m-%d'), o.`route_time_id`";
+                "  t_route_order ro \n" +
+                "  LEFT JOIN t_order o \n" +
+                "    ON o.`id` = ro.`order_id` \n" +
+                "  LEFT JOIN t_route r \n" +
+                "    ON r.`id` = ro.`route_id` \n" +
+                "  LEFT JOIN t_enterprise e \n" +
+                "    ON e.`id` = r.`enterprise_id` \n" +
+                "GROUP BY CONCAT(FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d'),' ',ro.`depart_time`)";
         Page page = orderService.queryPageBySql(sql, pagenum, length);
         return DataTableFactory.fitting(draw, page);
     }
 
+    /**
+     * 保存订单
+     * @param routeId
+     * @param departTime
+     * @param userId
+     * @return
+     */
     @RequestMapping(value = "/saveOrder", method = RequestMethod.POST)
     @ResponseBody
-    public Result saveOrder(Route route, Long timeId, Long userId) {
+    public Result saveOrder(Long routeId, String departTime, Long userId) {
         try {
             UserInfo user = userService.queryByPK(userId);
-            routeService.saveOrder(route, timeId, user);
+            routeService.saveOrder(routeId, departTime, user);
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();
@@ -337,15 +357,16 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      * @return
      */
     @RequestMapping(value = "/order/comment")
-    public String orderComment(Model model, Long routeTimeId, String routeTime) {
-        model.addAttribute("routeTimeId",routeTimeId);
-        model.addAttribute("routeTime",routeTime);
+    public String orderComment(Model model, Long routeId, String departTime) {
+        model.addAttribute("routeId",routeId);
+        model.addAttribute("departTime",departTime);
+        Route route = routeService.queryByPK(routeId);
+        model.addAttribute("route",route);
         return "route/route_order_comment";
     }
 
     /**
      * 获取路线对应的所有评价
-     * @param order
      * @param draw
      * @param start
      * @param length
@@ -353,15 +374,50 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      */
     @RequestMapping(value = "/comment/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> commentList(Order order,Integer draw, Integer start, Integer length) {
+    public Map<String, Object> commentList(RouteOrder routeOrder, Long routeId,String mobile,Integer draw, Integer start, Integer length) {
         int pagenum = getPageNum(start, length);
-        Query query = Query.forClass(Order.class, orderService);
+        Query query = Query.forClass(RouteOrder.class, routeOrderService);
         query.setPagenum(pagenum);
         query.setPagesize(length);
-        query.eq("isComment",1);
-        query.eq("routeTimeId",order.getRouteTimeId());
-        Page<Order> page = orderService.queryPage(query);
+        query.eq("order.isComment",1);//已评价
+        query.eq("route.id", routeId);
+        String [] departTimeArr = routeOrder.getDepartTime().split("\\ ");
+        query.eq("departTime", departTimeArr.length==2?departTimeArr[1]:null);
+        query.like("userInfo.mobile",mobile);
+        Page<RouteOrder> page = routeOrderService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
+    }
+
+    /**
+     * 解析xml
+     * @param file
+     * @return
+     * @throws JDOMException
+     * @throws IOException
+     */
+    private List<Map> doXMLParse(MultipartFile file) throws JDOMException, IOException, ParserConfigurationException, SAXException {
+        List<Map> list = new ArrayList<>();
+        DocumentBuilderFactory builderFactory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = builderFactory.newDocumentBuilder();
+        InputStream in = file.getInputStream();
+        Document doc = builder.parse(in);
+        doc.getDocumentElement().normalize();
+        NodeList nList = doc.getElementsByTagName("wpt");
+
+
+        for(int i = 0 ; i<nList.getLength();i++) {
+            Node node = nList.item(i);
+            Element ele = (Element) node;
+            if (node.getNodeType() == Element.ELEMENT_NODE) {
+                Map map = new HashMap();
+                map.put("lat",ele.getAttribute("lat"));
+                map.put("lon",ele.getAttribute("lon"));
+                map.put("name",ele.getElementsByTagName("name").item(0).getTextContent());
+                list.add(map);
+            }
+        }
+        in.close();
+        return list;
     }
 
 }

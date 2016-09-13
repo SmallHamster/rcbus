@@ -13,5 +13,12 @@
     <build>
         <finalName>server</finalName>
     </build>
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.poi</groupId>
+            <artifactId>poi</artifactId>
+            <version>3.10-FINAL</version>
+        </dependency>
+    </dependencies>
 
 </project>

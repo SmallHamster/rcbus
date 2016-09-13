@@ -59,7 +59,8 @@
                         <header class="panel-heading">
                             路线列表
                             <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
-                               <button class="btn btn-info" type="button" onclick="$route.fn.delete();" id="deleteBatch" style="display: none">删除</button>
+                               <button class="btn btn-info" type="button" onclick="$route.fn.delete();" id="deleteBatch" style="display: none">
+                                   <i class='fa fa-trash-o'></i> 删除</button>
                             </span>
                             <span class="tools pull-right">
                                <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i> 刷新</button>
@@ -139,22 +140,13 @@
                         {
                             "data": "id",//起点站--终点站
                             "render": function (data, type, row, meta) {
-                                var str = "";
-                                //企业类型为普通企业
-                                if(row[5] == '0'){
-                                    str = row[1]+" ------> "+row[2];
-                                }
-                                //企业类型为专线
-                                else if(row[5] == '1'){
-                                    str = row[3];
-                                }
-                                return str;
+                                return row[1]+" ------> "+row[2];
                             }
                         },
                         {
-                            "data": "id",
+                            "data": "id",//企业名称
                             "render": function (data, type, row, meta) {
-                                return row[2];
+                                return row[4];
                             }
                         },
                         {
@@ -166,14 +158,14 @@
                         {
                             "data": "peopleNum",//乘车人数
                             "render": function (data, type, row, meta) {
-                                return row[6];
+                                return row[5];
                             }
                         },
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {
 
-                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$route.fn.orderComment(\'" + row[7] + "\',\'" + row[0] + "\')\">" +
+                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$route.fn.orderComment(\'" + row[6] + "\',\'" + row[0] + "\')\">" +
                                         "<i class='fa fa-eye'></i> 查看</button>";
                                 return detail;
                             }
@@ -187,12 +179,9 @@
                 });
             },
             //查看司机评价
-            orderComment: function (routeTimeId, routeTime) {
-                var params = "";
-                if (routeTimeId != null && routeTimeId != '') {
-                    params = "?routeTimeId=" + routeTimeId+"&routeTime="+routeTime;
-                }
-                window.location.href = "${contextPath}/admin/order/comment" + params;
+            orderComment: function (routeId, departTime) {
+                var params = "?routeId=" + routeId+"&departTime="+departTime;
+                location.href = "${contextPath}/admin/route/order/comment" + params;
             },
             responseComplete: function (result, action) {
                 if (result.status == "0") {

@@ -23,7 +23,7 @@
                 <div class="col-sm-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            xxxx路线名称&nbsp;&nbsp;发车时间：${routeTime}
+                            ${route.startStation} ------> ${route.endStation}&nbsp;发车时间：${departTime}
                         </header>
                         <div class="panel-body">
 
@@ -43,8 +43,6 @@
                             司机评价
                             <span class="tools pull-right">
                                <button type="button" onclick="$route.fn.back()" class="btn btn-primary">返回</button>
-                                <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i> 刷新</button>
-                                <button class="btn btn-info" type="button" onclick="$route.fn.add();"><i class="fa fa-plus"></i> 新增路线</button>
                             </span>
                         </header>
                         <div class="panel-body">
@@ -100,28 +98,29 @@
                         "type": "POST"
                     },
                     "columns": [
-                        {"data": "userInfo.mobile"},
+                        {"data": "order.userInfo.mobile"},
                         {
-                            "data": "commentTime",
+                            "data": "order.commentTime",
                             "render": function (data, type, row, meta) {
                                 var date = new Date(data);
                                 return date.format('yyyy-MM-dd h:m:s');
                             }
                         },
-                        {"data": "driverService"},
-                        {"data": "busEnvironment"},
-                        {"data": "safeDriving"},
-                        {"data": "arriveTime"},
+                        {"data": "order.driverService"},
+                        {"data": "order.busEnvironment"},
+                        {"data": "order.safeDriving"},
+                        {"data": "order.arriveTime"},
                         {
                             "data": "arriveTime",//平均评分
                             "render": function (data, type, row, meta) {
-                                var avgScore = (row.driverService + row.busEnvironment + row.safeDriving + row.arriveTime)/4;
+                                var avgScore = (row.order.driverService + row.order.busEnvironment + row.order.safeDriving + row.order.arriveTime)/4;
                                 return avgScore.toFixed(1);
                             }
                         },
                     ],
                     "fnServerParams": function (aoData) {
-                        aoData.routeTimeId = "${routeTimeId}";//班车路线id
+                        aoData.routeId = "${routeId}";//路线id
+                        aoData.departTime = "${departTime}";//发车时间id
                         aoData.mobile = $("#mobile").val();//账号
                     }
                 });

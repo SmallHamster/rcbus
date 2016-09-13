@@ -53,7 +53,8 @@
                         <header class="panel-heading">
                             路线列表
                             <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
-                               <button class="btn btn-info" type="button" onclick="$route.fn.delete();" id="deleteBatch" style="display: none">删除</button>
+                               <button class="btn btn-info" type="button" onclick="$route.fn.delete();" id="deleteBatch" style="display: none">
+                                   <i class='fa fa-trash-o'></i> 删除</button>
                             </span>
                             <span class="tools pull-right">
                                <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i> 刷新</button>
@@ -102,9 +103,10 @@
                 /*$.ajax({
                     "url": "${contextPath}/admin/route/saveOrder",
                     "data": {
-                        'type':'1',
-                        'userId':5,
-                        'timeId':9
+                        'order.type':'1',
+                        'userId':2,
+                        'routeId':9,
+                        'departTime':'14:55'
                     },
                     "dataType": "json",
                     "type": "POST",
@@ -132,19 +134,9 @@
                             }
                         },
                         {
-                            "data": "enterprise.type",
+                            "data": "startStation",
                             "render": function (data, type, row, meta) {
-
-                                var routeName = "";
-                                //企业
-                                if(data == '0'){
-                                    routeName = row.startStation + " ------> " +row.endStation;
-                                }
-                                //专线
-                                else{
-                                    routeName = row.routeName;
-                                }
-                                return routeName;
+                                return row.startStation + " ------> " +row.endStation;
                             }
                         },
                         {"data": "enterprise.name"},
@@ -213,7 +205,12 @@
             },
             delete: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
-                var ids = checkBox.getInputId();
+                var ids = [];
+                if(id != null){
+                    ids.push(id);
+                }else{
+                    ids = checkBox.getInputId();
+                }
                 $("#confirm").modal("show");
                 $('#showText').html('您确定要删除吗？');
                 $("#determine").off("click");

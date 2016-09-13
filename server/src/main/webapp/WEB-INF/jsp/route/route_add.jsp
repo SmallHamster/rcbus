@@ -31,16 +31,17 @@
                         </header>
                         <div class="panel-body">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post" enctype="multipart/form-data">
-                                <input type="hidden" id="routeId" name="route.id" value="${route.id}">
+                                <input type="hidden" id="routeId" name="id" value="${route.id}">
+                                <input type="hidden" name="isShow" value="${route.isShow}">
                                 <input type="hidden" name="departTimes" value="">
                                 <input type="hidden" name="backTimes" value="">
                                 <input type="hidden" id="busIds" name="busIds" value="${busIds}">
-                                <input type="hidden" id="enterpriseType" name="enterprise.type" value="">
+                                <input type="hidden" id="isRoundTrip" name="isRoundTrip" value="0">
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >所属企业：</label>
                                     <div class="col-sm-1">
-                                        <select class="form-control input-sm" name="enterprise.id" onchange="$route.fn.enterpriseChange(this)">
+                                        <select class="form-control input-sm" name="enterprise.id">
                                             <c:forEach items="${enterpriseList}" var="enterprise">
                                                 <option value="${enterprise.id}" type="${enterprise.type}">${enterprise.name}</option>
                                             </c:forEach>
@@ -52,7 +53,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >是否有返程：</label>
                                     <div class="col-sm-1">
-                                        <select class="form-control input-sm" name="isRoundTrip" onchange="$route.fn.tripChange(this)">
+                                        <select class="form-control input-sm" onchange="$route.fn.tripChange(this)">
                                             <option value="0">否</option>
                                             <option value="1">是</option>
                                         </select>
@@ -64,10 +65,20 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label">线路添加：</label>
                                     <div class="col-sm-2">
-                                        <input type="file" name="file" id="file" title="选择EXCEL文件导入" class="btn btn-default required" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.externalLink+xml">
+                                        <input type="file" name="file" id="file" title="选择gpx文件导入" class="btn btn-default required" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.externalLink+xml">
+                                        (重新导入保存后，则覆盖原有路线)
                                     </div>
-                                    &nbsp;&nbsp;<button type="button" id="importBtn" class="btn btn-info">导入</button>
+                                    <%--&nbsp;&nbsp;<button type="button" id="importBtn" class="btn btn-info" onclick="$route.fn.uploadRoute()">导入</button>--%>
                                 </div>
+
+                                <c:if test="${route.id != null}">
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label">原有路线：</label>
+                                    <div class="col-sm-6" style="margin-bottom: 10px;">
+                                        ${stationStr}
+                                    </div>
+                                </div>
+                                </c:if>
 
                                 <div class="form-group" id="departTimeDiv">
 
@@ -287,26 +298,30 @@
                     $route.v.dTable = table;
                 }
             },
-            //企业下拉框改变事件
-            enterpriseChange : function (obj){
-                //如果企业类型为专线，则需要填写返程时间，不需要分派车辆
-                /*var type = $(obj).find("option:checked").attr("type");
-                $("#enterpriseType").val(type);
-                if( type == '1' && $("#routeId").val() ==''){
-                    $("#backTimeDiv").show();
-                }
-                //如果企业类型为一般，则不需要填写返程时间，但是需要分派车辆
-                else{
-                    $("#backTimeDiv").hide();
-                }*/
-            },
+            /*uploadRoute : function(){
+                $("#uploadForm").ajaxSubmit({
+                    url : "${contextPath}/admin/route/uploadRoute",
+                    type : "POST",
+                    success : function(result) {
+                        if(result.status == 0) {
+                            console.info("-----导入成功-----");
+                        }
+                        else {
+                            $common.fn.notify('操作失败');
+                        }
+                    }
+                });
+            },*/
             tripChange :function(obj){
+                //有往返
                 if( $(obj).val() == 1 && $("#routeId").val() ==''){
                     $("#backTimeDiv").show();
+                    $("#isRoundTrip").val(1);
                 }
-                //如果企业类型为一般，则不需要填写返程时间，但是需要分派车辆
+                //单程
                 else{
                     $("#backTimeDiv").hide();
+                    $("#isRoundTrip").val(0);
                 }
             },
             //返回
@@ -352,7 +367,6 @@
                         }
                         model.find("input[type=text]").attr("name","departTimes");
                         model.find("input[type=text]").val(arr[i].departTime);
-//                        model.find("input[type=text]").attr("value",arr[i].departTime);
                         model.show();
                         $("#departTimeDiv").append(model);
                     }
@@ -454,10 +468,10 @@
             save : function() {
                 var flag = true;
 
-                /*if($("#busIds").val() == ''){
+                if($("#busIds").val() == ''){
                     flag = false;
                     $common.fn.notify('请至少派遣一辆车');
-                }*/
+                }
 
                 if(flag){
                     $("#formId").ajaxSubmit({
@@ -465,7 +479,7 @@
                         type : "POST",
                         success : function(result) {
                             if(result.status == 0) {
-                                <%--window.location.href = "${contextPath}/admin/route/index";--%>
+                                window.location.href = "${contextPath}/admin/route/index";
                             }
                             else {
                                 $common.fn.notify('操作失败');

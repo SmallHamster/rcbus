@@ -21,9 +21,6 @@ public class Route extends BaseEntity{
     @Column(name = "end_station")
     private String endStation;//终点站
 
-    @Column(name = "route_name")
-    private String routeName;//路线名称
-
     @ManyToOne
     @JoinColumn(name = "enterprise_id")
     private Enterprise enterprise;//所属企业
@@ -51,14 +48,6 @@ public class Route extends BaseEntity{
         this.endStation = endStation;
     }
 
-    public String getRouteName() {
-        return routeName;
-    }
-
-    public void setRouteName(String routeName) {
-        this.routeName = routeName;
-    }
-
     public Enterprise getEnterprise() {
         return enterprise;
     }
@@ -81,5 +70,11 @@ public class Route extends BaseEntity{
 
     public void setTimes(List<RouteTime> times) {
         this.times = times;
+    }
+
+    public Route(){}
+
+    public Route(Long id) {
+        super.setId(id);
     }
 }

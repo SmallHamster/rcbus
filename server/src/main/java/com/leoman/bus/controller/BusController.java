@@ -1,13 +1,16 @@
 package com.leoman.bus.controller;
 
 import com.leoman.bus.entity.Bus;
+import com.leoman.bus.entity.CarType;
 import com.leoman.bus.service.BusService;
+import com.leoman.bus.service.CarTypeService;
 import com.leoman.bus.service.impl.BusServiceImpl;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
 import com.leoman.entity.Configue;
+import com.leoman.utils.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -33,6 +36,9 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
 
     @Autowired
     private BusService busService;
+
+    @Autowired
+    private CarTypeService carTypeService;
 
     /**
      * 列表页面
@@ -78,8 +84,11 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
             if(bus.getImage() != null){
                 bus.getImage().setPath(Configue.getUploadUrl()+bus.getImage().getPath());
             }
+
             model.addAttribute("bus", bus);
         }
+        List<CarType> typeList = carTypeService.queryAll();
+        model.addAttribute("typeList",typeList);
         return "bus/bus_add";
     }
 
@@ -109,7 +118,11 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
     public String info(Long id, Model model) {
         if (id != null) {
-            model.addAttribute("bus", busService.queryByPK(id));
+            Bus bus = busService.queryByPK(id);
+            if(bus.getImage() != null){
+                bus.getImage().setPath(Configue.getUploadUrl()+bus.getImage().getPath());
+            }
+            model.addAttribute("bus", bus);
         }
         return "bus/bus_info";
     }
@@ -123,10 +136,15 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
     @ResponseBody
     public Result delete(String ids) {
         try {
-            String [] idArr = ids.split("\\,");
+            /*Long[] idArr = JsonUtil.json2Obj(ids, Long[].class);
+            for (Long id:idArr) {
+                busService.deleteByPK(id);
+            }*/
+            String[] idArr = JsonUtil.json2Obj(ids, String[].class);
             for (String id:idArr) {
-                Integer busId = Integer.valueOf(id);
-                busService.deleteByPK(busId);
+                if(!StringUtils.isEmpty(id)){
+                    busService.deleteByPK(id);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -152,6 +170,7 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
         Query query = Query.forClass(Bus.class, busService);
         query.setPagenum(pageNum);
         query.setPagesize(length);
+        query.eq("carType.id",1);//只过滤通勤班车
         query.like("carNo",bus.getCarNo());
         query.like("modelNo",bus.getModelNo());
         query.like("driverName",bus.getDriverName());

@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>车辆列表</title>
+    <title>礼券列表</title>
     <%@ include file="../inc/new2/css.jsp" %>
 </head>
 <body class="sticky-header">
@@ -42,7 +42,7 @@
                 <div class="col-sm-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            车辆列表
+                            礼券列表
                             <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
                                <button class="btn btn-info" type="button" onclick="$bus.fn.delete();" id="deleteBatch" style="display: none">
                                    <i class="fa fa-trash-o"></i> 删除</button>
@@ -59,14 +59,9 @@
                                     <tr>
                                         <th><input type="checkbox" class="list-parent-check"
                                                    onclick="$leoman.checkAll(this);"/></th>
-                                        <th>车牌号</th>
-                                        <th>品牌</th>
-                                        <th>车型</th>
-                                        <th>座位数</th>
-                                        <th>司机姓名</th>
-                                        <th>司机联系电话</th>
-                                        <th>司机身份证号</th>
-                                        <th>司机性别</th>
+                                        <th>名称</th>
+                                        <th>获得条件</th>
+                                        <th>优惠方式</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
@@ -104,7 +99,7 @@
                     "searching": false,
                     "bSort": false,
                     "ajax": {
-                        "url": "${contextPath}/admin/bus/list",
+                        "url": "${contextPath}/admin/coupon/list",
                         "type": "POST"
                     },
                     "columns": [
@@ -115,31 +110,38 @@
                                 return checkbox;
                             }
                         },
-                        {"data": "carNo"},
-                        {"data": "brand"},
-                        {"data": "modelNo"},
-                        {"data": "seatNum"},
-                        {"data": "driverName"},
-                        {"data": "driverPhone"},
-                        {"data": "driverIDCard"},
+                        {"data": "name"},
                         {
-                            "data": "driverSex",
+                            "data": "gainWay",
                             "render": function (data) {
-                                var sex = '-';
+
+                                var str = "";
                                 if(data == 1){
-                                    sex = '女';
-                                }else if(data == 0){
-                                    sex = '男';
+                                    str = "好友分享";
+                                }else if(data == 2){
+                                    str = "订单完成后";
+                                }else if(data == 3){
+                                    str = "注册后";
                                 }
-                                return sex;
+                                return str;
+                            }
+                        },
+                        {
+                            "data": "couponWay",
+                            "render": function (data) {
+
+                                var str = "";
+                                if(data == 1){
+                                    str = "折扣";
+                                }else if(data == 2){
+                                    str = "减免金额";
+                                }
+                                return str;
                             }
                         },
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {
-
-                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$bus.fn.detail(\'" + data + "\')\">" +
-                                        "<i class='fa fa-eye'></i> 查看</button>";
 
                                 var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$bus.fn.add(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
@@ -147,30 +149,18 @@
                                 var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$bus.fn.delete(\'" + data + "\')\">" +
                                         "<i class='fa fa-trash-o'></i> 删除</button>";
 
-                                return detail + "&nbsp;" + edit + "&nbsp;"+ del;
+                                return edit + "&nbsp;"+ del;
                             }
                         }
-                    ],
-                    "fnServerParams": function (aoData) {
-                        aoData.carNo = $("#carNo").val();//车牌号
-                        aoData.modelNo = $("#modelNo").val();//车型
-                        aoData.driverName = $("#driverName").val();//车型
-                    }
+                    ]
                 });
-            },
-            detail: function (id) {
-                var params = "";
-                if (id != null && id != '') {
-                    params = "?id=" + id;
-                }
-                window.location.href = "${contextPath}/admin/bus/detail" + params;
             },
             add: function (id) {
                 var params = "";
                 if (id != null && id != '') {
                     params = "?id=" + id;
                 }
-                window.location.href = "${contextPath}/admin/bus/add" + params;
+                window.location.href = "${contextPath}/admin/coupon/add" + params;
             },
             delete: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');

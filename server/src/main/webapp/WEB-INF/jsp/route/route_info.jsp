@@ -27,47 +27,31 @@
                 <div class="col-lg-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            新增/编辑路线
+                            查看路线
                         </header>
                         <div class="panel-body">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post">
                                 <input type="hidden" id="routeId" name="route.id" value="${route.id}">
                                 <input type="hidden" name="departTimes" value="">
                                 <input type="hidden" name="backTimes" value="">
-                                <input type="hidden" id="busIds" name="busIds" value="">
-                                <input type="hidden" id="enterpriseType" name="enterprise.type" value="">
+                                <input type="hidden" id="busIds" name="busIds" value="${busIds}">
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >所属企业：</label>
                                     <div class="col-sm-1">
-                                        <select class="form-control input-sm" name="enterprise.id" onchange="$route.fn.enterpriseChange(this)">
-                                            <c:forEach items="${enterpriseList}" var="enterprise">
-                                                <option value="${enterprise.id}" type="${enterprise.type}">${enterprise.name}</option>
-                                            </c:forEach>
-                                        </select>
+                                        ${route.enterprise.name}
                                     </div>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label">线路添加：</label>
-                                    <div class="col-sm-2">
-                                        <input type="file" name="file" id="file" title="选择EXCEL文件导入" class="btn btn-default required" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.externalLink+xml">
+                                    <label class="col-sm-1 control-label">线路：</label>
+                                    <div class="col-sm-6">
+                                        ${stationStr}
                                     </div>
-                                    &nbsp;&nbsp;<button type="button" id="importBtn" class="btn btn-info">导入</button>
                                 </div>
 
                                 <div class="form-group" id="departTimeDiv">
 
-                                </div>
-
-                                <div class="form-group" id="backTimeDiv" style="display: none;">
-                                    <div style="margin-bottom: 10px;">
-                                        <label class="col-sm-1 control-label">返程时间:</label>
-                                        <div class="col-sm-2">
-                                            <input type="text" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="">
-                                        </div>
-                                        <button type="button" onclick="$route.fn.addRow(this)" class="btn btn-primary"><i class='fa fa-plus-circle'></i></button>
-                                    </div>
                                 </div>
 
                                 <div class="form-group">
@@ -75,8 +59,6 @@
                                     <label class="col-sm-1 control-label">车辆指派：</label>
                                     <div class="col-sm-6">
                                         已派遣车辆如下：
-                                        <button type="button" class="btn btn-info" onclick="$route.fn.openModal()" style="margin-bottom: 10px;">
-                                            <i class='fa fa-plus'></i> 新增派遣车辆</button>
                                         <div class="adv-table">
                                             <table class="display table table-bordered table-striped" id="dataTables" width="100%">
                                                 <thead>
@@ -86,7 +68,6 @@
                                                     <th>车牌号</th>
                                                     <th>车型</th>
                                                     <th>司机姓名</th>
-                                                    <th>操作</th>
                                                 </tr>
                                                 </thead>
                                             </table>
@@ -97,7 +78,6 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label"></label>
                                     <div class="col-sm-6">
-                                        <button type="button" onclick="$route.fn.save()" class="btn btn-primary">保存</button>
                                         <button type="button" onclick="$route.fn.back()" class="btn btn-primary">返回</button>
                                     </div>
                                 </div>
@@ -157,11 +137,9 @@
     <!-- 发车时间模板 -->
     <div id="timeModal" style="display: none;margin-bottom: 10px;">
         <label class="col-sm-1 control-label"></label>
-        <div class="col-sm-2">
+        <div class="col-sm-2" style="width: 100%;margin-left: 140px;">
             <input type="text" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="">
         </div>
-        <button type="button" onclick="$route.fn.addRow(this)" class="btn btn-primary"><i class='fa fa-plus-circle'></i></button>
-        <button type="button" onclick="$route.fn.removeRow(this)" class="btn btn-primary"><i class='fa fa-minus-circle'></i></button>
     </div>
 
     <!-- main content end-->
@@ -184,19 +162,6 @@
                 $("#operTableId").val("dataTables");//指定要操作的表id
                 $route.fn.dataTableInit("dataTables");
                 $route.fn.dataTableInit("dataTablesModal");
-
-                //时间控件初始化
-                $('.form_datetime').datetimepicker({
-                    language: 'zh-CN',
-                    weekStart: 1,
-                    todayBtn: 1,
-                    autoclose: 1,
-                    todayHighlight: 1,
-                    startView: 'hour',
-                    forceParse: 0,
-                    showMeridian: false,
-                    format: 'hh:ii'
-                });
 
                 //弹出框表格的查询和清空
                 $("#c_search").click(function () {
@@ -240,7 +205,7 @@
                         {"data": "carNo"},
                         {"data": "modelNo"},
                         {"data": "driverName"},
-                        {
+                        /*{
                             "data": "id",
                             "render": function (data, type, row, meta) {
                                 var oper = "";
@@ -257,7 +222,7 @@
                                 }
                                 return oper;
                             }
-                        }
+                        }*/
                     ],
                     "fnServerParams": function (aoData) {
                         aoData.carNo = $("#carNo").val();//车牌号
@@ -272,19 +237,6 @@
                     $route.v.modalTable = table;
                 }else if(tableId == 'dataTables'){
                     $route.v.dTable = table;
-                }
-            },
-            //企业下拉框改变事件
-            enterpriseChange : function (obj){
-                //如果企业类型为专线，则需要填写返程时间，不需要分派车辆
-                var type = $(obj).find("option:checked").attr("type");
-                $("#enterpriseType").val(type);
-                if( type == '1' && $("#routeId").val() ==''){
-                    $("#backTimeDiv").show();
-                }
-                //如果企业类型为一般，则不需要填写返程时间，但是需要分派车辆
-                else{
-                    $("#backTimeDiv").hide();
                 }
             },
             //返回
@@ -337,7 +289,7 @@
                 }
 
                 //时间控件初始化
-                $route.fn.datetimepickerInit();
+                //$route.fn.datetimepickerInit();
 
 
             },
