@@ -1,5 +1,8 @@
 package com.leoman.image.entity;
 
+import com.leoman.utils.ConfigUtil;
+import org.apache.commons.lang.StringUtils;
+
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -22,6 +25,9 @@ public class Image implements Serializable {
     private String thumbs;
 
     private String attribute;
+
+    @Transient
+    private String uploadUrl;
 
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "create_date")
@@ -65,5 +71,17 @@ public class Image implements Serializable {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    public String getUploadUrl() {
+        if(StringUtils.isNotBlank(path)){
+            return ConfigUtil.getString("upload.url") + path;
+        }else {
+            return "";
+        }
+    }
+
+    public void setUploadUrl(String uploadUrl) {
+        this.uploadUrl = uploadUrl;
     }
 }

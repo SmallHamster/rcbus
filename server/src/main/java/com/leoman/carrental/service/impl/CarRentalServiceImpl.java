@@ -20,9 +20,11 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartRequest;
 
 import javax.persistence.Transient;
-import java.util.List;
+import java.text.ParseException;
+import java.util.*;
 
 /**
  *
@@ -45,6 +47,57 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
     private CarTypeService carTypeService;
     @Autowired
     private OrderService orderService;
+
+
+    @Override
+    public List<Map<String, Object>> pageToExcel(List carRentals) throws ParseException {
+        List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+        Map<String, Object> params = null;
+        List<CarRental> baseList = new ArrayList<>();
+        baseList.addAll(carRentals);
+//        baseList = queryAll();
+        Set set = null;
+        Iterator iterator = null;
+        Map.Entry tempMap = null;
+
+        if(baseList != null){
+            for (CarRental carRental : baseList) {
+                params = new HashMap<String, Object>();
+
+                if(carRental.getOrder()!=null){
+                    params.put("orderNo", carRental.getOrder().getOrderNo());
+                    params.put("startDate", DateUtils.longToString(carRental.getStartDate(),"yyyy-MM-dd hh:mm"));
+                    params.put("userName", carRental.getOrder().getUserName());
+                    params.put("mobile", carRental.getOrder().getMobile());
+                    params.put("busNum", carRental.getBusNum());
+
+                }
+
+                params.put("totalAmount", carRental.getTotalAmount() );
+                params.put("income", carRental.getIncome());
+                params.put("refund", carRental.getRefund());
+
+                // 去掉null值
+                set = params.entrySet();
+                iterator = set.iterator();
+                while (iterator.hasNext()) {
+                    tempMap = (Map.Entry) iterator.next();
+                    params.put(tempMap.getKey().toString(), null == tempMap.getValue() ? "" : tempMap.getValue());
+                }
+
+                list.add(params);
+            }
+        }
+
+        return list;
+    }
+
+    @Override
+    public Integer readExcelInfo(MultipartRequest multipartRequest, Integer type) {
+        return null;
+    }
+
+
 
     /**
      * 派遣和订单金额保存
@@ -97,6 +150,7 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
         }
 
     }
+
 
     @Override
     @Transactional

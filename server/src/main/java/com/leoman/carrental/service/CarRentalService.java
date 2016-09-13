@@ -2,7 +2,9 @@ package com.leoman.carrental.service;
 
 import com.leoman.carrental.entity.CarRental;
 import com.leoman.common.service.GenericManager;
+import org.springframework.web.multipart.MultipartRequest;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 
@@ -11,7 +13,9 @@ import java.util.Map;
  */
 public interface CarRentalService extends GenericManager<CarRental> {
 
-//    public List<Map<String, Object>> pageToExcel(Map<String, Object> map, Integer type);
+    public List<Map<String, Object>> pageToExcel(List carRentals) throws ParseException;
+
+    public Integer readExcelInfo(MultipartRequest multipartRequest, Integer type);
 
     public Integer save(Long id, Long cityId, Integer rwType, String startPoint, String endPoint, String startDate, String endDate, Long carTypeId, Integer totalNumber, Integer busNum, Integer isInvoice, String invoice, String dispatch, String offter_name, String offter_amount);
 

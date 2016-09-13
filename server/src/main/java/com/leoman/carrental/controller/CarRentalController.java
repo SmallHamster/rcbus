@@ -20,6 +20,7 @@ import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.DateUtils;
 import com.leoman.utils.JsonUtil;
 import org.apache.commons.lang.StringUtils;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,8 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
     @Autowired
     private BusService busService;
 
+//    public static List<CarRental> list;
+
     @RequestMapping(value = "/index")
     public String index(){
         return "carrental/list";
@@ -72,7 +76,7 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Map<String, Object> list(Integer draw, Integer start, Integer length, String orderNo,Integer orderStatus,String carNo,String driverName,String userName,String Dstart,String Dend) throws ParseException {
+    public Map<String, Object> list(HttpServletRequest request,Model model,Integer draw, Integer start, Integer length, String orderNo,Integer orderStatus,String carNo,String driverName,String userName,String Dstart,String Dend) throws ParseException {
         int pagenum = getPageNum(start, length);
         Query query = Query.forClass(CarRental.class, carRentalService);
         query.setPagenum(pagenum);
@@ -109,7 +113,38 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
         }
 
         Page<CarRental> page = carRentalService.queryPage(query);
+        List<CarRental> carRentals = page.getContent();
+        List list = new ArrayList();
+        list.addAll(carRentals);
+//        Double sumTotalAmount = 0.0;
+//        Double sumIncome = 0.0;
+//        Double sumRefund = 0.0;
+//
+//        for(int i=0;i<length;i++){
+//            if(i<carRentals.size()){
+//                sumTotalAmount += carRentals.get(i).getTotalAmount();
+//                sumIncome += carRentals.get(i).getIncome();
+//                sumRefund += carRentals.get(i).getRefund();
+//            }else {
+//                break;
+//            }
+//        }
+////
+//        model.addAttribute("sumTotalAmount",sumTotalAmount);
+//        model.addAttribute("sumIncome",sumIncome);
+//        model.addAttribute("sumRefund",sumRefund);
+//
+//        CarRental _c = new CarRental();
+//        _c.setTotalAmount(sumTotalAmount);
+//        _c.setIncome(sumIncome);
+//        _c.setRefund(sumRefund);
+//        list.add(_c);
+
+        HttpSession session = request.getSession();
+        session.setAttribute("carRentals" , list);
+
         return DataTableFactory.fitting(draw, page);
+
     }
 
     @RequestMapping(value = "/detail")

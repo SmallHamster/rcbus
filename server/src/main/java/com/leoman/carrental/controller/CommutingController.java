@@ -36,7 +36,7 @@ public class CommutingController extends GenericEntityController<Commuting,Commu
 
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Map<String, Object> list(Integer draw, Integer start, Integer length, String Dstart, String Dend, Commuting commuting) throws ParseException {
+    public Map<String, Object> list(Integer draw, Integer start, Integer length, Commuting commuting) throws ParseException {
         int pagenum = getPageNum(start, length);
         Query query = Query.forClass(Commuting.class, commutingService);
         query.setPagenum(pagenum);

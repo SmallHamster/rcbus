@@ -38,7 +38,7 @@ public class ExcelUtil {
         HSSFRow row = null;
         for (int i = 0; i < list.size(); i++) {
             Map<String, Object> map = list.get(i);
-            row = sheet.createRow(2 + i);
+            row = sheet.createRow(1 + i);
 
             for (int j = 0; j < titlesArr.length; j++) {
                 HSSFCell cell = row.createCell(j);

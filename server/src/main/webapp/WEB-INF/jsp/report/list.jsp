@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ include file="../../inc/taglibs.jsp" %>
+<%@ include file="../inc/taglibs.jsp" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -9,14 +10,14 @@
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
     <title>Dynamic Table</title>
-    <%@ include file="../../inc/new2/css.jsp" %>
+    <%@ include file="../inc/new2/css.jsp" %>
 </head>
 <body class="sticky-header">
 <section>
-    <%@ include file="../../inc/new2/menu.jsp" %>
+    <%@ include file="../inc/new2/menu.jsp" %>
     <!-- main content start-->
     <div class="main-content">
-        <%@ include file="../../inc/new2/header.jsp" %>
+        <%@ include file="../inc/new2/header.jsp" %>
         <!--body wrapper start-->
         <div class="wrapper">
             <div class="row">
@@ -24,26 +25,20 @@
                     <section class="panel">
                         <div class="panel-body">
                             <div class="form-group col-sm-2">
-                                <input type="text" id="orderNo" name="orderNo" class="form-control" placeholder="订单号">
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <input type="text" id="driverName" name="driverName" class="form-control" placeholder="司机姓名">
+                                <input type="text" id="mobile" name="mobile" class="form-control" placeholder="联系方式">
                             </div>
 
                             <div class="form-group col-sm-2">
-                                <input type="text" id="carNo" name="carNo" class="form-control" placeholder="车牌号码">
+                                <input type="text" id="startDate" name="startDate" class="form-control input-append date form_datetime" placeholder="反馈时间(大于)">
                             </div>
 
                             <div class="form-group col-sm-2">
-                                <input type="text" id="start" name="start" class="form-control input-append date form_datetime" placeholder="发车时间(大于)">
+                                <input type="text" id="endDate" name="endDate" class="form-control input-append date form_datetime" placeholder="反馈时间(小于)">
                             </div>
-                            <div class="form-group col-sm-2">
-                                <input type="text" id="end" name="end" class="form-control input-append date form_datetime" placeholder="发车时间(小于)">
-                            </div>
+
                             <div class="form-group col-sm-2">
                                 <button id="c_search" class="btn btn-info">搜索</button>
                                 <button id="c_clear" class="btn btn-info"><i class="fa fa-recycle"></i> 清空</button>
-                                <button id="c_export" onclick="$income.fn.export()" class="btn btn-info"><i class="fa fa-recycle"></i> 导出EXCEL</button>
                             </div>
                         </div>
                     </section>
@@ -54,6 +49,9 @@
                     <section class="panel">
                         <header class="panel-heading">
                             收入明细
+                            <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
+                               <button class="btn btn-info" type="button" onclick="$report.fn.del();" id="deleteBatch" style="display: none">删除</button>
+                            </span>
                             <span class="tools pull-right">
                                <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
                             </span>
@@ -65,15 +63,11 @@
                                     <tr>
                                         <th><input type="checkbox" class="list-parent-check"
                                                    onclick="$leoman.checkAll(this);"/></th>
-                                        <th>订单号</th>
-                                        <th>发车时间</th>
-                                        <th>客人名称</th>
-                                        <th>客人手机</th>
-                                        <th>订单金额</th>
-                                        <th>已收金额</th>
-                                        <th>退款金额</th>
-                                        <th>巴士数量</th>
-                                        <th>详情</th>
+                                        <th>联系方式</th>
+                                        <th>用户权限</th>
+                                        <th>反馈时间</th>
+                                        <th>意见详情</th>
+                                        <th>操作</th>
                                     </tr>
                                     </thead>
                                 </table>
@@ -85,19 +79,19 @@
         </div>
     </div>
 </section>
-<%@ include file="../../inc/new2/foot.jsp" %>
-<%@ include file="../../inc/new2/confirm.jsp" %>
+<%@ include file="../inc/new2/foot.jsp" %>
+<%@ include file="../cartravel/detail.jsp" %>
 <script>
-    $income = {
+    $report = {
         v: {
             list: [],
             dTable: null
         },
         fn: {
             init: function () {
-                $income.fn.dataTableInit();
+                $report.fn.dataTableInit();
                 $("#c_search").click(function () {
-                    $income.v.dTable.ajax.reload();
+                    $report.v.dTable.ajax.reload();
                 });
                 //清空
                 $("#c_clear").click(function () {
@@ -114,13 +108,13 @@
                 });
             },
             dataTableInit: function () {
-                $income.v.dTable = $leoman.dataTable($('#dataTables'), {
+                $report.v.dTable = $leoman.dataTable($('#dataTables'), {
                     "processing": true,
                     "serverSide": true,
                     "searching": false,
                     "bSort": false,
                     "ajax": {
-                        "url": "${contextPath}/admin/carRental/list",
+                        "url": "${contextPath}/admin/report/list",
                         "type": "POST"
                     },
                     "columns": [
@@ -132,77 +126,95 @@
                             }
                         },
                         {
-                            "data": "order.orderNo",
+                            "data": "userInfo.mobile",
                             "sDefaultContent" : ""
                         },
                         {
-                            "data": "startDate",
+                            "data": "userInfo.type",
+                            "render": function (data) {
+                                if(data==0){
+                                    return "企业管理"
+                                }else if(data==1){
+                                    return "员工"
+                                }else{
+                                    return "普通会员"
+                                }
+                            },
+                            "sDefaultContent" : ""
+                        },
+                        {
+                            "data": "createDate",
                             "render": function (data) {
                                 return new Date(data).format("yyyy-MM-dd hh:mm:ss");
                             },
                             "sDefaultContent" : ""
                         },
                         {
-                            "data": "order.userName",
+                            "data": "content",
+                            render: function (data) {
+                                if (null != data && data != '') {
+                                    return data.length > 30 ? (data.substring(0, 30) + '...') : data;
+                                } else {
+                                    return "";
+                                }
+                            },
                             "sDefaultContent" : ""
                         },
                         {
-                            "data": "order.mobile",
-                            "sDefaultContent" : ""
-                        },
-                        {
-                            "data": "totalAmount",
-                            "sDefaultContent" : ""
-                        },
-                        {
-                            "data": "income",
-                            "sDefaultContent" : ""
-                        },
-                        {
-                            "data": "refund",
-                            "sDefaultContent" : ""
-                        },
-                        {
-                            "data": "busNum",
-                            "sDefaultContent" : ""
-
-                        },
-                        {
-                            "data": "id",
+                            "data": "content",
                             "render": function (data, type, row, meta) {
-                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$income.fn.detail(\'" + data + "\')\">" +
-                                        "<i class='fa fa-eye'></i> 查看</button>";
+                                var content  = data;
+                                var detail = "<button title='详细' class='btn btn-primary btn-circle add' onclick=\"$report.fn.detail(\'" + content.trim() + "\')\">" +
+                                        "<i class='fa fa-eye'></i> 详细</button>";
                                 return  detail ;
                             }
                         }
 
                     ],
                     "fnServerParams": function (aoData) {
-                        aoData.orderNo = $("#orderNo").val();
-                        aoData.driverName = $("#driverName").val();
-                        aoData.carNo = $("#carNo").val();
-                        aoData.Dstart = $("#start").val();
-                        aoData.Dend = $("#end").val();
+                        aoData.userName = $("#mobile").val();
+                        aoData.startDate = $("#startDate").val();
+                        aoData.endDate = $("#endDate").val();
                     }
                 });
             },
-            detail: function (id) {
-                var params = "";
-                if (id != null && id != '') {
-                    params = "?id=" + id;
-                }
-                window.location.href = "${contextPath}/admin/carRental/income/detail" + params;
+            del: function (id) {
+                var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
+                var ids = checkBox.getInputId();
+                $("#confirm").modal("show");
+                $('#showText').html('您确定要彻底删除所选的反馈记录吗？');
+                $("#determine").off("click");
+                $("#determine").on("click",function(){
+                    $.ajax({
+                        "url": "${contextPath}/admin/report/del",
+                        "data": {
+                            id:id,
+                            ids:JSON.stringify(ids)
+                        },
+                        "dataType": "json",
+                        "type": "POST",
+                        success: function (result) {
+                            if (result==1) {
+                                $('#showText').html('删除错误');
+                            }else {
+                                $("#deleteBatch").css('display','none');
+                                $enterprise.v.dTable.ajax.reload(null,false);
+                            }
+                            $("#confirm").modal("hide");
+                        }
+                    });
+                })
             },
-            export: function () {
-                window.location.href = "${contextPath}/admin/export/exportFeedback";
+            detail: function (data) {
+                $('#showText').html(data);
+                $("#detail").modal("show");
             },
-
             responseComplete: function (result, action) {
                 if (result.status == "0") {
                     if (action) {
-                        $income.v.dTable.ajax.reload(null, false);
+                        $report.v.dTable.ajax.reload(null, false);
                     } else {
-                        $income.v.dTable.ajax.reload();
+                        $report.v.dTable.ajax.reload();
                     }
                     $leoman.notify(result.msg, "success");
                 } else {
@@ -212,7 +224,7 @@
         }
     }
     $(function () {
-        $income.fn.init();
+        $report.fn.init();
     })
 </script>
 </body>
