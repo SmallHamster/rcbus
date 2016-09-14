@@ -96,6 +96,7 @@
 
 <%@ include file="../inc/new2/foot.jsp" %>
 <%@ include file="../inc/new2/confirm.jsp" %>
+<%@ include file="giving.jsp" %>
 <script>
     $user = {
         v: {
@@ -220,6 +221,9 @@
                         }
                     });
                 })
+            },
+            giving: function () {
+                $('#giving').modal("show");
             },
             clickFire: function () {
                 $('#feedback').click();

@@ -8,6 +8,7 @@ import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
+import com.leoman.coupon.service.CouponService;
 import com.leoman.order.entity.Order;
 import com.leoman.order.service.OrderService;
 import com.leoman.pay.util.MD5Util;
@@ -15,6 +16,7 @@ import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.user.entity.UserLogin;
+import com.leoman.user.service.UserCouponService;
 import com.leoman.user.service.UserLoginService;
 import com.leoman.user.service.UserService;
 import com.leoman.user.service.impl.UserServiceImpl;
@@ -46,15 +48,18 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
     @Autowired
     private EnterpriseService enterpriseService;
     @Autowired
-    private OrderService orderService;
+    private CouponService couponService;
     @Autowired
     private CarRentalService carRentalService;
     @Autowired
     private RouteOrderService routeOrderService;
+    @Autowired
+    private UserCouponService userCouponService;
 
     @RequestMapping(value = "/index")
     public String index(Model model){
         model.addAttribute("enterprise",enterpriseService.queryAll());
+        model.addAttribute("coupon",couponService.queryAll());
         return "user/list";
     }
 
@@ -162,6 +167,18 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
         }
         return 0;
 
+    }
+
+
+    public Result userCouponSave(Long userId,Long couponId){
+
+        try{
+
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.failure();
+        }
+        return Result.success();
     }
 
 
