@@ -13,14 +13,14 @@ import java.util.Map;
  */
 public interface CarRentalService extends GenericManager<CarRental> {
 
-    public List<Map<String, Object>> pageToExcel(List carRentals) throws ParseException;
-
-    public Integer readExcelInfo(MultipartRequest multipartRequest, Integer type);
+    public List<Map<String, Object>> pageToExcel(List<CarRental> carRentals) throws ParseException;
 
     public Integer save(Long id, Long cityId, Integer rwType, String startPoint, String endPoint, String startDate, String endDate, Long carTypeId, Integer totalNumber, Integer busNum, Integer isInvoice, String invoice, String dispatch, String offter_name, String offter_amount);
 
     public Integer saveDispatch(Long id,String dispatch);
 
     public Integer del(Long id);
+
+    public List<CarRental> findList(Long id);
 
 }

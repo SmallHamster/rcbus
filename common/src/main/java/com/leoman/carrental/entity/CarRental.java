@@ -87,9 +87,11 @@ public class CarRental extends BaseEntity{
     private Double totalAmount = 0.0;
 
     public Double getTotalAmount() {
-        if(carRentalOffers != null){
-            for(CarRentalOffer c : carRentalOffers){
-                totalAmount += c.getAmount();
+        if(totalAmount == 0.0){
+            if(carRentalOffers != null){
+                for(CarRentalOffer c : carRentalOffers){
+                    totalAmount += c.getAmount();
+                }
             }
         }
         return totalAmount;

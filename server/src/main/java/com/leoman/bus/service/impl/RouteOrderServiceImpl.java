@@ -10,6 +10,8 @@ import com.leoman.common.service.impl.GenericManagerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 路线订单
  * Created by Daisy on 2016/9/13.
@@ -20,4 +22,8 @@ public class RouteOrderServiceImpl extends GenericManagerImpl<RouteOrder,RouteOr
     @Autowired
     private RouteOrderDao routeOrderDao;
 
+    @Override
+    public List<RouteOrder> findList(Long id) {
+        return routeOrderDao.findList(id);
+    }
 }

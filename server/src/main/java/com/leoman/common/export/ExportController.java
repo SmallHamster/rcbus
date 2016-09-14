@@ -3,6 +3,8 @@ package com.leoman.common.export;
 import com.leoman.carrental.controller.CarRentalController;
 import com.leoman.carrental.entity.CarRental;
 import com.leoman.carrental.service.CarRentalService;
+import com.leoman.user.entity.UserInfo;
+import com.leoman.user.service.UserService;
 import com.leoman.utils.ExcelUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -46,15 +48,19 @@ public class ExportController {
     @Autowired
     private CarRentalService carRentalService;
 
+    @Autowired
+    private UserService userService;
+
     /**
      * 导出反馈问题信息
      *
      * @author 涂奕恒
      */
     @RequestMapping(value = {"/exportFeedback"})
-    public void exportFeedback(HttpServletRequest request, HttpServletResponse response, @RequestParam Map<String, Object> map, Integer type) throws Exception {
+    public void exportFeedback(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HttpSession session = request.getSession();
-        List<Map<String, Object>> list = carRentalService.pageToExcel((List)session.getAttribute("carRentals"));
+        List<CarRental> carRentals = (List<CarRental>)session.getAttribute("carRentals");
+        List<Map<String, Object>> list = carRentalService.pageToExcel(carRentals);
         ExcelUtil.createExcel(USER_TEMPLATE, USER_FIELD, list, tempFilePath);
         download(request, response, USER_EXCEL_NAME);
     }
@@ -66,8 +72,8 @@ public class ExportController {
      */
     @RequestMapping(value = {"/importFeedback"})
     @ResponseBody
-    public Integer importFeedback(MultipartRequest multipartRequest,Integer type) throws Exception {
-        return carRentalService.readExcelInfo(multipartRequest,type);
+    public Integer importFeedback(MultipartRequest multipartRequest) throws Exception {
+        return userService.readExcelInfo(multipartRequest);
     }
 
     /**

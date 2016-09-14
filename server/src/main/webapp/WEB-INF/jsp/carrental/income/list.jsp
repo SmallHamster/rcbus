@@ -10,6 +10,13 @@
     <link rel="shortcut icon" href="#" type="image/png">
     <title>Dynamic Table</title>
     <%@ include file="../../inc/new2/css.jsp" %>
+    <style type="text/css">
+        #dataTables tfoot tr th{
+            background-color:rgba(191, 196, 208, 0.5);
+            border:0;
+        }
+
+    </style>
 </head>
 <body class="sticky-header">
 <section>
@@ -43,6 +50,8 @@
                             <div class="form-group col-sm-2">
                                 <button id="c_search" class="btn btn-info">搜索</button>
                                 <button id="c_clear" class="btn btn-info"><i class="fa fa-recycle"></i> 清空</button>
+                            </div>
+                            <div class="form-group col-sm-2">
                                 <button id="c_export" onclick="$income.fn.export()" class="btn btn-info"><i class="fa fa-recycle"></i> 导出EXCEL</button>
                             </div>
                         </div>
@@ -76,6 +85,21 @@
                                         <th>详情</th>
                                     </tr>
                                     </thead>
+                                    <tbody></tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                        <th></th>
+                                    </tr>
+                                    </tfoot>
                                 </table>
                             </div>
                         </div>
@@ -96,6 +120,7 @@
         fn: {
             init: function () {
                 $income.fn.dataTableInit();
+
                 $("#c_search").click(function () {
                     $income.v.dTable.ajax.reload();
                 });
@@ -119,6 +144,7 @@
                     "serverSide": true,
                     "searching": false,
                     "bSort": false,
+
                     "ajax": {
                         "url": "${contextPath}/admin/carRental/list",
                         "type": "POST"
@@ -177,6 +203,28 @@
                         }
 
                     ],
+                    "footerCallback": function( tfoot, data, start, end, display ) {
+                        var api = this.api();
+                        $( api.column( 5 ).footer() ).html(
+                                api.column( 5 ).data().reduce( function ( a, b ) {
+                                    var sum = a + b;
+                                    return "总和: " + sum;
+                                } )
+                        );
+                        $( api.column( 6 ).footer() ).html(
+                                api.column( 6 ).data().reduce( function ( a, b ) {
+                                    var sum = a + b;
+                                    return "总和: " + sum;
+                                } )
+                        );
+                        $( api.column( 7 ).footer() ).html(
+                                api.column( 7 ).data().reduce( function ( a, b ) {
+                                    var sum = a + b;
+                                    return "总和: " + sum;
+                                } )
+                        )
+                    },
+
                     "fnServerParams": function (aoData) {
                         aoData.orderNo = $("#orderNo").val();
                         aoData.driverName = $("#driverName").val();
@@ -184,6 +232,7 @@
                         aoData.Dstart = $("#start").val();
                         aoData.Dend = $("#end").val();
                     }
+
                 });
             },
             detail: function (id) {
@@ -210,10 +259,20 @@
                 }
             }
         }
-    }
+    };
     $(function () {
         $income.fn.init();
-    })
+    });
+//    window.onload=function(){
+//        var sum  = 0.0;
+//        $("#dataTables tbody tr").each(function(){
+//            var amount = $(this).find("td").eq("5").text()
+//            sum += parseFloat(amount);
+//        });
+//        console.log(sum);
+//        $("#dataTables tfoot th[name=totalAmount]").text(sum);
+//        console.log(1)
+//    }
 </script>
 </body>
 </html>

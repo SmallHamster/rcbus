@@ -1,9 +1,15 @@
 package com.leoman.user.controller;
 
+import com.leoman.bus.entity.RouteOrder;
+import com.leoman.bus.service.RouteOrderService;
+import com.leoman.carrental.entity.CarRental;
+import com.leoman.carrental.service.CarRentalService;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
+import com.leoman.order.entity.Order;
+import com.leoman.order.service.OrderService;
 import com.leoman.pay.util.MD5Util;
 import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
@@ -23,6 +29,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,6 +45,12 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
     private UserService userService;
     @Autowired
     private EnterpriseService enterpriseService;
+    @Autowired
+    private OrderService orderService;
+    @Autowired
+    private CarRentalService carRentalService;
+    @Autowired
+    private RouteOrderService routeOrderService;
 
     @RequestMapping(value = "/index")
     public String index(Model model){
@@ -104,6 +118,13 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
     public String detail(Long id,Model model){
         UserInfo userInfo = userService.queryByPK(id);
         model.addAttribute("userInfo",userInfo);
+
+        List<CarRental> carRentals = carRentalService.findList(id);
+        model.addAttribute("carRentals",carRentals);
+
+        List<RouteOrder> routeOrders = routeOrderService.findList(id);
+        model.addAttribute("routeOrders",routeOrders);
+
         return "user/detail";
     }
 

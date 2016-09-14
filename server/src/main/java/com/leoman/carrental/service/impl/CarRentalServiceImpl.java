@@ -16,10 +16,12 @@ import com.leoman.order.service.OrderService;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.DateUtils;
 import com.leoman.utils.JsonUtil;
+import com.leoman.utils.ReadExcelUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
 import javax.persistence.Transient;
@@ -50,32 +52,33 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
 
 
     @Override
-    public List<Map<String, Object>> pageToExcel(List carRentals) throws ParseException {
+    public List<Map<String, Object>> pageToExcel(List<CarRental> carRentals) throws ParseException {
         List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
         Map<String, Object> params = null;
-        List<CarRental> baseList = new ArrayList<>();
-        baseList.addAll(carRentals);
+        List<CarRental> baseList = null;
 //        baseList = queryAll();
         Set set = null;
         Iterator iterator = null;
         Map.Entry tempMap = null;
+        Double sumTotalAmount = 0.0;
+        Double sumIncome = 0.0;
+        Double sumBusNum = 0.0;
 
-        if(baseList != null){
-            for (CarRental carRental : baseList) {
+        if(carRentals != null){
+            for (CarRental carRental : carRentals) {
                 params = new HashMap<String, Object>();
-
-                if(carRental.getOrder()!=null){
-                    params.put("orderNo", carRental.getOrder().getOrderNo());
-                    params.put("startDate", DateUtils.longToString(carRental.getStartDate(),"yyyy-MM-dd hh:mm"));
-                    params.put("userName", carRental.getOrder().getUserName());
-                    params.put("mobile", carRental.getOrder().getMobile());
-                    params.put("busNum", carRental.getBusNum());
-
-                }
-
-                params.put("totalAmount", carRental.getTotalAmount() );
+                params.put("orderNo", carRental.getOrder().getOrderNo());
+                params.put("startDate", DateUtils.longToString(carRental.getStartDate(),"yyyy-MM-dd hh:mm"));
+                params.put("userName", carRental.getOrder().getUserName());
+                params.put("mobile", carRental.getOrder().getMobile());
+                params.put("totalAmount", carRental.getTotalAmount());
                 params.put("income", carRental.getIncome());
                 params.put("refund", carRental.getRefund());
+                params.put("busNum", carRental.getBusNum());
+
+                sumTotalAmount += carRental.getTotalAmount();
+                sumIncome += carRental.getIncome();
+                sumBusNum += carRental.getRefund();
 
                 // 去掉null值
                 set = params.entrySet();
@@ -87,17 +90,24 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
 
                 list.add(params);
             }
+
+            //加最后一行
+            params = new HashMap<String, Object>();
+            params.put("orderNo", "");
+            params.put("startDate", "");
+            params.put("userName", "");
+            params.put("mobile", "");
+            params.put("busNum", "");
+
+            params.put("totalAmount", "总和 : " + sumTotalAmount);
+            params.put("income", "总和 : " + sumIncome);
+            params.put("refund", "总和 : " + sumBusNum);
+
+            list.add(params);
         }
 
         return list;
     }
-
-    @Override
-    public Integer readExcelInfo(MultipartRequest multipartRequest, Integer type) {
-        return null;
-    }
-
-
 
     /**
      * 派遣和订单金额保存
@@ -227,5 +237,10 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
             return 1;
         }
         return 0;
+    }
+
+    @Override
+    public List<CarRental> findList(Long id) {
+        return carRentalDao.findList(id);
     }
 }

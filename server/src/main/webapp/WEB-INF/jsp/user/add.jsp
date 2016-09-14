@@ -65,7 +65,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label"></label>
                                     <div class="col-sm-6">
-                                        <button type="button" onclick="$admin.fn.save()" class="btn btn-primary">保存</button>
+                                        <button type="button" onclick="$user.fn.save()" class="btn btn-primary">保存</button>
                                         <button type="button" class="btn btn-primary" onclick="history.go(-1);">返回</button>
                                     </div>
                                 </div>
@@ -76,11 +76,14 @@
             </div>
         </section>
     </div>
+
+
+
     <!-- main content end-->
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
 <script>
-    $admin = {
+    $user = {
         v: {
             list: [],
             chart: null,
@@ -90,7 +93,6 @@
             init: function () {
                 $("#formId").validate();
             },
-
             save : function() {
                 if(!$("#formId").valid()) return;
                 $("#formId").ajaxSubmit({
@@ -109,7 +111,7 @@
         }
     }
     $(function () {
-        $admin.fn.init();
+        $user.fn.init();
     })
 </script>
 </body>

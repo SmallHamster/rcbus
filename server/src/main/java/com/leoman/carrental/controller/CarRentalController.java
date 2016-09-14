@@ -1,39 +1,28 @@
 package com.leoman.carrental.controller;
 
-import com.leoman.bus.entity.Bus;
-import com.leoman.bus.entity.CarType;
 import com.leoman.bus.service.BusService;
 import com.leoman.bus.service.CarTypeService;
-import com.leoman.bussend.entity.BusSend;
 import com.leoman.bussend.service.BusSendService;
 import com.leoman.carrental.entity.CarRental;
 import com.leoman.carrental.entity.CarRentalOffer;
 import com.leoman.carrental.service.CarRentalOfferService;
 import com.leoman.carrental.service.CarRentalService;
 import com.leoman.carrental.service.impl.CarRentalServiceImpl;
-import com.leoman.city.entity.City;
 import com.leoman.city.service.CityService;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
-import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.DateUtils;
-import com.leoman.utils.JsonUtil;
 import org.apache.commons.lang.StringUtils;
-import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -114,34 +103,9 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
 
         Page<CarRental> page = carRentalService.queryPage(query);
         List<CarRental> carRentals = page.getContent();
-        List list = new ArrayList();
-        list.addAll(carRentals);
-//        Double sumTotalAmount = 0.0;
-//        Double sumIncome = 0.0;
-//        Double sumRefund = 0.0;
-//
-//        for(int i=0;i<length;i++){
-//            if(i<carRentals.size()){
-//                sumTotalAmount += carRentals.get(i).getTotalAmount();
-//                sumIncome += carRentals.get(i).getIncome();
-//                sumRefund += carRentals.get(i).getRefund();
-//            }else {
-//                break;
-//            }
-//        }
-////
-//        model.addAttribute("sumTotalAmount",sumTotalAmount);
-//        model.addAttribute("sumIncome",sumIncome);
-//        model.addAttribute("sumRefund",sumRefund);
-//
-//        CarRental _c = new CarRental();
-//        _c.setTotalAmount(sumTotalAmount);
-//        _c.setIncome(sumIncome);
-//        _c.setRefund(sumRefund);
-//        list.add(_c);
 
         HttpSession session = request.getSession();
-        session.setAttribute("carRentals" , list);
+        session.setAttribute("carRentals" , carRentals);
 
         return DataTableFactory.fitting(draw, page);
 

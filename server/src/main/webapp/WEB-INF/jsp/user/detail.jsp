@@ -56,12 +56,68 @@
                                         <input type="text" id="type" name="type" value="<c:if test="${userInfo.type eq 0}">企业管理员</c:if><c:if test="${userInfo.type eq 1}">员工</c:if><c:if test="${userInfo.type eq 2}">普通会员</c:if>" class="form-control" disabled/>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label  class="col-sm-1 control-label">订单信息</label>
-                                    <div class="col-sm-6">
-                                        租车详情(未写)
+                                <header class="panel-heading">
+                                    订单信息
+                                </header>
+                                <div class="form-group" style="margin-top: 15px"></div>
+                                <c:forEach var="v" items="${carRentals}">
+                                    <div class="form-group">
+                                        <label  class="col-sm-1 control-label">用车类型</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" value="预订用车" class="form-control" disabled/>
+                                        </div>
                                     </div>
-                                </div>
+                                    <div class="form-group">
+                                        <label  class="col-sm-1 control-label">始发点</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" value="${v.startPoint}" class="form-control" disabled/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label  class="col-sm-1 control-label">目的地</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" value="${v.endPoint}" class="form-control" disabled/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label  class="col-sm-1 control-label">出行时间</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" value="<date:date format='yyyy-MM-dd HH:mm' value='${v.startDate}'></date:date>" class="form-control" disabled/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label  class="col-sm-1 control-label">出行人数</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" value="${v.totalNumber}" class="form-control" disabled/>
+                                        </div>
+                                        <button type="button" class="btn btn-primary" onclick="$admin.fn.orderDetail(${v.id})">详情</button>
+                                    </div>
+                                    <header class="panel-heading"></header>
+                                    <div class="form-group" style="margin-top: 15px"></div>
+                                </c:forEach>
+                                <c:forEach items="${routeOrders}" var="v">
+                                    <div class="form-group">
+                                        <label  class="col-sm-1 control-label">用车类型</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" value="通勤班车" class="form-control" disabled/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label  class="col-sm-1 control-label">始发点</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" value="${v.startStation}" class="form-control" disabled/>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label  class="col-sm-1 control-label">目的地</label>
+                                        <div class="col-sm-6">
+                                            <input type="text" value="${v.endStation}" class="form-control" disabled/>
+                                        </div>
+                                        <button type="button" class="btn btn-primary" onclick="$admin.fn.routeDetail(${v.route.id})">详情</button>
+                                    </div>
+                                    <header class="panel-heading"></header>
+                                    <div class="form-group" style="margin-top: 15px"></div>
+                                </c:forEach>
                                 <%--</div>--%>
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label"></label>
@@ -90,7 +146,20 @@
             init: function () {
                 $("#formId").validate();
             },
-
+            orderDetail: function (id) {
+                var params = "";
+                if (id != null && id != '') {
+                    params = "?id=" + id;
+                }
+                window.location.href = "${contextPath}/admin/carRental/detail" + params;
+            },
+            routeDetail: function (id) {
+                var params = "";
+                if (id != null && id != '') {
+                    params = "?id=" + id;
+                }
+                window.location.href = "${contextPath}/admin/route/detail" + params;
+            },
             save : function() {
                 if(!$("#formId").valid()) return;
                 $("#formId").ajaxSubmit({

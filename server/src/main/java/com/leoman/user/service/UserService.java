@@ -5,6 +5,7 @@ import com.leoman.common.service.GenericManager;
 import com.leoman.user.entity.UserInfo;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartRequest;
 
 import java.util.List;
 
@@ -22,5 +23,7 @@ public interface UserService extends GenericManager<UserInfo> {
     public Result save(UserInfo userInfo, Long id, Long enterpriseId);
 
     public Integer del(Long id,String ids);
+
+    public Integer readExcelInfo(MultipartRequest multipartRequest);
 
 }
