@@ -300,7 +300,6 @@ public class RouteController extends GenericEntityController<Route, Route, Route
 
     /**
      * 获取通勤巴士历史记录，即订单列表
-     * @param route
      * @param draw
      * @param start
      * @param length
@@ -308,9 +307,9 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      */
     @RequestMapping(value = "/order/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(Route route, Integer draw, Integer start, Integer length) {
+    public Map<String, Object> list(Long enterpriseId, String startDate, String endDate , Integer draw, Integer start, Integer length) {
         int pagenum = getPageNum(start, length);
-        String sql = "SELECT \n" +
+        StringBuffer sql = new StringBuffer("SELECT \n" +
                 "  CONCAT(FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d'),' ',ro.`depart_time`) AS rideTime,\n" +//0
                 "  ro.`start_station` AS startStation,\n" +//1
                 "  ro.`end_station` AS endStation,\n" +//2
@@ -326,8 +325,15 @@ public class RouteController extends GenericEntityController<Route, Route, Route
                 "    ON r.`id` = ro.`route_id` \n" +
                 "  LEFT JOIN t_enterprise e \n" +
                 "    ON e.`id` = r.`enterprise_id` \n" +
-                "GROUP BY CONCAT(FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d'),' ',ro.`depart_time`)";
-        Page page = orderService.queryPageBySql(sql, pagenum, length);
+                "  where 1=1 ");
+        if(enterpriseId != null){
+            sql.append(" and e.`id` = '"+enterpriseId+"'");
+        }
+        if(!StringUtils.isEmpty(startDate)){
+            sql.append(" and e.`id` = '"+enterpriseId+"'");
+        }
+        sql.append(" GROUP BY CONCAT(FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d'),' ',ro.`depart_time`) ");
+        Page page = orderService.queryPageBySql(sql.toString(), pagenum, length);
         return DataTableFactory.fitting(draw, page);
     }
 

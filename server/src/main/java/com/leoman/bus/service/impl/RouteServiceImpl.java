@@ -121,10 +121,12 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
                 //返程时间点
                 String [] backTimeArr = backTimes.split("\\,");
                 for (String backTime:backTimeArr) {
-                    RouteTime routeTime = new RouteTime();
-                    routeTime.setDepartTime(backTime);//返程时间
-                    routeTime.setRouteId(backRoute.getId());//对应路线
-                    routeTimeDao.save(routeTime);
+                    if(!StringUtils.isEmpty(backTime)){
+                        RouteTime routeTime = new RouteTime();
+                        routeTime.setDepartTime(backTime);//返程时间
+                        routeTime.setRouteId(backRoute.getId());//对应路线
+                        routeTimeDao.save(routeTime);
+                    }
                 }
 
                 //路线站点
@@ -148,6 +150,18 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
                     routeDao.save(r);
 
                     routeStationDao.save(routeStation);
+                }
+
+                //路线发车
+                String [] busIdArr = busIds.split("\\,");
+                for (String busId:busIdArr) {
+                    if(!StringUtils.isEmpty(busId)){
+                        BusSend bs = new BusSend();
+                        bs.setBus(new Bus(Long.valueOf(busId)));
+                        bs.setContactId(backRoute.getId());
+                        bs.setType(1);//班车
+                        busSendDao.save(bs);
+                    }
                 }
             }
 

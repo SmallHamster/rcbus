@@ -25,11 +25,11 @@ public class Coupon extends BaseEntity{
     @Column(name = "coupon_way")
     private Integer couponWay;//优惠方式：1-折扣，2-减免金额
 
-    @Column(name = "valid_start_date")
-    private Long validStartDate;//有效期开始
+    @Column(name = "valid_date_from")
+    private Long validDateFrom;//有效期开始
 
-    @Column(name = "valid_end_date")
-    private Long validEndDate;//有效期结束
+    @Column(name = "valid_date_to")
+    private Long validDateTo;//有效期结束
 
     @Column(name = "discount_percent")
     private BigDecimal discountPercent;//折扣百分比
@@ -38,8 +38,13 @@ public class Coupon extends BaseEntity{
     private BigDecimal discountTopMoney;//最高立减金额
 
     @Column(name = "reduce_money")
-    private BigDecimal reduceMoney;//减免金额、
+    private BigDecimal reduceMoney;//减免金额
 
+    @Column(name = "is_limit")
+    private Integer isLimit;//是否有消费限制（1-是，0-否）
+
+    @Column(name = "limit_money")
+    private BigDecimal limitMoney;//限制金额（即消费满多少才可以享受折扣和减免）
 
     public String getName() {
         return name;
@@ -65,20 +70,20 @@ public class Coupon extends BaseEntity{
         this.couponWay = couponWay;
     }
 
-    public Long getValidStartDate() {
-        return validStartDate;
+    public Long getValidDateFrom() {
+        return validDateFrom;
     }
 
-    public void setValidStartDate(Long validStartDate) {
-        this.validStartDate = validStartDate;
+    public void setValidDateFrom(Long validDateFrom) {
+        this.validDateFrom = validDateFrom;
     }
 
-    public Long getValidEndDate() {
-        return validEndDate;
+    public Long getValidDateTo() {
+        return validDateTo;
     }
 
-    public void setValidEndDate(Long validEndDate) {
-        this.validEndDate = validEndDate;
+    public void setValidDateTo(Long validDateTo) {
+        this.validDateTo = validDateTo;
     }
 
     public BigDecimal getDiscountPercent() {
@@ -103,5 +108,21 @@ public class Coupon extends BaseEntity{
 
     public void setReduceMoney(BigDecimal reduceMoney) {
         this.reduceMoney = reduceMoney;
+    }
+
+    public Integer getIsLimit() {
+        return isLimit;
+    }
+
+    public void setIsLimit(Integer isLimit) {
+        this.isLimit = isLimit;
+    }
+
+    public BigDecimal getLimitMoney() {
+        return limitMoney;
+    }
+
+    public void setLimitMoney(BigDecimal limitMoney) {
+        this.limitMoney = limitMoney;
     }
 }

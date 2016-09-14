@@ -45,6 +45,8 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
      */
     @RequestMapping(value = "/index")
     public String index(Model model) {
+        List<CarType> typeList = carTypeService.queryAll();
+        model.addAttribute("typeList",typeList);
         return "bus/bus_list";
     }
 

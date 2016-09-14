@@ -8,7 +8,7 @@
     <meta name="description" content="">
     <meta name="author" content="ThemeBucket">
     <link rel="shortcut icon" href="#" type="image/png">
-    <title>车辆列表</title>
+    <title>企业报名信息列表</title>
     <%@ include file="../inc/new2/css.jsp" %>
 </head>
 <body class="sticky-header">
@@ -24,29 +24,13 @@
                     <section class="panel">
                         <div class="panel-body">
                             <div class="form-group col-sm-2">
-                                <input type="text" id="carNo" class="form-control" placeholder="车牌号">
+                                <input type="text" id="username" class="form-control" placeholder="联系人">
                             </div>
                             <div class="form-group col-sm-2">
-                                <input type="text" id="modelNo" class="form-control" placeholder="车型">
+                                <input type="text" id="mobile" class="form-control" placeholder="联系人电话">
                             </div>
                             <div class="form-group col-sm-2">
-                                <input type="text" id="driverName" class="form-control" placeholder="司机姓名">
-                            </div>
-                            <div class="form-group col-sm-2" style="width: 100px;margin-top: 5px;">
-                                用车类型：
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <select class="form-control input-sm" id="carType">
-                                    <option value="">---请选择---</option>
-                                    <c:forEach items="${typeList}" var="type">
-                                        <c:if test="${type.id == bus.carType.id}">
-                                            <option value="${type.id}" selected="selected">${type.name}</option>
-                                        </c:if>
-                                        <c:if test="${type.id != bus.carType.id}">
-                                            <option value="${type.id}">${type.name}</option>
-                                        </c:if>
-                                    </c:forEach>
-                                </select>
+                                <input type="text" id="enterpriseName" class="form-control" placeholder="企业名称">
                             </div>
                             <button id="c_search" class="btn btn-info"><i class="fa fa-search"></i> 搜索</button>
                             <button id="c_clear" class="btn btn-info"><i class="fa fa-recycle"></i> 清空</button>
@@ -58,14 +42,10 @@
                 <div class="col-sm-12">
                     <section class="panel">
                         <header class="panel-heading">
-                            车辆列表
+                            企业报名信息列表
                             <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
                                <button class="btn btn-info" type="button" onclick="$bus.fn.delete();" id="deleteBatch" style="display: none">
                                    <i class="fa fa-trash-o"></i> 删除</button>
-                            </span>
-                            <span class="tools pull-right">
-                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i> 刷新</button>
-                               <button class="btn btn-info" type="button" onclick="$bus.fn.add();"><i class="fa fa-plus"></i> 新增车辆</button>
                             </span>
                         </header>
                         <div class="panel-body">
@@ -75,15 +55,12 @@
                                     <tr>
                                         <th><input type="checkbox" class="list-parent-check"
                                                    onclick="$leoman.checkAll(this);"/></th>
-                                        <th>车牌号</th>
-                                        <th>品牌</th>
-                                        <th>车型</th>
-                                        <th>座位数</th>
-                                        <th>司机姓名</th>
-                                        <th>司机联系电话</th>
-                                        <th>司机身份证号</th>
-                                        <th>司机性别</th>
-                                        <th>用车类型</th>
+                                        <th>联系人</th>
+                                        <th>联系人电话</th>
+                                        <th>申请时间</th>
+                                        <th>企业名称</th>
+                                        <th>企业地址</th>
+                                        <th>备注</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
@@ -121,7 +98,7 @@
                     "searching": false,
                     "bSort": false,
                     "ajax": {
-                        "url": "${contextPath}/admin/bus/list",
+                        "url": "${contextPath}/admin/enterprise/apply/list",
                         "type": "POST"
                     },
                     "columns": [
@@ -132,64 +109,35 @@
                                 return checkbox;
                             }
                         },
-                        {"data": "carNo"},
-                        {"data": "brand"},
-                        {"data": "modelNo"},
-                        {"data": "seatNum"},
-                        {"data": "driverName"},
-                        {"data": "driverPhone"},
-                        {"data": "driverIDCard"},
+                        {"data": "username"},
+                        {"data": "mobile"},
                         {
-                            "data": "driverSex",
-                            "render": function (data) {
-                                var sex = '-';
-                                if(data == 1){
-                                    sex = '女';
-                                }else if(data == 0){
-                                    sex = '男';
-                                }
-                                return sex;
+                            "data": "createDate",
+                            "render": function (data, type, row, meta) {
+                                var date = new Date(data);
+                                return date.format('yyyy-MM-dd h:m:s');
                             }
                         },
-                        {"data": "carType.name"},
+                        {"data": "enterpriseName"},
+                        {"data": "enterpriseAddress"},
+                        {"data": "remark"},
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {
 
-                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$bus.fn.detail(\'" + data + "\')\">" +
-                                        "<i class='fa fa-eye'></i> 查看</button>";
-
-                                var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$bus.fn.add(\'" + data + "\')\">" +
-                                        "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
-
                                 var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$bus.fn.delete(\'" + data + "\')\">" +
                                         "<i class='fa fa-trash-o'></i> 删除</button>";
 
-                                return detail + "&nbsp;" + edit + "&nbsp;"+ del;
+                                return del;
                             }
                         }
                     ],
                     "fnServerParams": function (aoData) {
-                        aoData.carNo = $("#carNo").val();//车牌号
-                        aoData.modelNo = $("#modelNo").val();//车型
-                        aoData.driverName = $("#driverName").val();//车型
-                        aoData.carType1 = $("#carType").val();//车型
+                        aoData.username = $("#username").val();//车牌号
+                        aoData.mobile = $("#mobile").val();//车型
+                        aoData.enterpriseName = $("#enterpriseName").val();//车型
                     }
                 });
-            },
-            detail: function (id) {
-                var params = "";
-                if (id != null && id != '') {
-                    params = "?id=" + id;
-                }
-                window.location.href = "${contextPath}/admin/bus/detail" + params;
-            },
-            add: function (id) {
-                var params = "";
-                if (id != null && id != '') {
-                    params = "?id=" + id;
-                }
-                window.location.href = "${contextPath}/admin/bus/add" + params;
             },
             delete: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
@@ -204,7 +152,7 @@
                 $("#determine").off("click");
                 $("#determine").on("click",function(){
                     $.ajax({
-                        "url": "${contextPath}/admin/bus/delete",
+                        "url": "${contextPath}/admin/enterprise/apply/delete",
                         "data": {
                             ids:JSON.stringify(ids)
                         },
@@ -240,6 +188,7 @@
     $(function () {
         $bus.fn.init();
     })
+
 </script>
 </body>
 </html>

@@ -43,7 +43,12 @@
                                     <div class="col-sm-1">
                                         <select class="form-control input-sm" name="enterprise.id">
                                             <c:forEach items="${enterpriseList}" var="enterprise">
-                                                <option value="${enterprise.id}" type="${enterprise.type}">${enterprise.name}</option>
+                                                <c:if test="${enterprise.id == route.enterprise.id}">
+                                                    <option value="${enterprise.id}" selected>${enterprise.name}</option>
+                                                </c:if>
+                                                <c:if test="${enterprise.id != route.enterprise.id}">
+                                                    <option value="${enterprise.id}">${enterprise.name}</option>
+                                                </c:if>
                                             </c:forEach>
                                         </select>
                                     </div>
@@ -88,7 +93,7 @@
                                     <div style="margin-bottom: 10px;">
                                         <label class="col-sm-1 control-label">返程时间:</label>
                                         <div class="col-sm-2">
-                                            <input type="text" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="">
+                                            <input type="text" name="backTimes" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="">
                                         </div>
                                         <button type="button" onclick="$route.fn.addRow(this)" class="btn btn-primary"><i class='fa fa-plus-circle'></i></button>
                                     </div>
@@ -232,8 +237,6 @@
 
                 //初始化发车时间和返程时间
                 $route.fn.timeInit('depart');
-
-                $("#enterpriseType").val($("select").find("option:first").attr("type"));
 
             },
             dataTableInit: function (tableId) {

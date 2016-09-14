@@ -34,13 +34,13 @@
                                     </c:forEach>
                                 </select>
                             </div>
-                            <div class="form-group col-sm-2" style="width: 100px;margin-top: 5px;">
+                            <div class="form-group col-sm-1" style="width: 50px;margin-top: 5px;">
                                 从：
                             </div>
                             <div class="form-group col-sm-2">
                                 <input type="text" id="startTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="" placeholder="请选择起始时间">
                             </div>
-                            <div class="form-group col-sm-2" style="width: 100px;margin-top: 5px;">
+                            <div class="form-group col-sm-1" style="width: 50px;margin-top: 5px;">
                                 至：
                             </div>
                             <div class="form-group col-sm-2">

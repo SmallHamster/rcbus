@@ -24,13 +24,7 @@
                     <section class="panel">
                         <div class="panel-body">
                             <div class="form-group col-sm-2">
-                                <input type="text" id="carNo" class="form-control" placeholder="车牌号">
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <input type="text" id="modelNo" class="form-control" placeholder="车型">
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <input type="text" id="driverName" class="form-control" placeholder="司机姓名">
+                                <input type="text" id="name" class="form-control" placeholder="名称">
                             </div>
                             <button id="c_search" class="btn btn-info"><i class="fa fa-search"></i> 搜索</button>
                             <button id="c_clear" class="btn btn-info"><i class="fa fa-recycle"></i> 清空</button>
@@ -46,10 +40,6 @@
                             <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
                                <button class="btn btn-info" type="button" onclick="$bus.fn.delete();" id="deleteBatch" style="display: none">
                                    <i class="fa fa-trash-o"></i> 删除</button>
-                            </span>
-                            <span class="tools pull-right">
-                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i> 刷新</button>
-                               <button class="btn btn-info" type="button" onclick="$bus.fn.add();"><i class="fa fa-plus"></i> 新增车辆</button>
                             </span>
                         </header>
                         <div class="panel-body">
@@ -152,7 +142,10 @@
                                 return edit + "&nbsp;"+ del;
                             }
                         }
-                    ]
+                    ],
+                    "fnServerParams": function (aoData) {
+                        aoData.name = $("#name").val();//名称
+                    }
                 });
             },
             add: function (id) {
@@ -175,7 +168,7 @@
                 $("#determine").off("click");
                 $("#determine").on("click",function(){
                     $.ajax({
-                        "url": "${contextPath}/admin/bus/delete",
+                        "url": "${contextPath}/admin/coupon/delete",
                         "data": {
                             ids:JSON.stringify(ids)
                         },

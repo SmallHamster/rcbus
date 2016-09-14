@@ -40,19 +40,19 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="brand" class="col-sm-1 control-label">品牌：</label>
+                                    <label for="brand" class="col-sm-1 control-label"><span style="color: red;">* </span>品牌：</label>
                                     <div class="col-sm-6">
                                         <input type="text" id="brand" name="brand" value="${bus.brand}" class="form-control" required/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="seatNum" class="col-sm-1 control-label">座位数：</label>
+                                    <label for="seatNum" class="col-sm-1 control-label"><span style="color: red;">* </span>座位数：</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="seatNum" name="seatNum" value="${bus.seatNum}" class="form-control" required />
+                                        <input type="text" id="seatNum" name="seatNum" value="${bus.seatNum}" class="form-control" required number-0="true"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="carNo" class="col-sm-1 control-label">车牌号：</label>
+                                    <label for="carNo" class="col-sm-1 control-label"><span style="color: red;">* </span>车牌号：</label>
                                     <div class="col-sm-6">
                                         <input type="text" id="carNo" name="carNo" value="${bus.carNo}" class="form-control" required/>
                                     </div>
@@ -60,17 +60,17 @@
                                 <div class="form-group">
                                     <label for="policyNo" class="col-sm-1 control-label">保险单号：</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="policyNo" name="policyNo" value="${bus.policyNo}" class="form-control" required />
+                                        <input type="text" id="policyNo" name="policyNo" value="${bus.policyNo}" class="form-control" />
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="driverName" class="col-sm-1 control-label">司机姓名：</label>
+                                    <label for="driverName" class="col-sm-1 control-label"><span style="color: red;">* </span>司机姓名：</label>
                                     <div class="col-sm-6">
                                         <input type="text" id="driverName" name="driverName" value="${bus.driverName}" class="form-control" required/>
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label for="driverPhone" class="col-sm-1 control-label">司机联系电话：</label>
+                                    <label for="driverPhone" class="col-sm-1 control-label"><span style="color: red;">* </span>联系电话：</label>
                                     <div class="col-sm-6">
                                         <input type="text" id="driverPhone" name="driverPhone" value="${bus.driverPhone}" class="form-control" required mobile="true"/>
                                     </div>
@@ -78,16 +78,16 @@
                                 <div class="form-group">
                                     <label for="driverIDCard" class="col-sm-1 control-label">司机身份证号：</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="driverIDCard" name="driverIDCard" value="${bus.driverIDCard}" class="form-control" required />
+                                        <input type="text" id="driverIDCard" name="driverIDCard" value="${bus.driverIDCard}" class="form-control" />
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label">司机性别：</label>
                                     <div class="col-sm-1">
-                                        <select class="form-control input-sm" name="driverSex">
-                                            <option value="0">男</option>
-                                            <option value="1">女</option>
-                                        </select>
+                                        <input type="radio" name="driverSex" value="0" checked="checked">男
+                                        &nbsp;
+                                        <input type="radio" name="driverSex" value="1">女
+
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -106,7 +106,7 @@
                                     </div>
                                 </div>
                                 <div class="form-group img_tooltip" >
-                                    <label for="imageId" class="col-sm-1 control-label">图片:</label>
+                                    <label for="imageId" class="col-sm-1 control-label"><span style="color: red;">* </span>图片:</label>
 
                                     <div class="col-sm-2">
                                         <input type="hidden" id="imageId" name="image.id" value="${bus.image.id}">
@@ -152,7 +152,7 @@
         fn: {
             init: function () {
                 if("${bus.driverSex}" != ''){
-                    $("[name=driverSex] option[value='+${bus.driverSex}+']").click();
+                    $("[name=driverSex][value="+"${bus.driverSex}"+"]").click();
                 }
                 $bus.fn.dropperInit();//显示图片
                 $("#removeImg").click(function(){

@@ -49,8 +49,11 @@ public class Bus extends BaseEntity{
     @JoinColumn(name = "image_id")
     private Image image;//图片
 
-    @Column(name = "cur_station_id")
-    private String curStationId;//当前所在站
+    @Column(name = "cur_lat")
+    private Double cur_lat;//当前纬度
+
+    @Column(name = "cur_lng")
+    private Double cur_lng;//当前经度
 
     public String getCarNo() {
         return carNo;
@@ -140,12 +143,20 @@ public class Bus extends BaseEntity{
         this.image = image;
     }
 
-    public String getCurStationId() {
-        return curStationId;
+    public Double getCur_lat() {
+        return cur_lat;
     }
 
-    public void setCurStationId(String curStationId) {
-        this.curStationId = curStationId;
+    public void setCur_lat(Double cur_lat) {
+        this.cur_lat = cur_lat;
+    }
+
+    public Double getCur_lng() {
+        return cur_lng;
+    }
+
+    public void setCur_lng(Double cur_lng) {
+        this.cur_lng = cur_lng;
     }
 
     public Bus(){}
