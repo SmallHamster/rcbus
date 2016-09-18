@@ -53,7 +53,7 @@
                 <li class="menu-list"><a href="javascript:void(0);"><i class="fa fa fa-users"></i><span>个人用户</span></a>
                     <ul class="sub-menu-list">
                         <li><a href="${contextPath}/admin/admin/index">永旺专线</a></li>
-                        <li><a href="${contextPath}/admin/admin/index">租车预定</a></li>
+                        <li><a href="${contextPath}/wechat/carrental/index">租车预定</a></li>
                     </ul>
                 </li>
 

@@ -16,7 +16,7 @@ import javax.persistence.*;
 @Table(name = "t_banner")
 public class Banner extends BaseEntity {
 
-    //位置 0:通勤巴士 1:永旺专线
+    //位置 0:通勤巴士 1:永旺专线 2:用车预定
     @Column(name = "position")
     private Integer position;
 

@@ -56,6 +56,7 @@
                                             <option value="">请选择</option>
                                             <option value="0">通勤巴士</option>
                                             <option value="1">永旺专线</option>
+                                            <option value="2">用车预定</option>
                                         </select>
                                     </div>
                                 </div>

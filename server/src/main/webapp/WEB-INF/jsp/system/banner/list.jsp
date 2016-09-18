@@ -102,8 +102,10 @@
                             "render": function (data) {
                                 if(data==0){
                                     return "通勤巴士";
-                                }else{
+                                }else if(data==1){
                                     return "永旺专线";
+                                }else{
+                                    return "用车预定";
                                 }
                             },
                             "sDefaultContent" : ""
