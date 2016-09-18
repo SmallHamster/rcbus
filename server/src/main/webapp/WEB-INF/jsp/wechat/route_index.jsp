@@ -23,7 +23,7 @@
 <section class="wrap route-box">
     <div class="slide">
         <ul>
-            <li>
+            <%--<li>
                 <img src="images/banner_bus.jpg" />
             </li>
             <li>
@@ -31,10 +31,15 @@
             </li>
             <li>
                 <img src="images/banner_bus.jpg" />
-            </li>
+            </li>--%>
+            <c:forEach items="${bannerList}" var="banner">
+                <li>
+                    <img src="${banner.image.path}" />
+                </li>
+            </c:forEach>
         </ul>
     </div>
-    <form action="">
+    <form action="" id="formId">
         <div class="search">
             <div class="item from">
                 <em>从</em>
@@ -47,7 +52,7 @@
                 <i class="clear"></i>
             </div>
             <div class="button">
-                <button type="submit" class="ubtn ubtn-blue" id="submit">查询班车</button>
+                <button type="button" class="ubtn ubtn-blue" id="submit"onclick="search()">查询班车</button>
             </div>
         </div>
     </form>
@@ -56,171 +61,34 @@
         <div class="hd">全部线路</div>
         <div class="bd">
             <ul>
-                <li class="c1">
-                    <div class="inner">
-                        <div class="fromto">
-                            <em>光谷广场</em>
-                            <i></i>
-                            <em>武昌火车站</em>
-                            <b>1</b>
-                        </div>
-                        <div class="detail">
-                            <span>东风风行cm7</span>
-                            <span>即将出发：9:30</span>
-                            <span>车牌：鄂TF0809</span>
-                            <span>预定人数：48</span>
-                        </div>
-                        <div class="bus">野芷湖西路保利心语</div>
-                        <div class="op">
-                            <a href="#1" class="place">实时位置</a>
-                        </div>
-                        <div class="fav">
-                            <a href="javascript:;"></a>
-                        </div>
-                    </div>
-                </li>
-                <li class="c2">
-                    <div class="inner">
-                        <div class="fromto">
-                            <em>光谷广场</em>
-                            <i></i>
-                            <em>武昌火车站</em>
-                            <b>2</b>
-                        </div>
-                        <div class="detail">
-                            <span>东风风行cm7</span>
-                            <span>即将出发：9:30</span>
-                            <span>车牌：鄂TF0809</span>
-                            <span>预定人数：48</span>
-                        </div>
-                        <div class="bus">野芷湖西路保利心语</div>
-                        <div class="op">
-                            <a href="#1" class="place">实时位置</a>
-                        </div>
-                        <div class="fav">
-                            <a href="javascript:;"></a>
-                        </div>
-                    </div>
-                </li>
-                <li class="c3">
-                    <div class="inner">
-                        <div class="fromto">
-                            <em>光谷广场</em>
-                            <i></i>
-                            <em>武昌火车站</em>
-                            <b>3</b>
-                        </div>
-                        <div class="detail">
-                            <span>东风风行cm7</span>
-                            <span>即将出发：9:30</span>
-                            <span>车牌：鄂TF0809</span>
-                            <span>预定人数：48</span>
-                        </div>
-                        <div class="bus">野芷湖西路保利心语</div>
-                        <div class="op">
-                            <a href="#1" class="place">实时位置</a>
-                        </div>
-                        <div class="fav">
-                            <a href="javascript:;"></a>
-                        </div>
-                    </div>
-                </li>
-                <li class="c4">
-                    <div class="inner">
-                        <div class="fromto">
-                            <em>光谷广场</em>
-                            <i></i>
-                            <em>武昌火车站</em>
-                            <b>4</b>
-                        </div>
-                        <div class="detail">
-                            <span>东风风行cm7</span>
-                            <span>即将出发：9:30</span>
-                            <span>车牌：鄂TF0809</span>
-                            <span>预定人数：48</span>
-                        </div>
-                        <div class="bus">野芷湖西路保利心语</div>
-                        <div class="op">
-                            <a href="#1" class="place">实时位置</a>
-                        </div>
-                        <div class="fav">
-                            <a href="javascript:;"></a>
-                        </div>
-                    </div>
-                </li>
-                <li class="c5">
-                    <div class="inner">
-                        <div class="fromto">
-                            <em>光谷广场</em>
-                            <i></i>
-                            <em>武昌火车站</em>
-                            <b>5</b>
-                        </div>
-                        <div class="detail">
-                            <span>东风风行cm7</span>
-                            <span>即将出发：9:30</span>
-                            <span>车牌：鄂TF0809</span>
-                            <span>预定人数：48</span>
-                        </div>
-                        <div class="bus">野芷湖西路保利心语</div>
-                        <div class="op">
-                            <a href="#1" class="place">实时位置</a>
-                        </div>
-                        <div class="fav">
-                            <a href="javascript:;"></a>
-                        </div>
-                    </div>
-                </li>
-                <li class="c6">
-                    <div class="inner">
-                        <div class="fromto">
-                            <em>光谷广场</em>
-                            <i></i>
-                            <em>武昌火车站</em>
-                            <b>6</b>
-                        </div>
-                        <div class="detail">
-                            <span>东风风行cm7</span>
-                            <span>即将出发：9:30</span>
-                            <span>车牌：鄂TF0809</span>
-                            <span>预定人数：48</span>
-                        </div>
-                        <div class="bus">野芷湖西路保利心语</div>
-                        <div class="op">
-                            <a href="#1" class="place">实时位置</a>
-                        </div>
-                        <div class="fav">
-                            <a href="javascript:;"></a>
-                        </div>
-                    </div>
-                </li>
-                <li class="c7">
-                    <div class="inner">
-                        <div class="fromto">
-                            <em>光谷广场</em>
-                            <i></i>
-                            <em>武昌火车站</em>
-                            <b>7</b>
-                        </div>
-                        <div class="detail">
-                            <span>东风风行cm7</span>
-                            <span>即将出发：9:30</span>
-                            <span>车牌：鄂TF0809</span>
-                            <span>预定人数：48</span>
-                        </div>
-                        <div class="bus">野芷湖西路保利心语</div>
-                        <div class="op">
-                            <a href="#1" class="place">实时位置</a>
-                        </div>
-                        <div class="fav">
-                            <a href="javascript:;"></a>
-                        </div>
-                    </div>
-                </li>
             </ul>
         </div>
     </div>
 </section>
+
+<li id="routeTemplate" class="c1" style="display: none;">
+    <div class="inner">
+        <div class="fromto">
+            <em>光谷广场</em>
+            <i></i>
+            <em>武昌火车站</em>
+            <b>1</b>
+        </div>
+        <div class="detail">
+            <span>东风风行cm7</span>
+            <span>即将出发：9:30</span>
+            <span>车牌：鄂TF0809</span>
+            <span>预定人数：48</span>
+        </div>
+        <div class="bus">野芷湖西路保利心语</div>
+        <div class="op">
+            <a href="#1" class="place">实时位置</a>
+        </div>
+        <div class="fav">
+            <a href="javascript:;"></a>
+        </div>
+    </div>
+</li>
 
 <%@ include file="../inc/new2/foot.jsp" %>
 <script src="${contextPath}/wechat/js/zepto.min.js"></script>
@@ -275,7 +143,35 @@
                 }
             })
         })
+
+        search();
     })
+
+    //查询
+    function search(){
+        $("#formId").ajaxSubmit({
+            url : "${contextPath}/wechat/route/list",
+            type : "POST",
+            success : function(result) {
+                if(result.status == 0) {
+                    var list = result.data.list;
+                    $(".ui-list ul").empty();
+                    for(var i=0; i<list.length;i++){
+                        var template = $("#routeTemplate").clone().removeAttr("id");
+                        template.find("em:eq(0)").text(list[i].startStation);
+                        template.find("em:eq(1)").text(list[i].endStation);
+                        template.find("b").text(i+1);
+                        console.info(list[i].startStation);
+                        template.show();
+                        $(".ui-list ul").append(template);
+                    }
+
+                }else {
+                    alert("查询失败");
+                }
+            }
+        });
+    }
 </script>
 </body>
 </html>

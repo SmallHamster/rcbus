@@ -9,6 +9,7 @@ import com.leoman.bus.service.impl.RouteServiceImpl;
 import com.leoman.common.controller.common.CommonController;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
+import com.leoman.system.banner.entity.Banner;
 import com.leoman.system.banner.service.BannerService;
 import com.leoman.utils.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,8 @@ public class RouteWeChatController extends CommonController {
      */
     @RequestMapping(value = "/index")
     public String index(Model model) {
+        List<Banner> bannerList = bannerService.findList(0);
+        model.addAttribute("bannerList", bannerList);
         return "wechat/route_index";
     }
 
@@ -59,7 +62,7 @@ public class RouteWeChatController extends CommonController {
                        Route route) {
         try {
             List<Route> list = routeService.queryAll();
-            WebUtil.printJson(response,new Result().success(createMap("list", list)));
+            WebUtil.printJson(response,new Result().success(list));
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();
