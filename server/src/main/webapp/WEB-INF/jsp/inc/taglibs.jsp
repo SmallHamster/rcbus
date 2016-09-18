@@ -6,3 +6,8 @@
 <%@ taglib prefix="date" uri="/tags" %>
 <%@ taglib prefix="fns" uri="/WEB-INF/functions.tld" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<base href="<%=basePath%>" />
