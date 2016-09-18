@@ -45,8 +45,8 @@
 
                 <li class="menu-list"><a href="javascript:void(0);"><i class="fa fa fa-users"></i><span>企业用户</span></a>
                     <ul class="sub-menu-list">
-                        <li><a href="${contextPath}/wechat/enterprise/apply/">企业申请</a></li>
-                        <li><a href="${contextPath}/admin/admin/index">通勤班车</a></li>
+                        <li><a target="_blank" href="${contextPath}/wechat/enterprise/apply/">企业申请</a></li>
+                        <li><a target="_blank" href="${contextPath}/wechat/route/index">通勤班车</a></li>
                     </ul>
                 </li>
 

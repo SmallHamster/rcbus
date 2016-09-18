@@ -92,4 +92,10 @@ public class CommonController {
 
         return finallyDate;
     }
+
+    public Map<String,Object> createMap(String key, Object obj){
+        Map<String,Object> map = new HashMap<>();
+        map.put(key,obj);
+        return map;
+    }
 }

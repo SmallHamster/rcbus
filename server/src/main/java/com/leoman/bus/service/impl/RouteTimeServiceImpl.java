@@ -7,8 +7,10 @@ import com.leoman.common.service.impl.GenericManagerImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
- * Created by Administrator on 2016/9/8.
+ * Created by Daisy on 2016/9/8.
  */
 @Service
 public class RouteTimeServiceImpl extends GenericManagerImpl<RouteTime,RouteTimeDao> implements RouteTimeService{
@@ -16,4 +18,8 @@ public class RouteTimeServiceImpl extends GenericManagerImpl<RouteTime,RouteTime
     @Autowired
     private RouteTimeDao routeTimeDao;
 
+    @Override
+    public List<RouteTime> findByRouteId(Long routeId) {
+        return routeTimeDao.findByRouteId(routeId);
+    }
 }

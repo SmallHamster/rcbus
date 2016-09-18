@@ -199,6 +199,9 @@ var $leoman = {
         form.find("input[type=checkbox]").removeAttr("checked");
         form.validator("cleanUp");
     },
+    test11:function(){
+        console.info("-----test");
+    },
     dataTable: function (obj, option) {
         return obj.DataTable($.extend($leoman.v.dataTableL, option))
     },
@@ -227,7 +230,7 @@ var $leoman = {
             return "租客";
         }
         return "";
-    }
+    },
 
 }
 
