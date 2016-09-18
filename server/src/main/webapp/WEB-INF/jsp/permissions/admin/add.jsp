@@ -100,6 +100,7 @@
                                     <label class="col-sm-1 control-label"></label>
                                     <div class="col-sm-6">
                                         <button type="button" onclick="$admin.fn.save()" class="btn btn-primary">保存</button>
+                                        <button type="button" class="btn btn-primary" onclick="history.go(-1);">返回</button>
                                     </div>
                                 </div>
                             </form>

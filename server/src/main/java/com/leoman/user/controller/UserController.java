@@ -14,6 +14,7 @@ import com.leoman.order.service.OrderService;
 import com.leoman.pay.util.MD5Util;
 import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
+import com.leoman.user.entity.UserCoupon;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.user.entity.UserLogin;
 import com.leoman.user.service.UserCouponService;
@@ -95,7 +96,7 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
 //        if(id != null){
 //            model.addAttribute("user",userService.queryByPK(id));
 //        }
-        model.addAttribute("enterprise",enterpriseService.queryAll());
+        model.addAttribute("enterprise",enterpriseService.queryByProperty("type",0));
         return "user/add";
     }
 
@@ -170,9 +171,24 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
     }
 
 
-    public Result userCouponSave(Long userId,Long couponId){
-
+    @RequestMapping(value = "/userCouponSave")
+    @ResponseBody
+    public Result userCouponSave(Long id,Long coupon,String ids){
         try{
+            if(id!=null && coupon!=null){
+                UserCoupon userCoupon = new UserCoupon();
+                userCoupon.setUserId(id);
+                userCoupon.setCouponId(coupon);
+                userCouponService.save(userCoupon);
+            }else {
+                Long[] ss = JsonUtil.json2Obj(ids,Long[].class);
+                for (Long _id : ss) {
+                    UserCoupon userCoupon = new UserCoupon();
+                    userCoupon.setUserId(_id);
+                    userCoupon.setCouponId(coupon);
+                    userCouponService.save(userCoupon);
+                }
+            }
 
         }catch (Exception e){
             e.printStackTrace();

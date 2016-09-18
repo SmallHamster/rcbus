@@ -6,11 +6,14 @@ import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
 import com.leoman.pay.util.MD5Util;
 import com.leoman.permissions.admin.entity.Admin;
+import com.leoman.permissions.admin.service.AdminService;
 import com.leoman.permissions.adminrole.entity.AdminRole;
+import com.leoman.permissions.adminrole.service.AdminRoleService;
 import com.leoman.system.enterprise.dao.EnterpriseDao;
 import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
 import com.leoman.system.enterprise.service.impl.EnterpriseServiceImpl;
+import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.JsonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +37,6 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
 
     @Autowired
     private EnterpriseService enterpriseService;
-
 
     @RequestMapping(value = "/index")
     public String index(){
@@ -82,19 +84,9 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Result save(Long id,String name) {
-        Enterprise enterprise = null;
+    public Result save(Long id,String name,String userName,Integer type) {
         try {
-            if(id!=null){
-                enterprise = enterpriseService.queryByPK(id);
-            }
-            if(enterprise!=null){
-                enterprise.setName(name);
-            }else {
-                enterprise = new Enterprise();
-                enterprise.setName(name);
-            }
-            enterpriseService.save(enterprise);
+            enterpriseService.save(id,name,userName,type);
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();

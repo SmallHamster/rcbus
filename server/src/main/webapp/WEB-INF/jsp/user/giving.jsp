@@ -9,7 +9,7 @@
             </div>
             <div class="modal-body">
                 <div align=center>
-                    <select class="form-control input-sm">
+                    <select class="form-control input-sm" id="coupon">
                         <c:forEach var="v" items="${coupon}">
                             <option value="${v.id}">${v.name}</option>
                         </c:forEach>
@@ -18,7 +18,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-warning" id="determine"> 确定</button>
+                <button type="button" class="btn btn-warning" id="giveSave"> 确定</button>
             </div>
         </div>
     </div>

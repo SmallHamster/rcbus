@@ -58,11 +58,12 @@
                         <header class="panel-heading">
                             会员列表
                             <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
-                               <button class="btn btn-info" type="button" onclick="$user.fn.del();" id="deleteBatch" style="display: none">删除</button>
+                                <button class="btn btn-info" type="button" onclick="$user.fn.del();" id="deleteBatch" style="display: none">删除</button>
                             </span>
                             <span class="tools pull-right">
-                               <button class="btn btn-default " type="button" id="refresh"><i class="fa fa-refresh"></i>刷新</button>
-                               <button class="btn btn-info" type="button" onclick="$user.fn.add();">新增会员</button>
+                                <button class="btn btn-info" type="button" onclick="$user.fn.giving();" >赠送</button>
+                                <button class="btn btn-default " type="button" id="refresh"><i class="fa fa-refresh"></i>刷新</button>
+                                <button class="btn btn-info" type="button" onclick="$user.fn.add();">新增会员</button>
                             </span>
 
                         </header>
@@ -222,8 +223,39 @@
                     });
                 })
             },
-            giving: function () {
+            giving: function (id) {
+                var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');
+                if(id==null && checkBox.length<1){
+                    alert("最少选择一个用户");
+                    return;
+                }
+                var ids = checkBox.getInputId();
+                var coupon = $("#coupon").val();
+                $("#coupon").change(function(){
+                    coupon = $("#coupon").val();
+                });
                 $('#giving').modal("show");
+                $("#giveSave").off("click");
+                $("#giveSave").on("click",function(){
+                    $.ajax({
+                        "url": "${contextPath}/admin/user/userCouponSave",
+                        "data": {
+                            coupon:coupon,
+                            id:id,
+                            ids:JSON.stringify(ids)
+                        },
+                        "dataType": "json",
+                        "type": "POST",
+                        success: function (result) {
+                            if (result==1) {
+                                alert("删除错误");
+                            }else {
+                                $user.v.dTable.ajax.reload(null,false);
+                            }
+                            $("#giving").modal("hide");
+                        }
+                    });
+                })
             },
             clickFire: function () {
                 $('#feedback').click();
