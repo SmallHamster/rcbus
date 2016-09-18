@@ -2,7 +2,9 @@ package com.leoman.common.service.impl;
 
 import com.leoman.common.dao.IBaseJpaRepository;
 import com.leoman.common.service.GenericManager;
+import org.hibernate.SQLQuery;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.transform.Transformers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -483,8 +485,9 @@ public class GenericManagerImpl<E, D extends IBaseJpaRepository<E>> implements G
         if (firstResult < 0) {
             firstResult = 0;
         }
-        List result = getEntityManager().createNativeQuery(sql).setFirstResult(firstResult).setMaxResults(rowsPerPage)
-                .getResultList();
+        Query query = getEntityManager().createNativeQuery(sql);
+        query.unwrap(SQLQuery.class).setResultTransformer(Transformers.ALIAS_TO_ENTITY_MAP);//返回map对象
+        List result = query.setFirstResult(firstResult).setMaxResults(rowsPerPage).getResultList();
         return new PageImpl<E>(result, new PageRequest(pageNo - 1, rowsPerPage), totalPageCount == 0 ? 1 : totalPageCount);
     }
 }

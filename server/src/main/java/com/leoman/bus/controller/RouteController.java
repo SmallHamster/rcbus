@@ -307,7 +307,7 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      */
     @RequestMapping(value = "/order/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(Long enterpriseId, String startDate, String endDate , Integer draw, Integer start, Integer length) {
+    public Map<String, Object> list(String routeName,Long enterpriseId, String startDate, String endDate, Integer draw, Integer start, Integer length) {
         int pagenum = getPageNum(start, length);
         StringBuffer sql = new StringBuffer("SELECT \n" +
                 "  CONCAT(FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d'),' ',ro.`depart_time`) AS rideTime,\n" +//0
@@ -326,11 +326,17 @@ public class RouteController extends GenericEntityController<Route, Route, Route
                 "  LEFT JOIN t_enterprise e \n" +
                 "    ON e.`id` = r.`enterprise_id` \n" +
                 "  where 1=1 ");
+        if(!StringUtils.isEmpty(routeName)){
+            sql.append(" AND (ro.`start_station` LIKE '%"+routeName+"%' OR ro.`end_station` LIKE '%"+routeName+"%') ");
+        }
         if(enterpriseId != null){
             sql.append(" and e.`id` = '"+enterpriseId+"'");
         }
         if(!StringUtils.isEmpty(startDate)){
-            sql.append(" and e.`id` = '"+enterpriseId+"'");
+            sql.append(" AND FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d') >= DATE_FORMAT('"+startDate+"','%Y-%m-%d') ");
+        }
+        if(!StringUtils.isEmpty(endDate)){
+            sql.append(" AND FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d') <= DATE_FORMAT('"+endDate+"','%Y-%m-%d') ");
         }
         sql.append(" GROUP BY CONCAT(FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d'),' ',ro.`depart_time`) ");
         Page page = orderService.queryPageBySql(sql.toString(), pagenum, length);

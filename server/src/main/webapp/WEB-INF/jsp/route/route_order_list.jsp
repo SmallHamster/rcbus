@@ -23,6 +23,9 @@
                 <div class="col-sm-12">
                     <section class="panel">
                         <div class="panel-body">
+                            <div class="form-group col-sm-2">
+                                <input type="text" id="routeName" class="form-control" placeholder="路线起始">
+                            </div>
                             <div class="form-group col-sm-2" style="width: 100px;margin-top: 5px;">
                                 所属企业：
                             </div>
@@ -38,13 +41,13 @@
                                 从：
                             </div>
                             <div class="form-group col-sm-2">
-                                <input type="text" id="startTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="" placeholder="请选择起始时间">
+                                <input type="text" id="startDate" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="" placeholder="请选择起始时间">
                             </div>
                             <div class="form-group col-sm-1" style="width: 50px;margin-top: 5px;">
                                 至：
                             </div>
                             <div class="form-group col-sm-2">
-                                <input type="text" id="endTime" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="" placeholder="请选择结束时间">
+                                <input type="text" id="endDate" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="" placeholder="请选择结束时间">
                             </div>
 
                             <button id="c_search" class="btn btn-info"><i class="fa fa-search"></i> 搜索</button>
@@ -72,8 +75,6 @@
                                 <table class="display table table-bordered table-striped" id="dataTables" width="100%">
                                     <thead>
                                     <tr>
-                                        <th><input type="checkbox" class="list-parent-check"
-                                                   onclick="$leoman.checkAll(this);"/></th>
                                         <th>路线起始</th>
                                         <th>公司名称</th>
                                         <th>发车时间</th>
@@ -113,10 +114,11 @@
                     todayBtn: 1,
                     autoclose: 1,
                     todayHighlight: 1,
-                    startView: 'hour',
+                    startView: 'month',
+                    minView: "month",
                     forceParse: 0,
                     showMeridian: false,
-                    format: 'hh:ii'
+                    format: 'yyyy-mm-dd'
                 });
             },
             dataTableInit: function () {
@@ -131,50 +133,29 @@
                     },
                     "columns": [
                         {
-                            "data": "id",
-                            "render": function (data, type, row, meta) {
-                                var checkbox = "<input type='checkbox' class='list-check' onclick='$leoman.subSelect(this);' value=" + data + ">";
-                                return checkbox;
-                            }
-                        },
-                        {
                             "data": "id",//起点站--终点站
                             "render": function (data, type, row, meta) {
-                                return row[1]+" ------> "+row[2];
+                                return row.startStation+" ------> "+row.endStation;
                             }
                         },
-                        {
-                            "data": "id",//企业名称
-                            "render": function (data, type, row, meta) {
-                                return row[4];
-                            }
-                        },
-                        {
-                            "data": "rideTime",//发车时间
-                            "render": function (data, type, row, meta) {
-                                return row[0];
-                            }
-                        },
-                        {
-                            "data": "peopleNum",//乘车人数
-                            "render": function (data, type, row, meta) {
-                                return row[5];
-                            }
-                        },
+                        {"data": "enterpriseName"},//企业名称
+                        {"data": "rideTime"},//企业名称
+                        {"data": "peopleNum"},//企业名称
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {
 
-                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$route.fn.orderComment(\'" + row[6] + "\',\'" + row[0] + "\')\">" +
+                                var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$route.fn.orderComment(\'" + row.routeId + "\',\'" + row.rideTime + "\')\">" +
                                         "<i class='fa fa-eye'></i> 查看</button>";
                                 return detail;
                             }
                         }
                     ],
                     "fnServerParams": function (aoData) {
-                        aoData.startStation = $("#startStation").val();//车牌号
-                        aoData.endStation = $("#endStation").val();//车型
-                        aoData.enterpriseId = $("#enterpriseId").val();//车型
+                        aoData.routeName = $("#routeName").val();//路线起始
+                        aoData.enterpriseId = $("#enterpriseId").val();//企业
+                        aoData.startDate = $("#startDate").val();//起始时间
+                        aoData.endDate = $("#endDate").val();//结束时间
                     }
                 });
             },
