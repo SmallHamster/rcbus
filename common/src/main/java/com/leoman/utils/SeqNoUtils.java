@@ -3,6 +3,7 @@ package com.leoman.utils;
 
 
 import java.util.Date;
+import java.util.Random;
 
 
 public final class SeqNoUtils {
@@ -47,7 +48,13 @@ public final class SeqNoUtils {
         return DateUtils.dateToStringWithFormat(new Date(), "yyyyMMddHHmmss")+seq;
     }
 
-
+    public static String getVerCode(int length){
+        StringBuilder sb = new StringBuilder();
+        for(int i=0;i<length;i++){
+            sb.append(new Random().nextInt(10));
+        }
+        return sb.toString();
+    }
 
 
 }

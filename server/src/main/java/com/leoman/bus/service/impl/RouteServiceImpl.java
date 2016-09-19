@@ -17,12 +17,10 @@ import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.ClassUtil;
 import com.leoman.utils.SeqNoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.jca.cci.core.InteractionCallback;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
@@ -31,7 +29,6 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -268,6 +265,11 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         for (BusSend bs:sendList) {
             busSendDao.delete(bs.getId());
         }
+    }
+
+    @Override
+    public List<Route> findByEnterpriseType(Integer type, String startStation, String endStation){
+        return routeDao.findByEnterpriseType(type,startStation, endStation);
     }
 
 

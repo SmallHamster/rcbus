@@ -23,4 +23,8 @@ public class Configue {
     public static String getBaseDomain(){
         return ConfigUtil.getString("base.domain");
     }
+
+    public static String getSmsApiKey(){
+        return ConfigUtil.getString("sms.api.key");
+    }
 }

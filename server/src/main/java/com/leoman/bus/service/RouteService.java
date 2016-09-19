@@ -23,4 +23,6 @@ public interface RouteService extends GenericManager<Route> {
 
     public void deleteRoute(Long routeId);
 
+    public List<Route> findByEnterpriseType(Integer type, String startStation, String endStation);
+
 }

@@ -11,4 +11,7 @@ public interface UserLoginDao extends IBaseJpaRepository<UserLogin>{
 
     @Query("select userLogin from UserLogin userLogin where userLogin.username = ?1")
     public UserLogin findByUsername(String username);
+
+    @Query("select userLogin from UserLogin userLogin where userLogin.username = ?1 and userLogin.password = ?2")
+    public UserLogin findByUsernameAndPass(String username, String password);
 }
