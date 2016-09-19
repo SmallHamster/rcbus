@@ -71,16 +71,9 @@
     })
 
     function citySelection (data){
-        $.ajax({
-            url : "${contextPath}/wechat/carrental/city",
-            type : "POST",
-            success : function(result) {
-                if(result.status == 0) {
-                    window.history.go(-1);
-                }
-            }
-        });
-        console.log($(data).text());
+        var city = $(data).text().trim();
+        console.log(city);
+        window.location.href = "${contextPath}/wechat/carrental/add?city="+city ;
     }
 
 </script>

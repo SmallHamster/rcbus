@@ -1,7 +1,9 @@
 package com.leoman.bus.entity;
 
+import com.leoman.bussend.entity.BusSend;
 import com.leoman.entity.BaseEntity;
 import com.leoman.system.enterprise.entity.Enterprise;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.util.List;
@@ -14,6 +16,11 @@ import java.util.List;
 @Entity
 @Table(name = "t_route")
 public class Route extends BaseEntity{
+
+//    @OneToMany(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "contact_id")
+//    @Where(clause = "type = '1'")
+//    private List<BusSend> busSends;
 
     @Column(name = "start_station")
     private String startStation;//起点站
@@ -77,4 +84,12 @@ public class Route extends BaseEntity{
     public Route(Long id) {
         super.setId(id);
     }
+//
+//    public List<BusSend> getBusSends() {
+//        return busSends;
+//    }
+//
+//    public void setBusSends(List<BusSend> busSends) {
+//        this.busSends = busSends;
+//    }
 }

@@ -93,7 +93,7 @@
         var carTypeId = $(data).parent().find("input").val();
         var params = "";
         if (carTypeId != null && carTypeId != '') {
-            params = "?carTypeId=" + carTypeId;
+            params = "?carTypeId=" + carTypeId +"&index=1";
         }
         window.location.href = "${contextPath}/wechat/carrental/add" + params;
     }

@@ -1,6 +1,7 @@
 package com.leoman.carrental.service;
 
 import com.leoman.carrental.entity.CarRental;
+import com.leoman.common.core.Result;
 import com.leoman.common.service.GenericManager;
 import org.springframework.web.multipart.MultipartRequest;
 
@@ -22,5 +23,8 @@ public interface CarRentalService extends GenericManager<CarRental> {
     public Integer del(Long id);
 
     public List<CarRental> findList(Long id);
+
+    //微信新增
+    public void save(String city,String from, String to, Integer stype, String time1, String time2, Integer number, Integer amount, Integer ticket, String title, String linkman, String mobile, Long carTypeId) throws ParseException;
 
 }

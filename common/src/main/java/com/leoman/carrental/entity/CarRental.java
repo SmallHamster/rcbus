@@ -1,11 +1,14 @@
 package com.leoman.carrental.entity;
 
 import com.leoman.bus.entity.CarType;
+import com.leoman.bussend.entity.BusSend;
 import com.leoman.city.entity.City;
 import com.leoman.entity.BaseEntity;
 import com.leoman.order.entity.Order;
+import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -15,6 +18,11 @@ import java.util.Set;
 @Entity
 @Table(name = "t_car_rental_order")
 public class CarRental extends BaseEntity{
+
+    @OneToMany(fetch = FetchType.EAGER)
+    @JoinColumn(name = "contact_id")
+    @Where(clause = "type = '2'")
+    private List<BusSend> busSends;
 
     //订单号
     @ManyToOne
@@ -227,5 +235,13 @@ public class CarRental extends BaseEntity{
 
     public void setRefund(Double refund) {
         this.refund = refund;
+    }
+
+    public List<BusSend> getBusSends() {
+        return busSends;
+    }
+
+    public void setBusSends(List<BusSend> busSends) {
+        this.busSends = busSends;
     }
 }

@@ -10,6 +10,7 @@ import com.leoman.carrental.entity.CarRentalOffer;
 import com.leoman.carrental.service.CarRentalOfferService;
 import com.leoman.carrental.service.CarRentalService;
 import com.leoman.city.service.CityService;
+import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.order.entity.Order;
 import com.leoman.order.service.OrderService;
@@ -17,6 +18,7 @@ import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.DateUtils;
 import com.leoman.utils.JsonUtil;
 import com.leoman.utils.ReadExcelUtil;
+import com.leoman.utils.SeqNoUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -242,5 +244,44 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
     @Override
     public List<CarRental> findList(Long id) {
         return carRentalDao.findList(id);
+    }
+
+    @Override
+    @Transactional
+    public void save(String city,String from, String to, Integer stype, String time1, String time2, Integer number, Integer amount, Integer ticket, String title, String linkman, String mobile, Long carTypeId) throws ParseException {
+        //新增一条订单
+        Order order = new Order();
+        order.setType(2);
+        order.setStatus(0);
+        //登录时存Session 再取
+//            order.setUserInfo();
+        order.setUserName(linkman);
+        order.setMobile(mobile);
+        order.setOrderNo(SeqNoUtils.getMallOrderCode(0));
+        order.setIsComment(0);
+        orderService.save(order);
+
+        //新增一条租车信息
+        CarRental carRental = new CarRental();
+        carRental.setOrder(order);
+        carRental.setCity(cityService.queryByProperty("name",city).get(0));
+        carRental.setCarType(carTypeService.queryByPK(carTypeId));
+        carRental.setStartPoint(from);
+        carRental.setEndPoint(to);
+        carRental.setRentalWay(stype);
+        carRental.setStartDate(DateUtils.stringToLong(time1,"yyyy-MM-dd hh:mm"));
+        if(stype!=0 && time2!=null){
+            carRental.setEndDate(DateUtils.stringToLong(time2,"yyyy-MM-dd hh:mm"));
+        }
+        carRental.setBusNum(number);
+        carRental.setTotalNumber(amount);
+        carRental.setIsInvoice(ticket);
+        if(ticket==1 && StringUtils.isNotBlank(title)){
+            carRental.setInvoice(title);
+        }
+        carRental.setIncome(0.0);
+        carRental.setRefund(0.0);
+        carRental.setUnsubscribe("");
+        save(carRental);
     }
 }

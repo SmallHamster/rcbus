@@ -101,13 +101,13 @@
                                         <div class="square-yellow  single-row">
                                             <div class="radio ">
                                                 <input tabindex="3" type="radio"  name="rwType" value="1">
-                                                <label>返程 </label>
+                                                <label>往返 </label>
                                             </div>
                                         </div>
                                         <div class="square-blue  single-row">
                                             <div class="radio ">
                                                 <input tabindex="3" type="radio"  name="rwType" value="2">
-                                                <label>往返 </label>
+                                                <label>包天 </label>
                                             </div>
                                         </div>
                                     </div>
@@ -421,10 +421,10 @@
                 $(data).parent().parent().remove()
             },
             endDateChk: function(data){
-                if(data==2){
-                    $("#endDate_hidden").css('display','block');
-                }else {
+                if(data==0){
                     $("#endDate_hidden").css('display','none');
+                }else {
+                    $("#endDate_hidden").css('display','block');
                 }
             },
             invoiceChk: function(data){
