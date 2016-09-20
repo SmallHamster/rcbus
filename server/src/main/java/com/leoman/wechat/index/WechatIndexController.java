@@ -120,19 +120,19 @@ public class WechatIndexController extends CommonController {
         return Result.success();
     }
 
-    @RequestMapping(value = "/toRegister1")
+    @RequestMapping(value = "/register1")
     public String toRegister1() {
         return "wechat/register1";
     }
 
-    @RequestMapping(value = "/toRegister2")
+    @RequestMapping(value = "/register2")
     public String toRegister2(ModelMap model, String mobile, String code) {
         model.addAttribute("mobile",mobile);
         model.addAttribute("code",code);
         return "wechat/register2";
     }
 
-    @RequestMapping(value = "/toAgree")
+    @RequestMapping(value = "/agreement")
     public String toAgree() {
         return "wechat/agreement";
     }

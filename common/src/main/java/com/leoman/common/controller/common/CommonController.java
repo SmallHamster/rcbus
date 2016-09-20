@@ -2,11 +2,13 @@ package com.leoman.common.controller.common;
 
 import com.leoman.common.controller.editor.*;
 import com.leoman.entity.Constant;
+import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.DateUtils;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.ParseException;
 import java.util.*;
 
@@ -97,5 +99,10 @@ public class CommonController {
         Map<String,Object> map = new HashMap<>();
         map.put(key,obj);
         return map;
+    }
+
+    public UserInfo getSessionUser(HttpServletRequest request){
+        UserInfo user = (UserInfo) request.getSession().getAttribute(Constant.SESSION_MEMBER_USER);
+        return user;
     }
 }

@@ -48,7 +48,7 @@ public class WechatFilter implements Filter {
     public void doFilter(ServletRequest request,
                          ServletResponse response,
                          FilterChain chain) throws IOException, ServletException {
-        /*HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpResponse = (HttpServletResponse) response;
 
         String url = httpRequest.getRequestURI().toString();
@@ -79,9 +79,8 @@ public class WechatFilter implements Filter {
             WebUtil.print(httpResponse, "重新登录！");
         } else {
             httpResponse.sendRedirect(contextPath + "/wechat/login");
-        }*/
+        }
 
-        chain.doFilter(request, response);
     }
 
     @Override

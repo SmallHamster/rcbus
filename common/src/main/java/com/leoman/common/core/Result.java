@@ -88,4 +88,11 @@ public final class Result {
         result.msg = ErrorType.ERROR_CODE_0001.getName();
         return result;
     }
+
+    public static Result failure(String msg) {
+        Result result = new Result();
+        result.status = ErrorType.ERROR_CODE_0001.getCode();
+        result.msg = msg;
+        return result;
+    }
 }
