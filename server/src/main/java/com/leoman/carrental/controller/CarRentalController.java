@@ -10,6 +10,7 @@ import com.leoman.carrental.service.CarRentalService;
 import com.leoman.carrental.service.impl.CarRentalServiceImpl;
 import com.leoman.city.service.CityService;
 import com.leoman.common.controller.common.GenericEntityController;
+import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
 import com.leoman.utils.DateUtils;
@@ -176,23 +177,29 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
      */
     @RequestMapping(value = "/save")
     @ResponseBody
-    public Integer save(Long id,
-                        Long cityId,
-                        Integer rwType,
-                        String startPoint,
-                        String endPoint,
-                        String startDate,
-                        String endDate,
-                        Long carTypeId,
-                        Integer totalNumber,
-                        Integer busNum,
-                        Integer isInvoice,
-                        String invoice,
-                        String dispatch,
-                        String offter_name,
-                        String offter_amount){
+    public Result save(Long id,
+                       Long cityId,
+                       Integer rwType,
+                       String startPoint,
+                       String endPoint,
+                       String startDate,
+                       String endDate,
+                       Long carTypeId,
+                       Integer totalNumber,
+                       Integer busNum,
+                       Integer isInvoice,
+                       String invoice,
+                       String dispatch,
+                       String offter_name,
+                       String offter_amount){
 
-        return carRentalService.save(id,cityId,rwType,startPoint,endPoint,startDate,endDate,carTypeId,totalNumber,busNum,isInvoice,invoice,dispatch,offter_name,offter_amount);
+        try{
+            carRentalService.save(id,cityId,rwType,startPoint,endPoint,startDate,endDate,carTypeId,totalNumber,busNum,isInvoice,invoice,dispatch,offter_name,offter_amount);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.failure();
+        }
+        return Result.success();
 
     }
 

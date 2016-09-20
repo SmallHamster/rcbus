@@ -10,7 +10,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="favicon.ico">
-    <link rel="stylesheet" href="${contextPath}/wechat/css/app.css">
+    <link rel="stylesheet" href="${contextPath}/wechat-html/css/app.css">
 </head>
 
 <body>
@@ -37,11 +37,11 @@
                 <c:forEach items="${carType}" var="v">
                     <li>
                         <div class="img">
-                            <img src="${contextPath}/wechat/uploads/pro1.jpg" alt="">
+                            <img src="${contextPath}/wechat-html/uploads/pro1.jpg" alt="">
                         </div>
                         <div class="txt">
                             <em>${v.name}</em>
-                            <img src="${contextPath}/wechat/images/hot.png" alt="热门">
+                            <img src="${contextPath}/wechat-html/images/hot.png" alt="热门">
                             <input type="hidden" id="carTypeId" value="${v.id}">
                             <a onclick="line(this)" class="ubtn ubtn-ghost">预定用车</a>
                         </div>
@@ -53,8 +53,8 @@
 </section>
 
 
-<script src="${contextPath}/wechat/js/zepto.min.js"></script>
-<script src="${contextPath}/wechat/js/app.js"></script>
+<script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
+<script src="${contextPath}/wechat-html/js/app.js"></script>
 
 <script>
     $(function() {

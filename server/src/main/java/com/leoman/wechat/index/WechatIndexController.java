@@ -17,8 +17,6 @@ import com.leoman.user.entity.UserLogin;
 import com.leoman.user.service.UserLoginService;
 import com.leoman.user.service.UserService;
 import com.leoman.utils.*;
-import com.sun.deploy.net.HttpUtils;
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

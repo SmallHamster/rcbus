@@ -11,7 +11,7 @@
     <meta name="author" content="">
     <link rel="icon" href="favicon.ico">
 
-    <link rel="stylesheet" href="${contextPath}/wechat/css/app.css">
+    <link rel="stylesheet" href="${contextPath}/wechat-html/css/app.css">
 </head>
 
 <body>
@@ -85,16 +85,28 @@
     </div>
 
     <div class="button">
-        <a href="${contextPath}/wechat/oldFile/disclaimer.html">免责申明</a>
-        <a href="#" class="ubtn ubtn-ghost">修改信息</a>
+        <a href="${contextPath}/wechat-html/oldFile/disclaimer.html">免责申明</a>
+        <a id="edit" class="ubtn ubtn-ghost">修改信息</a>
         <button type="button" class="ubtn ubtn-red" id="cancel">取消申请</button>
     </div>
+    <input type="hidden" id="id" value="${CarRental.id}">
 </section>
 
-<script src="${contextPath}/wechat/js/zepto.min.js"></script>
-<script src="${contextPath}/wechat/js/layer/layer.js"></script>
+<script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
+<script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
 <script>
     $(function() {
+
+        $("#edit").on("click",function(){
+            var id = $("#id").val();
+            var params = "";
+            if (id != null && id != '') {
+                params = "?id=" + id +"&index=3";
+            }
+            window.location.href = "${contextPath}/wechat/carrental/add" + params;
+
+        });
+
         $('#cancel').on('click', function() {
             layer.open({
                 content: '您的订单正在审核中，您<br />确定要取消吗？'
@@ -103,10 +115,28 @@
                     layer.close(index);
                 }
                 ,no: function(index){
-                    layer.open({
-                        content: '<i class="ico ico-right2"></i><br /><br />取消成功！'
-                        ,btn: '确定'
+                    var id = $("#id").val();
+                    $.ajax({
+                        url : "${contextPath}/wechat/carrental/cancel",
+                        data : {
+                            "id" : id
+                        },
+                        type : "post",
+                        success : function (result){
+                            if(result.status == 0) {
+                                layer.open({
+                                    content: '<i class="ico ico-right2"></i><br /><br />取消成功！'
+                                    ,btn: '确定'
+                                });
+                            }else {
+                                layer.open({
+                                    content: '<i class="ico ico-right2"></i><br /><br />取消失败！'
+                                    ,btn: '确定'
+                                });
+                            }
+                        }
                     });
+
                 }
             });
 

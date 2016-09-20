@@ -5,6 +5,8 @@ package com.leoman.carrental.entity.vo;
  */
 public class CarRentalVo {
 
+    private Long id;
+
     private String city;
 
     private String from;
@@ -30,6 +32,15 @@ public class CarRentalVo {
     private String mobile;
 
     private Long carTypeId;
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public Long getCarTypeId() {
         return carTypeId;

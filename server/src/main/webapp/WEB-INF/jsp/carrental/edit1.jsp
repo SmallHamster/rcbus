@@ -482,7 +482,7 @@
                     },
                     type : "POST",
                     success : function(result) {
-                        if(result == 0) {
+                        if(result.status == 0) {
                             window.location.href = "${contextPath}/admin/carRental/index";
                         }
                         else {

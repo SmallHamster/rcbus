@@ -3,6 +3,7 @@ package com.leoman.carrental.service;
 import com.leoman.carrental.entity.CarRental;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.GenericManager;
+import com.leoman.user.entity.UserInfo;
 import org.springframework.web.multipart.MultipartRequest;
 
 import java.text.ParseException;
@@ -16,7 +17,7 @@ public interface CarRentalService extends GenericManager<CarRental> {
 
     public List<Map<String, Object>> pageToExcel(List<CarRental> carRentals) throws ParseException;
 
-    public Integer save(Long id, Long cityId, Integer rwType, String startPoint, String endPoint, String startDate, String endDate, Long carTypeId, Integer totalNumber, Integer busNum, Integer isInvoice, String invoice, String dispatch, String offter_name, String offter_amount);
+    public void save(Long id, Long cityId, Integer rwType, String startPoint, String endPoint, String startDate, String endDate, Long carTypeId, Integer totalNumber, Integer busNum, Integer isInvoice, String invoice, String dispatch, String offter_name, String offter_amount) throws ParseException;
 
     public Integer saveDispatch(Long id,String dispatch);
 
@@ -25,6 +26,6 @@ public interface CarRentalService extends GenericManager<CarRental> {
     public List<CarRental> findList(Long id);
 
     //微信新增
-    public void save(String city,String from, String to, Integer stype, String time1, String time2, Integer number, Integer amount, Integer ticket, String title, String linkman, String mobile, Long carTypeId) throws ParseException;
+    public void save(UserInfo userInfo,String city, String from, String to, Integer stype, String time1, String time2, Integer number, Integer amount, Integer ticket, String title, String linkman, String mobile, Long carTypeId, Long id) throws ParseException;
 
 }

@@ -73,7 +73,7 @@
     function citySelection (data){
         var city = $(data).text().trim();
         console.log(city);
-        window.location.href = "${contextPath}/wechat/carrental/add?city="+city ;
+        window.location.href = "${contextPath}/wechat/carrental/add?city="+city+"&index=2" ;
     }
 
 </script>

@@ -11,7 +11,7 @@
     <meta name="author" content="">
     <link rel="icon" href="favicon.ico">
 
-    <link rel="stylesheet" href="${contextPath}/wechat/css/app.css">
+    <link rel="stylesheet" href="${contextPath}/wechat-html/css/app.css">
 </head>
 
 <body>

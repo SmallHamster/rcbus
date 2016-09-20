@@ -10,6 +10,7 @@ import com.leoman.carrental.entity.CarRentalOffer;
 import com.leoman.carrental.service.CarRentalOfferService;
 import com.leoman.carrental.service.CarRentalService;
 import com.leoman.city.service.CityService;
+import com.leoman.common.controller.common.CommonController;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.order.entity.Order;
@@ -166,8 +167,7 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
 
     @Override
     @Transactional
-    public Integer save(Long id, Long cityId, Integer rwType, String startPoint, String endPoint, String startDate, String endDate, Long carTypeId, Integer totalNumber, Integer busNum, Integer isInvoice, String invoice, String dispatch, String offter_name, String offter_amount) {
-        try{
+    public void save(Long id, Long cityId, Integer rwType, String startPoint, String endPoint, String startDate, String endDate, Long carTypeId, Integer totalNumber, Integer busNum, Integer isInvoice, String invoice, String dispatch, String offter_name, String offter_amount) throws ParseException {
             if(id!=null){
                 CarRental carRental =  queryByPK(id);
                 carRental.setCity(cityService.queryByPK(cityId));
@@ -184,6 +184,8 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
                 carRental.setIsInvoice(isInvoice);
                 if(isInvoice==1){
                     carRental.setInvoice(invoice);
+                }else {
+                    carRental.setInvoice("");
                 }
 
                 this.DOsave(id,dispatch,offter_name,offter_amount,carRental);
@@ -191,11 +193,6 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
                 save(carRental);
 
             }
-        }catch (Exception e){
-            e.printStackTrace();
-            return 1;
-        }
-        return 0;
     }
 
     @Override
@@ -246,42 +243,84 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
         return carRentalDao.findList(id);
     }
 
+    /**
+     * 微信保存
+     * @param userInfo
+     * @param city
+     * @param from
+     * @param to
+     * @param stype
+     * @param time1
+     * @param time2
+     * @param number
+     * @param amount
+     * @param ticket
+     * @param title
+     * @param linkman
+     * @param mobile
+     * @param carTypeId
+     * @param id
+     * @throws ParseException
+     */
     @Override
     @Transactional
-    public void save(String city,String from, String to, Integer stype, String time1, String time2, Integer number, Integer amount, Integer ticket, String title, String linkman, String mobile, Long carTypeId) throws ParseException {
-        //新增一条订单
-        Order order = new Order();
-        order.setType(2);
-        order.setStatus(0);
-        //登录时存Session 再取
-//            order.setUserInfo();
-        order.setUserName(linkman);
-        order.setMobile(mobile);
-        order.setOrderNo(SeqNoUtils.getMallOrderCode(0));
-        order.setIsComment(0);
-        orderService.save(order);
+    public void save(UserInfo userInfo,String city,String from, String to, Integer stype, String time1, String time2, Integer number, Integer amount, Integer ticket, String title, String linkman, String mobile, Long carTypeId,Long id) throws ParseException {
+        CarRental carRental;
+        Order order;
+
+        if(id!=null){
+            carRental = queryByPK(id);
+            order = carRental.getOrder();
+        }else {
+            carRental = new CarRental();
+            //新增一条订单
+            order = new Order();
+            order.setType(2);
+            order.setStatus(0);
+            //登录时存Session 再取
+            order.setUserInfo(userInfo);
+
+            order.setOrderNo(SeqNoUtils.getMallOrderCode(0));
+            order.setIsComment(0);
+        }
 
         //新增一条租车信息
-        CarRental carRental = new CarRental();
-        carRental.setOrder(order);
         carRental.setCity(cityService.queryByProperty("name",city).get(0));
         carRental.setCarType(carTypeService.queryByPK(carTypeId));
         carRental.setStartPoint(from);
         carRental.setEndPoint(to);
         carRental.setRentalWay(stype);
         carRental.setStartDate(DateUtils.stringToLong(time1,"yyyy-MM-dd hh:mm"));
+
         if(stype!=0 && time2!=null){
             carRental.setEndDate(DateUtils.stringToLong(time2,"yyyy-MM-dd hh:mm"));
         }
+
         carRental.setBusNum(number);
         carRental.setTotalNumber(amount);
-        carRental.setIsInvoice(ticket);
-        if(ticket==1 && StringUtils.isNotBlank(title)){
-            carRental.setInvoice(title);
+
+        if(ticket!=null){
+            carRental.setIsInvoice(ticket);
+        }else {
+            carRental.setIsInvoice(0);
         }
+
+        if(ticket!=null && ticket==1 && StringUtils.isNotBlank(title)){
+            carRental.setInvoice(title);
+        }else {
+            carRental.setInvoice("");
+        }
+
         carRental.setIncome(0.0);
         carRental.setRefund(0.0);
         carRental.setUnsubscribe("");
+
+        order.setUserName(linkman);
+        order.setMobile(mobile);
+        orderService.save(order);
+
+        //关联订单
+        carRental.setOrder(order);
         save(carRental);
     }
 }

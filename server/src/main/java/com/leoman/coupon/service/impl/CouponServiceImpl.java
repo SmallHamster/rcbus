@@ -7,6 +7,8 @@ import com.leoman.coupon.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * 优惠券
  * Created by Daisy on 2016/9/13.
@@ -17,4 +19,13 @@ public class CouponServiceImpl extends GenericManagerImpl<Coupon,CouponDao> impl
     @Autowired
     private CouponDao couponDao;
 
+    @Override
+    public List<Coupon> findList(Long userId) {
+        return couponDao.findList(System.currentTimeMillis(),userId);
+    }
+
+    @Override
+    public Coupon findOne(Long userId, Long orderId) {
+        return couponDao.findOne(userId,orderId);
+    }
 }

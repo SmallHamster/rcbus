@@ -10,10 +10,10 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="favicon.ico">
-    <link rel="stylesheet" href="${contextPath}/wechat/css/app.css">
-    <link rel="stylesheet" href="${contextPath}/wechat/css/mobiscroll.animation.css" />
-    <link rel="stylesheet" href="${contextPath}/wechat/css/mobiscroll.frame.css" />
-    <link rel="stylesheet" href="${contextPath}/wechat/css/mobiscroll.frame.ios.css" />
+    <link rel="stylesheet" href="${contextPath}/wechat-html/css/app.css">
+    <link rel="stylesheet" href="${contextPath}/wechat-html/css/mobiscroll.animation.css" />
+    <link rel="stylesheet" href="${contextPath}/wechat-html/css/mobiscroll.frame.css" />
+    <link rel="stylesheet" href="${contextPath}/wechat-html/css/mobiscroll.frame.ios.css" />
 </head>
 
 <body>
@@ -26,6 +26,7 @@
     <div class="ui-form2">
         <div class="floor">
             <input type="hidden" id="carTypeId" value="${carRentalVo.carTypeId}">
+            <input type="hidden" id="id" value="${carRentalVo.id}">
             <div class="item">
                 <div class="txt">出发城市</div>
                 <div class="cnt">
@@ -118,7 +119,7 @@
             <div class="item">
                 <div class="txt">用车联系人</div>
                 <div class="cnt">
-                    <input type="text" class="ipt" id="linkman" placeholder="" value="小牧">
+                    <input type="text" class="ipt" id="linkman" placeholder="" value="${carRentalVo.linkm}">
                     <span class="error"></span>
                 </div>
             </div>
@@ -126,7 +127,7 @@
             <div class="item">
                 <div class="txt">联系电话</div>
                 <div class="cnt">
-                    <input type="text" class="ipt" id="mobile" placeholder="" value="15098741234">
+                    <input type="text" class="ipt" id="mobile" placeholder="" value="${carRentalVo.mobile}">
                     <span class="error"></span>
                 </div>
             </div>
@@ -139,15 +140,15 @@
     </div>
 </section>
 
-<script src="${contextPath}/wechat/js/zepto.min.js"></script>
-<script src="${contextPath}/wechat/js/mobiscroll/mobiscroll.dom.js"></script>
-<script src="${contextPath}/wechat/js/mobiscroll/mobiscroll.core.js"></script>
-<script src="${contextPath}/wechat/js/mobiscroll/mobiscroll.scrollview.js"></script>
-<script src="${contextPath}/wechat/js/mobiscroll/mobiscroll.frame.js"></script>
-<script src="${contextPath}/wechat/js/mobiscroll/mobiscroll.scroller.js"></script>
-<script src="${contextPath}/wechat/js/mobiscroll/mobiscroll.frame.ios.js"></script>
-<script src="${contextPath}/wechat/js/mobiscroll/mobiscroll.i18n.zh.js"></script>
-<script src="${contextPath}/wechat/js/layer/layer.js"></script>
+<script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
+<script src="${contextPath}/wechat-html/js/mobiscroll/mobiscroll.dom.js"></script>
+<script src="${contextPath}/wechat-html/js/mobiscroll/mobiscroll.core.js"></script>
+<script src="${contextPath}/wechat-html/js/mobiscroll/mobiscroll.scrollview.js"></script>
+<script src="${contextPath}/wechat-html/js/mobiscroll/mobiscroll.frame.js"></script>
+<script src="${contextPath}/wechat-html/js/mobiscroll/mobiscroll.scroller.js"></script>
+<script src="${contextPath}/wechat-html/js/mobiscroll/mobiscroll.frame.ios.js"></script>
+<script src="${contextPath}/wechat-html/js/mobiscroll/mobiscroll.i18n.zh.js"></script>
+<script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
 <%@ include file="../inc/new2/foot.jsp" %>
 
 <script type="text/javascript">
@@ -270,6 +271,7 @@
 
     $('#submit').on('click', function() {
 
+
         var city = $("#city").val();
         var from = $("#from").val();
         var to = $("#to").val();
@@ -283,6 +285,7 @@
         var linkman = $("#linkman").val();
         var mobile = $("#mobile").val();
         var carTypeId = $("#carTypeId").val();
+        var id = $("#id").val();
 
         if(null==city || city==""){
             alert("请选择城市");
@@ -347,7 +350,8 @@
                 "title" : title,
                 "linkman" : linkman,
                 "mobile" : mobile,
-                "carTypeId" : carTypeId
+                "carTypeId" : carTypeId,
+                "id" : id
             },
             type : "POST",
             success : function(result) {
@@ -357,25 +361,20 @@
                         ,btn: '确定'
                     });
                     //跳转到我的订单
-                    window.location.href = "${contextPath}/wechat/carrental/index"
+                    window.location.href = "${contextPath}/wechat/order/myOrder/index"
                 }else {
                     alert("提交出错");
                 }
             }
         });
 
-
-        layer.open({
-            content: '当前座位已满，是否申请增派车辆？'
-            ,btn: ['申请', '取消']
-            ,yes: function(index){
-                layer.close(index);
-            }
-        });
-
+//
 //        layer.open({
-//            content: '<i class="ico ico-right2"></i><br /><br />您的订单已提交成功，请等待<br />客服人员与您联系'
-//            ,btn: '确定'
+//            content: '当前座位已满，是否申请增派车辆？'
+//            ,btn: ['申请', '取消']
+//            ,yes: function(index){
+//                layer.close(index);
+//            }
 //        });
 
         return false;
@@ -422,6 +421,8 @@
         var linkman = $("#linkman").val();
         var mobile = $("#mobile").val();
         var carTypeId = $("#carTypeId").val();
+        var id = $("#id").val();
+
         $.ajax({
             url : "${contextPath}/wechat/carrental/citySession",
             data : {
@@ -436,15 +437,16 @@
                 "title" : title,
                 "linkman" : linkman,
                 "mobile" : mobile,
-                "carTypeId" : carTypeId
+                "carTypeId" : carTypeId,
+                "id" : id
             },
             type : "POST",
             success : function(result) {
                 if(result.status == 0) {
+                    window.location.href = "${contextPath}/wechat/carrental/city"
                 }
             }
         });
-        window.location.href = "${contextPath}/wechat/carrental/city"
     });
 
     $(function(){

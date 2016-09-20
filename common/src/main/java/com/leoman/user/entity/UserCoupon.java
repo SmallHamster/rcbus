@@ -14,11 +14,38 @@ import javax.persistence.Table;
 @Table(name = "t_user_coupon")
 public class UserCoupon extends BaseEntity{
 
+    //用户
     @Column(name = "user_id")
     private Long userId;
 
+    //优惠券
     @Column(name = "coupon_id")
     private Long couponId;
+
+    //是否使用 1:没使用 2:已使用
+    @Column(name = "is_use")
+    private Integer isUse;
+
+    //使用订单
+    @Column(name = "rental_id")
+    private Long rentalId;
+
+
+    public Integer getIsUse() {
+        return isUse;
+    }
+
+    public void setIsUse(Integer isUse) {
+        this.isUse = isUse;
+    }
+
+    public Long getRentalId() {
+        return rentalId;
+    }
+
+    public void setRentalId(Long rentalId) {
+        this.rentalId = rentalId;
+    }
 
     public Long getUserId() {
         return userId;
