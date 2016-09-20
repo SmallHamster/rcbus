@@ -4,6 +4,7 @@
 	   xmlns:jpa="http://www.springframework.org/schema/data/jpa" xmlns:tx="http://www.springframework.org/schema/tx"
 	   xmlns:context="http://www.springframework.org/schema/context"
 	   xmlns:aop="http://www.springframework.org/schema/aop"
+	   xmlns:task="http://www.springframework.org/schema/task"
 	   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
 	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
 
@@ -129,4 +130,9 @@
 	<bean id="beanUtil" class="com.leoman.utils.BeanUtils"></bean>
 	<!--<bean id="cacheTempCodeServiceImpl" class="com.leoman.cache.CacheTempCodeServiceImpl" />-->
 	<bean id="logService" class="com.leoman.common.log.service.impl.LogServiceImpl" />
+
+	<!--定时器 -->
+	<task:annotation-driven/>
+
+
 </beans>

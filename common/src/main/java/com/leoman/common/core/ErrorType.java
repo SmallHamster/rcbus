@@ -31,7 +31,8 @@ public enum ErrorType {
     ERROR_CODE_00024("中奖项不存在", 24),
     ERROR_CODE_00025("已经点赞过", 25),
     ERROR_CODE_00026("暂未点赞", 26),
-    ERROR_CODE_00027("资源不存在", 27);
+    ERROR_CODE_00027("资源不存在", 27),
+    ERROR_CODE_00028("验证码超时", 28);
 
     private String name;
 

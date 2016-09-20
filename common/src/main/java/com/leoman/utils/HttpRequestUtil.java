@@ -15,6 +15,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.util.EntityUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -306,6 +307,20 @@ public class HttpRequestUtil {
         }
         return result;
 
+    }
+
+    public static String getUserIpByRequest(HttpServletRequest request){
+        String ip = null;
+
+        if (request.getHeader("x-forwarded-for") == null) {
+            ip= request.getRemoteAddr();
+        }else{
+            ip= request.getHeader("x-forwarded-for");
+        }
+        if("127.0.0.1".equals(ip)){
+            return null;
+        }
+        return ip;
     }
 
     public static void main(String[] args) {

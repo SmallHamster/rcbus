@@ -52,6 +52,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <label for="uuid" class="col-sm-1 control-label"><span style="color: red;">* </span>车辆唯一标识：</label>
+                                    <div class="col-sm-6">
+                                        <input type="text" id="uuid" name="uuid" value="${bus.uuid}" class="form-control" required/>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <label for="carNo" class="col-sm-1 control-label"><span style="color: red;">* </span>车牌号：</label>
                                     <div class="col-sm-6">
                                         <input type="text" id="carNo" name="carNo" value="${bus.carNo}" class="form-control" required/>

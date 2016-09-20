@@ -50,4 +50,9 @@ public class BusServiceImpl extends GenericManagerImpl<Bus, BusDao> implements B
 
         return page;
     }
+
+    @Override
+    public Bus findByUuid(String uuid) {
+        return busDao.findByUuid(uuid);
+    }
 }

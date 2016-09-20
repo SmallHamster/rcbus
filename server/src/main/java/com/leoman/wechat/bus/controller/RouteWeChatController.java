@@ -114,6 +114,13 @@ public class RouteWeChatController extends CommonController {
         return "wechat/route_detail";
     }
 
+    /**
+     * 获取详情页的其他相关数据，如：派遣车辆，路线站点，时间点
+     * @param request
+     * @param response
+     * @param routeId
+     * @return
+     */
     @RequestMapping(value = "/other", method = RequestMethod.POST)
     @ResponseBody
     public Result stations(HttpServletRequest request,

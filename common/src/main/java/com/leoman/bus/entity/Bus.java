@@ -14,6 +14,12 @@ import javax.persistence.*;
 @Table(name = "t_bus")
 public class Bus extends BaseEntity{
 
+    @Column(name = "uuid")
+    private String uuid;//唯一标识
+
+    @Column(name = "vkey")
+    private String vkey;//车辆授权码
+
     @Column(name = "car_no")
     private String carNo;//车牌号
 
@@ -50,10 +56,10 @@ public class Bus extends BaseEntity{
     private Image image;//图片
 
     @Column(name = "cur_lat")
-    private Double cur_lat;//当前纬度
+    private Double curLat;//当前纬度
 
     @Column(name = "cur_lng")
-    private Double cur_lng;//当前经度
+    private Double curLng;//当前经度
 
     public String getCarNo() {
         return carNo;
@@ -143,25 +149,41 @@ public class Bus extends BaseEntity{
         this.image = image;
     }
 
-    public Double getCur_lat() {
-        return cur_lat;
+    public Double getCurLat() {
+        return curLat;
     }
 
-    public void setCur_lat(Double cur_lat) {
-        this.cur_lat = cur_lat;
+    public void setCurLat(Double curLat) {
+        this.curLat = curLat;
     }
 
-    public Double getCur_lng() {
-        return cur_lng;
+    public Double getCurLng() {
+        return curLng;
     }
 
-    public void setCur_lng(Double cur_lng) {
-        this.cur_lng = cur_lng;
+    public void setCurLng(Double curLng) {
+        this.curLng = curLng;
     }
 
     public Bus(){}
 
     public Bus(Long id) {
         this.setId(id);
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    public String getVkey() {
+        return vkey;
+    }
+
+    public void setVkey(String vkey) {
+        this.vkey = vkey;
     }
 }

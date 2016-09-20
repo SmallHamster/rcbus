@@ -9,9 +9,9 @@
     <title>企业报名入口-江城巴士</title>
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="${contextPath}/wechat-html/favicon.ico">
 
-    <link rel="stylesheet" href="${contextPath}/wechat/css/app.css">
+    <link rel="stylesheet" href="${contextPath}/wechat-html/css/app.css">
 </head>
 
 <body>
@@ -24,7 +24,7 @@
 <section class="wrap ui-form">
     <h1 class="sub-title">请留下您的联系方式，我们将尽快与您取得联系</h1>
     <div class="banner">
-        <img src="${contextPath}/wechat/images/banner_apply.jpg" width="100%" />
+        <img src="${contextPath}/wechat-html/images/banner_apply.jpg" width="100%" />
     </div>
 
     <form id="formId">
@@ -62,7 +62,7 @@
 </section>
 
 <%@ include file="../inc/new2/foot.jsp" %>
-<script src="${contextPath}/wechat/js/zepto.min.js"></script>
+<script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script>
     $enApply = {
         v: {

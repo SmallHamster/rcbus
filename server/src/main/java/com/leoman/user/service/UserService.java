@@ -22,4 +22,6 @@ public interface UserService extends GenericManager<UserInfo> {
 
     public Integer readExcelInfo(MultipartRequest multipartRequest);
 
+    public void saveUser(String mobile,String password, String ip);
+
 }

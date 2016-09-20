@@ -14,4 +14,6 @@ import javax.persistence.QueryHint;
  */
 public interface BusDao extends IBaseJpaRepository<Bus> {
 
+    @Query("select a from Bus a where a.uuid = ?1")
+    public Bus findByUuid(String uuid);
 }

@@ -9,9 +9,9 @@
     <title>设置密码-江城巴士</title>
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="${contextPath}/wechat-html/favicon.ico">
 
-    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="${contextPath}/wechat-html/css/app.css">
 </head>
 
 <body class="bg-reg">
@@ -23,25 +23,29 @@
 <section class="wrap reg-box">
     <div class="form form-extal">
 
-        <div class="item">
-            <input type="password" class="ipt" value="" name="" id="oldpwd" placeholder="请输入登录密码" />
-            <span class="error"></span>
-        </div>
+        <form id="formId">
+            <input type="hidden" name="mobile" value="${mobile}">
+            <div class="item">
+                <input type="password" class="ipt" value="" name="password" id="oldpwd" placeholder="请输入登录密码" />
+                <span class="error"></span>
+            </div>
 
-        <div class="item">
-            <input type="password" class="ipt" name="" id="newpwd" placeholder="请输入确认密码" />
-            <span class="error"></span>
-        </div>
+            <div class="item">
+                <input type="password" class="ipt" name="" id="newpwd" placeholder="请输入确认密码" />
+                <span class="error"></span>
+            </div>
 
-        <div class="button">
-            <button type="submit" class="ubtn ubtn-blue" id="submit">确定</button>
-        </div>
+            <div class="button">
+                <button type="button" class="ubtn ubtn-blue" id="submit">确定</button>
+            </div>
+        </form>
 
     </div>
 </section>
 
 
-<script src="js/zepto.min.js"></script>
+<script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
+<%@ include file="../inc/new2/foot.jsp" %>
 <script>
     $(function() {
         var $oldpwd = $('#oldpwd'),
@@ -77,7 +81,20 @@
         }
         // 保存
         $('#submit').on('click', function() {
-            return checkIpt();
+            var flag = checkIpt();
+            if(flag){
+                $("#formId").ajaxSubmit({
+                    url : "${contextPath}/wechat/register",
+                    type : "POST",
+                    success : function(result) {
+                        if(result.status == 0) {
+                            location.href = "${contextPath}/wechat/index";
+                        }else {
+                            alert(result.msg);
+                        }
+                    }
+                });
+            }
         });
 
         $('body').on('click', function() {

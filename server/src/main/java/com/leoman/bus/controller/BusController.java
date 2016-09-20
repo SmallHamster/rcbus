@@ -5,11 +5,14 @@ import com.leoman.bus.entity.CarType;
 import com.leoman.bus.service.BusService;
 import com.leoman.bus.service.CarTypeService;
 import com.leoman.bus.service.impl.BusServiceImpl;
+import com.leoman.bus.util.GpxUtil;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
+import com.leoman.common.core.bean.Response;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
 import com.leoman.entity.Configue;
+import com.leoman.utils.HttpRequestUtil;
 import com.leoman.utils.JsonUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -21,10 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 班车
@@ -138,10 +138,6 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
     @ResponseBody
     public Result delete(String ids) {
         try {
-            /*Long[] idArr = JsonUtil.json2Obj(ids, Long[].class);
-            for (Long id:idArr) {
-                busService.deleteByPK(id);
-            }*/
             String[] idArr = JsonUtil.json2Obj(ids, String[].class);
             for (String id:idArr) {
                 if(!StringUtils.isEmpty(id)){
@@ -197,6 +193,27 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
         }
         Page<Bus> page = busService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
+    }
+
+    /**
+     * 批量导入gpx系统的所有车辆信息，存到本地数据库
+     * @return
+     */
+    @RequestMapping(value = "/multiImport", method = RequestMethod.POST)
+    @ResponseBody
+    public Result multiImport() {
+        List<Map> groups = GpxUtil.getGroupsBus();
+        for (Map group:groups) {
+            List<Map> busList = (List<Map>)group.get("vehicles");
+            for (Map map:busList) {
+                Bus bus = new Bus();
+                bus.setUuid(String.valueOf(map.get("id")));//id
+                bus.setCarNo((String) map.get("name"));//车牌号
+                bus.setVkey((String) map.get("vKey"));//车辆授权码
+                busService.save(bus);
+            }
+        }
+        return Result.success();
     }
 
 }

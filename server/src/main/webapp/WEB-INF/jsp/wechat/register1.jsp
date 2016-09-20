@@ -9,7 +9,7 @@
     <title>注册-江城巴士</title>
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="${contextPath}/wechat-html/favicon.ico">
 
     <link rel="stylesheet" href="${contextPath}/wechat-html/css/app.css">
 </head>
@@ -25,19 +25,19 @@
         <div class="form">
             <div class="item">
                 <label class="for">手机号</label>
-                <input type="text" class="ipt" value="" name="" id="mobile" placeholder="请输入手机号" />
+                <input type="text" class="ipt" value="" name="mobile" id="mobile" placeholder="请输入手机号" />
                 <span class="error"></span>
             </div>
 
             <div class="item">
                 <label class="for">验证码</label>
-                <input type="text" class="ipt" name="" id="code" placeholder="请输入验证码" maxlength="6" />
+                <input type="text" class="ipt" name="code" id="code" placeholder="请输入验证码" maxlength="6" />
                 <span class="error"></span>
                 <span class="btn-wrap"><button type="button" class="btn-code" id="getcode">获取验证码</button></span>
             </div>
 
             <div class="item">
-                <label><input type="checkbox" checked class="cbx">我已阅读并同意xxx的<a href="agreement.html" class="agreement" target="_blank">服务条款</a></label>
+                <label><input type="checkbox" checked class="cbx">我已阅读并同意江城巴士的<a href="javascript:;" onclick="toAgree()" class="agreement" target="_blank">服务条款</a></label>
             </div>
         </div>
 
@@ -79,28 +79,39 @@
             $code.focus();
             return false;
         }
+        function checkCbx(){
+            $cbx = $("input[type=checkbox]");
+            if(!$cbx.is(':checked')){
+                alert("请勾选同意服务条款");
+            }else {
+                return true;
+            }
+            $cbx.focus();
+            return false;
+        }
         function checkIpt() {
-            if (checkMobile() && checkCode()) {
+            if (checkMobile() && checkCode() && checkCbx()) {
                 return true;
             }
             return false;
         }
-        // 保存
+        // 下一步
         $('#submit').on('click', function() {
             var flag = checkIpt();
             if(flag){
-                /*$("#formId").ajaxSubmit({
-                    url : "${contextPath}/wechat/login/check",
+                $("#formId").ajaxSubmit({
+                    url : "${contextPath}/wechat/check/code",
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            location.href = "${contextPath}/wechat/toRegister2?mobile="+"${mobile}"+"&code="+"${code}";
+                            location.href = "${contextPath}/wechat/register2?mobile="+$("#mobile").val();
                         }else {
                             alert(result.msg);
                         }
                     }
-                });*/
-                location.href = "${contextPath}/wechat/register2?mobile="+"${mobile}"+"&code="+"${code}";
+                });
+            }else{
+                return flag;
             }
         });
 
@@ -163,11 +174,25 @@
             }
         }
 
+        //获取验证码
         $getcode.on("click", function(e) {
             e.stopPropagation();
-            checkMobile() && sendSMS.send(60);
+            var flag = checkMobile() && sendSMS.send(60);
+            if(flag){
+                $.post("${contextPath}/wechat/sms/code",{'mobile':$("#mobile").val()},function(res){
+                    if(res.status != 0){
+                        alert(res.msg);
+                    }
+                })
+            }else{
+                return flag;
+            }
         })
     });
+
+    function toAgree(){
+        location.href = "${contextPath}/wechat/agreement";
+    }
 
 </script>
 

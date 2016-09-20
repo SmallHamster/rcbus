@@ -9,9 +9,9 @@
     <title>班车线路-江城巴士</title>
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="${contextPath}/wechat-html/favicon.ico">
 
-    <link rel="stylesheet" href="${contextPath}/wechat/css/app.css">
+    <link rel="stylesheet" href="${contextPath}/wechat-html/css/app.css">
 </head>
 
 <body>
@@ -23,15 +23,6 @@
 <section class="wrap route-box">
     <div class="slide">
         <ul>
-            <%--<li>
-                <img src="images/banner_bus.jpg" />
-            </li>
-            <li>
-                <img src="images/banner_bus.jpg" />
-            </li>
-            <li>
-                <img src="images/banner_bus.jpg" />
-            </li>--%>
             <c:forEach items="${bannerList}" var="banner">
                 <li>
                     <img src="${banner.image.path}" />
@@ -92,8 +83,8 @@
 </li>
 
 <%@ include file="../inc/new2/foot.jsp" %>
-<script src="${contextPath}/wechat/js/zepto.min.js"></script>
-<script src="${contextPath}/wechat/js/app.js"></script>
+<script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
+<script src="${contextPath}/wechat-html/js/app.js"></script>
 <script>
 
     $(function() {
@@ -166,7 +157,6 @@
                         template.find("em:eq(0)").text(list[i].startStation);
                         template.find("em:eq(1)").text(list[i].endStation);
                         template.find("b").text(i+1);
-                        console.info(list[i].id);
                         template.find(".inner").attr('onclick','toDetail('+list[i].id+')');
                         template.show();
                         $(".ui-list ul").append(template);

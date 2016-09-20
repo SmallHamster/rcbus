@@ -13,4 +13,6 @@ public interface BusService extends GenericManager<Bus> {
 
     public Page<Bus> page(Integer pageNum, Integer pageSize);
 
+    public Bus findByUuid(String uuid);
+
 }

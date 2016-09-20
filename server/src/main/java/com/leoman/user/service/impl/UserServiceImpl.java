@@ -176,13 +176,22 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
         }
     }
 
-//    @Override
-//    public UserInfo findOneByNickname(String nickname) {
-//        return userInfoDao.findOneByNickname(nickname);
-//    }
-//
-//    @Override
-//    public List<UserInfo> findListNew() {
-//        return userInfoDao.findListNew(CommonController.getOldDate());
-//    }
+    @Transactional
+    @Override
+    public void saveUser(String mobile,String password, String ip){
+        UserLogin userLogin = new UserLogin();
+        userLogin.setUsername(mobile);
+        userLogin.setPassword(password);
+        userLogin.setLastLoginDate(System.currentTimeMillis());
+        userLogin.setIp(ip);
+        userLoginService.save(userLogin);
+
+        UserInfo userInfo = new UserInfo();
+        userInfo.setMobile(mobile);
+        userInfo.setPassword(password);
+        userInfo.setUserId(userLogin.getId());
+        userInfo.setType(2);//普通会员
+        userInfoDao.save(userInfo);
+    }
+
 }
