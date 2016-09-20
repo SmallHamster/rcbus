@@ -11,7 +11,7 @@
     <meta name="author" content="">
     <link rel="icon" href="favicon.ico">
 
-    <link rel="stylesheet" href="${contextPath}/wechat/css/app.css">
+    <link rel="stylesheet" href="${contextPath}/wechat-html/css/app.css">
 </head>
 
 <body class="bg-reg">
@@ -48,8 +48,8 @@
 </section>
 
 <%@ include file="../inc/new2/foot.jsp" %>
-<script src="${contextPath}/wechat/js/zepto.min.js"></script>
-<script src="${contextPath}/wechat/js/app.js"></script>
+<script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
+<script src="${contextPath}/wechat-html/js/app.js"></script>
 <script>
     $(function() {
         var $mobile = $('#mobile'),
@@ -89,7 +89,7 @@
         $('#submit').on('click', function() {
             var flag = checkIpt();
             if(flag){
-                $("#formId").ajaxSubmit({
+                /*$("#formId").ajaxSubmit({
                     url : "${contextPath}/wechat/login/check",
                     type : "POST",
                     success : function(result) {
@@ -99,7 +99,8 @@
                             alert(result.msg);
                         }
                     }
-                });
+                });*/
+                location.href = "${contextPath}/wechat/register2?mobile="+"${mobile}"+"&code="+"${code}";
             }
         });
 

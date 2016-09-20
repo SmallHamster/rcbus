@@ -14,9 +14,12 @@ import com.leoman.common.controller.common.CommonController;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.Query;
+import com.leoman.coupon.entity.SystemConfig;
 import com.leoman.entity.Configue;
+import com.leoman.entity.Constant;
 import com.leoman.system.banner.entity.Banner;
 import com.leoman.system.banner.service.BannerService;
+import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -58,7 +61,10 @@ public class RouteWeChatController extends CommonController {
      * 班车路线页面
      */
     @RequestMapping(value = "/index")
-    public String index(Model model, Integer type) {
+    public String index(HttpServletRequest request,
+                        HttpServletResponse response,
+                        Model model,
+                        Integer type) {
         List<Banner> bannerList = bannerService.findList(type);
         for (Banner banner:bannerList) {
             if(banner.getImage() != null){
@@ -85,6 +91,9 @@ public class RouteWeChatController extends CommonController {
             query.like("startStation",route.getStartStation());
             query.like("endStation",route.getEndStation());
             query.eq("enterprise.type",type);
+
+            UserInfo user = getSessionUser(request);
+            System.out.println("--------login user mobile--------"+user.getMobile());
             List<Route> list = routeService.queryAll(query);
             WebUtil.printJson(response,new Result().success(createMap("list",list)));
         } catch (Exception e) {
