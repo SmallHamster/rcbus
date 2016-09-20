@@ -11,7 +11,7 @@
     <meta name="author" content="">
     <link rel="icon" href="favicon.ico">
 
-    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="${contextPath}/wechat/css/app.css">
 </head>
 
 <body>
@@ -24,13 +24,13 @@
 <section class="wrap location-box">
     <div class="slide-wrap">
         <div class="hd">
-            <span><img src="images/file.png" />车辆信息</span>
+            <span><img src="${contextPath}/wechat/images/file.png" />车辆信息</span>
         </div>
         <div class="slide">
             <ul>
                 <li>
                     <div class="avatar">
-                        <img src="images/bus_avatar.jpg" />
+                        <img src="${contextPath}/wechat/images/bus_avatar.jpg" />
                         <span>鄂TF0809</span>
                     </div>
                     <div class="detail">
@@ -50,7 +50,7 @@
                 </li>
                 <li>
                     <div class="avatar">
-                        <img src="images/bus_avatar.jpg" />
+                        <img src="${contextPath}/wechat/images/bus_avatar.jpg" />
                         <span>鄂TF0809</span>
                     </div>
                     <div class="detail">
@@ -73,7 +73,7 @@
     </div>
 
     <div class="hd">
-        <span><img src="images/road.png" />发车线路</span>
+        <span><img src="${contextPath}/wechat/images/road.png" />发车线路</span>
         <em>实时线路</em>
     </div>
     <div class="location">
@@ -94,53 +94,16 @@
                 <i class="arrow"></i>
                 <em>友谊大道柴林花园</em>
             </li>
-            <li>
-                <i class="arrow"></i>
-                <em>友谊大道华城广场</em>
-            </li>
-            <li>
-                <i class="arrow"></i>
-                <em>友谊大道铁机路</em>
-            </li>
-            <li>
-                <i class="arrow"></i>
-                <em>友谊大道才茂街</em>
-            </li>
-            <li>
-                <i class="arrow"></i>
-                <em>友谊大道才华街</em>
-            </li>
-            <li>
-                <i class="arrow"></i>
-                <em>徐东大街徐东村</em>
-            </li>
-            <li>
-                <i class="arrow"></i>
-                <em>徐东大街汪家墩</em>
-            </li>
         </ul>
     </div>
 
     <div class="departure">
-        <h2><img src="images/clock.png" />发车时间</h2>
+        <h2><img src="${contextPath}/wechat/images/clock.png" />发车时间</h2>
 
         <dl>
             <dd class="time1">
-                <span><em>7:30</em></span>
-                <span><em>8:30</em></span>
-                <span><em>9:30</em></span>
-                <span><em>10:30</em></span>
-                <span><em>11:30</em></span>
-                <span><em>11:30</em></span>
-                <span><em>11:30</em></span>
-
-                <span class="fix"></span>
-                <span class="fix"></span>
-                <span class="fix"></span>
             </dd>
         </dl>
-
-
     </div>
 
 
@@ -149,16 +112,83 @@
     </div>
 </section>
 
+<li id="busTemplate" style="display: none;">
+    <div class="avatar">
+        <img src="${contextPath}/wechat/images/bus_avatar.jpg" />
+        <span></span>
+    </div>
+    <div class="detail">
+        <em>司机姓名</em>
+        <span></span>
+        <em>司机电话</em>
+        <span></span>
+        <div class="col">
+            <em>品牌</em>
+            <span></span>
+        </div>
+        <div class="col">
+            <em>车型</em>
+            <span></span>
+        </div>
+    </div>
+</li>
 
-<script src="js/zepto.min.js"></script>
-<script src="js/app.js"></script>
+
+
+<script src="${contextPath}/wechat/js/zepto.min.js"></script>
+<script src="${contextPath}/wechat/js/app.js"></script>
 <script>
     $(function() {
-        var $line = $('#line'),
+        /*var $line = $('#line'),
                 count = $line.find('li').length;
+        $('#line').width(56 * count - 10);*/
 
-        $('#line').width(56 * count - 10);
+        initOther();
+    })
 
+    //初始化班车，路线，时间
+    function initOther(){
+        $.post("${contextPath}/wechat/route/other",{'routeId':"${routeId}"},function(res){
+
+            //班车
+            var bsList = res.data.object.map.bsList;
+            $(".slide ul").empty();
+            for(var i=0; i<bsList.length;i++){
+                var template = $("#busTemplate").clone().removeAttr("id");
+                template.find(".avatar img").attr("src",bsList[i].bus.image.path);
+                template.find(".avatar span").text(bsList[i].bus.carNo);
+                template.find(".detail span").eq(0).text(bsList[i].bus.driverName);
+                template.find(".detail span").eq(1).text(bsList[i].bus.driverPhone);
+                template.find(".detail .col").eq(0).find("span").text(bsList[i].bus.brand);
+                template.find(".detail .col").eq(1).find("span").text(bsList[i].bus.modelNo);
+                template.show();
+                $(".slide ul").append(template);
+            }
+
+            initSlide();
+
+
+            //站点
+            var stationList = res.data.object.map.stationList;
+            $("#line").empty();
+            for(var i=0; i<stationList.length;i++){
+                $("#line").append('<li><i class="arrow"></i><em>'+stationList[i].stationName+'</em></li>');
+            }
+            var count = $("#line").find('li').length;
+            $('#line').width(56 * count - 10);
+
+            //时间
+            var timeList = res.data.object.map.timeList;
+            $(".time1").empty();
+            for(var i=0; i<timeList.length;i++){
+                $(".time1").append('<span style="margin-left: 20px;"><em>'+timeList[i].departTime+'</em></span>');
+            }
+
+        });
+    }
+
+    //初始化滑动效果，暂时没效果
+    function initSlide(){
         $('.slide').each(function() {
             var $self = $(this),
                     $nav,
@@ -182,13 +212,18 @@
                 lazyLoad : true,
                 firstCallback : function(i,sum){
                     $nav.eq(i).addClass('current').siblings().removeClass('current');
+                    console.info($nav.eq(i));
+                    console.info("---------firstCallback-----------");
                 },
                 callback : function(i,sum){
                     $nav.eq(i).addClass('current').siblings().removeClass('current');
+                    console.info($nav.eq(i));
+                    console.info("---------callback-----------");
                 }
             });
-        })
-    })
+        });
+    }
+
 </script>
 
 </body>

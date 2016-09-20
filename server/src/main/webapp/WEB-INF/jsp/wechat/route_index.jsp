@@ -40,15 +40,16 @@
         </ul>
     </div>
     <form action="" id="formId">
+        <input type="hidden" name="type" value="${type}">
         <div class="search">
             <div class="item from">
                 <em>从</em>
-                <input type="text" class="ipt" name="" id="from" placeholder="从哪儿出发？" required />
+                <input type="text" class="ipt" name="startStation" id="from" placeholder="从哪儿出发？" required />
                 <i class="clear"></i>
             </div>
             <div class="item to">
                 <em>到</em>
-                <input type="text" class="ipt" name="" id="to" placeholder="到哪儿去？" required />
+                <input type="text" class="ipt" name="endStation" id="to" placeholder="到哪儿去？" required />
                 <i class="clear"></i>
             </div>
             <div class="button">
@@ -94,6 +95,7 @@
 <script src="${contextPath}/wechat/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat/js/app.js"></script>
 <script>
+
     $(function() {
         $('.slide').each(function() {
             var $self = $(this),
@@ -111,7 +113,7 @@
             $self.append(nav.join(''));
             $nav = $self.find('i');
 
-            $(this).swipeSlide({
+            /*$(this).swipeSlide({
                 index : 0,
                 continuousScroll : true,
                 autoSwipe : false,
@@ -122,7 +124,7 @@
                 callback : function(i,sum){
                     $nav.eq(i).addClass('current').siblings().removeClass('current');
                 }
-            });
+            });*/
         })
 
         // 清空输入框文本
@@ -130,7 +132,11 @@
             $(this).prev().val('');
         });
 
+        //初始化查询
+        search();
+    });
 
+    function initFav(){
         // 收藏&取消收藏
         $('.fav').on('click', function() {
             $(this).toggleClass('faved');
@@ -144,8 +150,7 @@
             })
         })
 
-        search();
-    })
+    }
 
     //查询
     function search(){
@@ -154,23 +159,29 @@
             type : "POST",
             success : function(result) {
                 if(result.status == 0) {
-                    var list = result.data.list;
+                    var list = result.data.object.list;
                     $(".ui-list ul").empty();
                     for(var i=0; i<list.length;i++){
                         var template = $("#routeTemplate").clone().removeAttr("id");
                         template.find("em:eq(0)").text(list[i].startStation);
                         template.find("em:eq(1)").text(list[i].endStation);
                         template.find("b").text(i+1);
-                        console.info(list[i].startStation);
+                        console.info(list[i].id);
+                        template.find(".inner").attr('onclick','toDetail('+list[i].id+')');
                         template.show();
                         $(".ui-list ul").append(template);
                     }
+                    initFav();
 
                 }else {
                     alert("查询失败");
                 }
             }
         });
+    }
+
+    function toDetail(id){
+        location.href = "${contextPath}/wechat/route/detail?routeId="+id;
     }
 </script>
 </body>

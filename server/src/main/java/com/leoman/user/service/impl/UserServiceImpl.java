@@ -50,6 +50,11 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
     private EnterpriseService enterpriseService;
 
     @Override
+    public UserInfo findByMobile(String mobile) {
+        return userInfoDao.findByMobile(mobile);
+    }
+
+    @Override
     @Transient
     public Result save(UserInfo userInfo, Long id, Long enterpriseId) {
         Enterprise enterprise = enterpriseService.queryByPK(enterpriseId);

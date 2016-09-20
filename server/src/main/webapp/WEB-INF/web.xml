@@ -66,6 +66,19 @@
         <url-pattern>/admin/*</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>WechatFilter</filter-name>
+        <filter-class>com.leoman.common.filter.WechatFilter</filter-class>
+        <init-param>
+            <param-name>skipUrls</param-name>
+            <param-value>/wechat/login/*,/wechat/login,/wechat/toRegister1,/wechat/toRegister2,/wechat/toAgree,/wechat/index</param-value>
+        </init-param>
+    </filter>
+    <filter-mapping>
+        <filter-name>WechatFilter</filter-name>
+        <url-pattern>/wechat/*</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>DruidStatView</servlet-name>
         <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>

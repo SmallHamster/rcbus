@@ -12,6 +12,7 @@ public interface Constant {
 
     String SESSION_MEMBER_GLOBLE = "session_globle_member";
     String SESSION_MEMBER_BUSINESS = "session_business_member";
+    String SESSION_MEMBER_USER = "session_user_member";
 
     String MEMBER_TYPE_GLOBLE = "GLOBLE";
 

@@ -14,11 +14,7 @@ import java.util.List;
  */
 public interface UserService extends GenericManager<UserInfo> {
 
-//
-//    public UserInfo findOneByNickname(String nickname);
-//
-//    // 查询新增会员列表
-//    public List<UserInfo> findListNew();
+    public UserInfo findByMobile(String mobile);
 
     public Result save(UserInfo userInfo, Long id, Long enterpriseId);
 
