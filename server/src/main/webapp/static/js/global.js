@@ -199,9 +199,6 @@ var $leoman = {
         form.find("input[type=checkbox]").removeAttr("checked");
         form.validator("cleanUp");
     },
-    test11:function(){
-        console.info("-----test");
-    },
     dataTable: function (obj, option) {
         return obj.DataTable($.extend($leoman.v.dataTableL, option))
     },
@@ -232,6 +229,93 @@ var $leoman = {
         return "";
     },
 
+    /**
+     * 将form表单中带name属性的dom节点系列化成object
+     * @author Chenwq
+     */
+    serializeObject : function(form) {
+        var o = {};
+        $.each(form.serializeArray(), function(index) {
+            if (o[this["name"]]) {
+                o[this["name"]] = o[this["name"]] + "," + this["value"];
+            } else {
+                o[this["name"]] = this["value"];
+            }
+        });
+        return o;
+    },
+
+    /**
+     * 描述：点击click事件提交表单，跳转页面，兼容所有的浏览器
+     *
+     * @param url
+     *            链接的URL
+     * @param jsonObj
+     *            参数对象json ｛"a":b,"c":d,"d":[数组]｝
+     */
+    subWebForm : function(url, jsonObj, t) {
+        var fid = "form_open_win", obj = $("#" + fid);
+        if (obj && obj != null) {
+            obj.remove();
+        }
+        t = t && t != "" ? "_blank" : "_self";
+        method = jsonObj.method && jsonObj.method != '' ? jsonObj.method : "post";
+        delete jsonObj.method;
+        var form = null;
+        try {
+            form = document.createElement("<form  method='" + method + "'></form>");
+        } catch (e) {
+        }
+        if (form == null) {
+            form = document.createElement("form");
+            form.method = method;
+        }
+        $("body").append(form);
+        obj = $(form);
+        obj.hide();
+        var tj = null;
+        $.each(jsonObj, function(key, val) {
+            tj = jsonObj[key];
+            if (tj instanceof Array) {
+                $.each(tj, function(i, value) {
+                    var tempClone = null;
+                    try {
+                        tempClone = document.createElement("<input type='checkbox' name='" + key + "' />");
+                    } catch (e) {
+                    }
+                    if (tempClone == null) {
+                        tempClone = document.createElement("input");
+                        tempClone.type = "checkbox";
+                    }
+                    $(tempClone).attr({
+                        "checked" : true,
+                        "name" : key
+                    }).val(value);
+                    obj.append(tempClone);
+                });
+            } else {
+                var tempClone = null;
+                try {
+                    tempClone = document.createElement("<input type='text' name='" + key + "' />");
+                } catch (e) {
+                }
+                if (tempClone == null) {
+                    tempClone = document.createElement("input");
+                    tempClone.type = "text";
+                }
+                $(tempClone).attr({
+                    "name" : key
+                }).val(val);
+                obj.append(tempClone);
+            }
+        });
+        url = url && url != null ? url : '/';
+        obj.attr({
+            "action" : url,
+            "target" : t,
+            "id" : fid
+        }).submit();
+    }
 }
 
 

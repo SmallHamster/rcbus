@@ -36,4 +36,10 @@ public class CarType extends BaseEntity{
     public void setImage(Image image) {
         this.image = image;
     }
+
+    public CarType(){}
+
+    public CarType(Long id) {
+        super.setId(id);
+    }
 }

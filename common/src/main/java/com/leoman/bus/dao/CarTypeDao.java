@@ -7,7 +7,8 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 /**
- * Created by Administrator on 2016/9/8.
+ * 用车类型
+ * Created by Daisy on 2016/9/8.
  */
 public interface CarTypeDao extends IBaseJpaRepository<CarType>{
 

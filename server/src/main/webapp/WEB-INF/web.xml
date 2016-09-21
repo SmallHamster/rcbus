@@ -53,7 +53,7 @@
         <url-pattern>/*</url-pattern>
     </filter-mapping>
 
-    <!--<filter>
+    <filter>
         <filter-name>AdminFilter</filter-name>
         <filter-class>com.leoman.common.filter.AdminFilter</filter-class>
         <init-param>
@@ -64,7 +64,7 @@
     <filter-mapping>
         <filter-name>AdminFilter</filter-name>
         <url-pattern>/admin/*</url-pattern>
-    </filter-mapping>-->
+    </filter-mapping>
 
     <filter>
         <filter-name>WechatFilter</filter-name>

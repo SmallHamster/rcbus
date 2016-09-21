@@ -133,10 +133,13 @@
             $(this).toggleClass('faved');
             var isFaved = $(this).hasClass('faved');
             $.ajax({
-                url: '',
-                data: {faved: isFaved},
-                success: function() {
-                    // save data into database
+                url: "${contextPath}/wechat/route/collect",
+                data: {'isCollect': isFaved,'routeId': $(this).attr("val")},
+                success: function(res) {
+                    if(res.status != 0){
+                        alert("操作失败");
+                        $(this).toggleClass('faved');
+                    }
                 }
             })
         })
@@ -157,7 +160,8 @@
                         template.find("em:eq(0)").text(list[i].startStation);
                         template.find("em:eq(1)").text(list[i].endStation);
                         template.find("b").text(i+1);
-                        template.find(".inner").attr('onclick','toDetail('+list[i].id+')');
+                        template.find(".fromto").attr('onclick','toDetail('+list[i].id+')');
+                        template.find(".fav").attr("val",list[i].id);
                         template.show();
                         $(".ui-list ul").append(template);
                     }

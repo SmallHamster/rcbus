@@ -210,6 +210,7 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
                 bus.setUuid(String.valueOf(map.get("id")));//id
                 bus.setCarNo((String) map.get("name"));//车牌号
                 bus.setVkey((String) map.get("vKey"));//车辆授权码
+                bus.setCarType(new CarType(1l));//类型为通勤班车
                 busService.save(bus);
             }
         }

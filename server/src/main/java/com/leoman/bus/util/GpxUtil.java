@@ -42,7 +42,9 @@ public class GpxUtil {
 		if(result.getStatus()){
 			String body = result.getBody();
 			Map resMap = JsonUtil.jsontoMap(body);
-			return resMap;
+			if(resMap.get("success").equals(true)){
+				return resMap;
+			}
 		}
 		return null;
 	}
@@ -53,17 +55,21 @@ public class GpxUtil {
      */
 	public static List<Map> getGroupsBus() {
 		Map user = userLogin();
-		Map map = new HashMap<>();
-		map.put("version",version);
-		map.put("method","loadVehicles");
-		map.put("uid",String.valueOf(user.get("uid")));
-		map.put("uKey",user.get("uKey"));
-		Response result = HttpRequestUtil.sendPost(basicUrl,map);
-		if(result.getStatus()){
-			String body = result.getBody();
-			Map resMap = JsonUtil.jsontoMap(body);
-			List<Map> groups = (List<Map>)resMap.get("groups");
-			return groups;
+		if(user != null){
+			Map map = new HashMap<>();
+			map.put("version",version);
+			map.put("method","loadVehicles");
+			map.put("uid",String.valueOf(user.get("uid")));
+			map.put("uKey",user.get("uKey"));
+			Response result = HttpRequestUtil.sendPost(basicUrl,map);
+			if(result.getStatus()){
+				String body = result.getBody();
+				Map resMap = JsonUtil.jsontoMap(body);
+				if(resMap.get("success").equals(true)){
+					List<Map> groups = (List<Map>)resMap.get("groups");
+					return groups;
+				}
+			}
 		}
 		return null;
 	}
@@ -84,10 +90,39 @@ public class GpxUtil {
 		if(result.getStatus()){
 			String body = result.getBody();
 			Map resMap = JsonUtil.jsontoMap(body);
-			List<Map> locs = (List<Map>)resMap.get("locs");
-			return locs;
+			if(resMap.get("success").equals(true)){
+				List<Map> locs = (List<Map>)resMap.get("locs");
+				return locs;
+			}
 		}
 		return null;
+	}
+
+	/**
+	 * 获取两点间的距离
+	 * @param long1
+	 * @param lat1
+	 * @param long2
+	 * @param lat2
+     * @return
+     */
+	public static double getDistance(double long1, double lat1, double long2,
+								  double lat2) {
+		double a, b, R;
+		R = 6378137; // 地球半径
+		lat1 = lat1 * Math.PI / 180.0;
+		lat2 = lat2 * Math.PI / 180.0;
+		a = lat1 - lat2;
+		b = (long1 - long2) * Math.PI / 180.0;
+		double d;
+		double sa2, sb2;
+		sa2 = Math.sin(a / 2.0);
+		sb2 = Math.sin(b / 2.0);
+		d = 2
+				* R
+				* Math.asin(Math.sqrt(sa2 * sa2 + Math.cos(lat1)
+				* Math.cos(lat2) * sb2 * sb2));
+		return d;
 	}
 
 }
