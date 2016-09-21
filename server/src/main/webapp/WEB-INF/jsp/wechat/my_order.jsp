@@ -25,7 +25,7 @@
     <div class="ui-list3">
         <ul>
             <c:forEach items="${CarRentalList}" var="cr" >
-                <c:if test="${cr.order.status ne 3 || cr.order.status ne 4}">
+                <c:if test="${cr.order.status ne 3 && cr.order.status ne 4}">
                     <li class="c2">
                         <a onclick="carRental(${cr.id},${cr.order.status})">
                             <div class="cat">预定用车</div>
@@ -50,20 +50,106 @@
                                 </div>
                             </div>
                             <div class="check">
-                                <input type="checkbox" class="rdo2">
+                                <input type="checkbox" class="rdo2" value="${cr.id}">
                             </div>
                         </a>
                     </li>
                 </c:if>
             </c:forEach>
         </ul>
+        <div class="button">
+            <button class="ubtn ubtn-blue" onclick="del()">删除</button>
+        </div>
     </div>
 </section>
+<script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 
 <script>
+    $(function() {
+        var sX = 0;    // 手指初始x坐标
+        var sY = 0;    // 手指初始y坐标
+        var disX = 0;  // 滑动差值
+        var disY = 0;  // 滑动差值
+
+        $('.ui-list3').on('touchstart', '.check', function(e) {
+            var rdo2 = $(this).find('.rdo2')[0];
+            rdo2.checked = !rdo2.checked;
+            return false;
+        });
+
+        $('.ui-list3').on('touchstart', 'li', function(e){
+            sX = e.changedTouches[0].pageX;
+            sY = e.changedTouches[0].pageY;
+        });
+
+        $('.ui-list3').on('touchmove', 'li', function(e){
+            if($(this).find(".state4").length==1){
+                return;
+            }
+            disX = e.changedTouches[0].pageX - sX;
+            disY = e.changedTouches[0].pageY - sY;
+            if (Math.abs(disY) <= Math.abs(disX)) {
+                e.preventDefault();
+            }
+            if(disX<0){
+                $(this).find(".rdo2").attr("checked","checked");
+            }
+            if(disX>0){
+                $(this).find(".rdo2").removeAttr("checked");
+            }
+
+        });
+
+        $('.ui-list3').on('touchend', 'li', function(e){
+            if (Math.abs(disY) > 40) {
+                return;
+            }
+            if (disX > 40) {
+                $(this).removeClass('on');
+
+            } else if (disX < -40) {
+                $(this).addClass('on');
+
+            }
+        })
+    });
 
     function carRental(id,status){
         window.location.href = "${contextPath}/wechat/order/detail?id=" + id +"&status=" + status;
+    }
+
+    function del(){
+        var ids = [];
+
+        $(".rdo2:checked").each(function (){
+            var id = $(this).val();
+            ids.push(id);
+        });
+
+        $.ajax({
+            "url": "${contextPath}/wechat/order/del",
+            "data": {
+                ids:JSON.stringify(ids)
+            },
+            "dataType": "json",
+            "type": "POST",
+            success: function (result) {
+                if (result.status==0) {
+                    layer.open({
+                        content: '<i class="ico ico-right2"></i><br /><br />删除成功'
+                        ,btn: '确定'
+                        ,yes: function(index, layero){
+                            window.location.href = "${contextPath}/wechat/order/myOrder/index";
+                        }
+                    });
+                }else {
+                    layer.open({
+                        content: '<i class="ico ico-right2"></i><br /><br />删除失败'
+                        ,btn: '确定'
+                    });;
+                }
+            }
+        });
     }
 
 </script>

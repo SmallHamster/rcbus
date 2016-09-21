@@ -48,11 +48,11 @@
             </dd>
             <dd>
                 <span>发车时间</span>
-                <em><date:date value="${CarRental.startDate}" format="yyyy-MM-dd hh:mm"></date:date></em>
+                <em><date:date value="${CarRental.startDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
             </dd>
             <dd>
                 <span>返程时间</span>
-                <em><date:date value="${CarRental.endDate}" format="yyyy-MM-dd hh:mm"></date:date></em>
+                <em><date:date value="${CarRental.endDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
             </dd>
             <dd>
                 <span>乘车人数</span>
@@ -76,7 +76,7 @@
             </dd>
             <dd>
                 <span>提交时间</span>
-                <em><date:date value="${CarRental.createDate}" format="yyyy-MM-dd hh:mm"></date:date></em>
+                <em><date:date value="${CarRental.createDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
             </dd>
         </dl>
 
@@ -117,7 +117,7 @@
                 ,no: function(index){
                     var id = $("#id").val();
                     $.ajax({
-                        url : "${contextPath}/wechat/carrental/cancel",
+                        url : "${contextPath}/wechat/order/cancel/save",
                         data : {
                             "id" : id
                         },
@@ -127,6 +127,9 @@
                                 layer.open({
                                     content: '<i class="ico ico-right2"></i><br /><br />取消成功！'
                                     ,btn: '确定'
+                                    ,yes: function(index, layero){
+                                        window.location.href = "${contextPath}/wechat/order/myOrder/index";
+                                    }
                                 });
                             }else {
                                 layer.open({

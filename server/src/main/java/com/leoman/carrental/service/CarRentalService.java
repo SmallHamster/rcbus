@@ -28,4 +28,6 @@ public interface CarRentalService extends GenericManager<CarRental> {
     //微信新增
     public void save(UserInfo userInfo,String city, String from, String to, Integer stype, String time1, String time2, Integer number, Integer amount, Integer ticket, String title, String linkman, String mobile, Long carTypeId, Long id) throws ParseException;
 
+    //微信删除
+    public void del(String ids);
 }

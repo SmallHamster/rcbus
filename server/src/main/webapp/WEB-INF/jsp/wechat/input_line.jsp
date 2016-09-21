@@ -359,9 +359,10 @@
                     layer.open({
                         content: '<i class="ico ico-right2"></i><br /><br />您的订单已提交成功，请等待<br />客服人员与您联系'
                         ,btn: '确定'
+                        ,yes: function(index, layero){
+                            window.location.href = "${contextPath}/wechat/order/myOrder/index";
+                        }
                     });
-                    //跳转到我的订单
-                    window.location.href = "${contextPath}/wechat/order/myOrder/index"
                 }else {
                     alert("提交出错");
                 }

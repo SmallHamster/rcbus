@@ -321,6 +321,34 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
 
         //关联订单
         carRental.setOrder(order);
+        //新增的订单未改签过
+        carRental.setIsRewrite(0);
         save(carRental);
+    }
+
+    @Override
+    @Transactional
+    public void del(String ids) {
+        Long[] ss = JsonUtil.json2Obj(ids,Long[].class);
+        for (Long _id : ss) {
+            //删除租单
+            CarRental carRental = queryByPK(_id);
+            delete(carRental);
+            //删除订单
+            Order order = carRental.getOrder();
+            orderService.delete(order);
+            if(order.getStatus()!=0){
+                //删除价钱
+                List<CarRentalOffer> carRentalOfferList = carRentalOfferService.queryByProperty("rentalId",carRental.getId());
+                for(CarRentalOffer carRentalOffer : carRentalOfferList){
+                    carRentalOfferService.delete(carRentalOffer);
+                }
+                //删除租车
+                List<BusSend> busSendLis = busSendService.findBus(carRental.getId(),1);
+                for(BusSend busSend : busSendLis){
+                    busSendService.delete(busSend);
+                }
+            }
+        }
     }
 }

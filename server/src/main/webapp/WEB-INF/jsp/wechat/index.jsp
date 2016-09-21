@@ -60,7 +60,7 @@
                 <li class="menu-list"><a href="javascript:void(0);"><i class="fa fa fa-users"></i><span>个人中心</span></a>
                     <ul class="sub-menu-list">
                         <li><a href="${contextPath}/wechat/order/myOrder/index">我的订单</a></li>
-                        <li><a href="${contextPath}/admin/admin/index">个人信息</a></li>
+                        <li><a href="${contextPath}/wechat/user/index">个人信息</a></li>
                         <li><a href="${contextPath}/admin/admin/index">反馈建议</a></li>
                         <li><a href="${contextPath}/admin/admin/index">在线客服</a></li>
 

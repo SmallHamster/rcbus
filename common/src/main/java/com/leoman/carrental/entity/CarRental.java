@@ -87,6 +87,10 @@ public class CarRental extends BaseEntity{
     @Column(name= "refund")
     private Double refund;
 
+    //是否改签过了 0:否 1:是 每个订单只能改签一次
+    @Column(name = "is_rewrite")
+    private Integer isRewrite;
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "rental_id")
     private Set<CarRentalOffer> carRentalOffers;
@@ -243,5 +247,13 @@ public class CarRental extends BaseEntity{
 
     public void setBusSends(List<BusSend> busSends) {
         this.busSends = busSends;
+    }
+
+    public Integer getIsRewrite() {
+        return isRewrite;
+    }
+
+    public void setIsRewrite(Integer isRewrite) {
+        this.isRewrite = isRewrite;
     }
 }

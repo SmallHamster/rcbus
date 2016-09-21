@@ -39,22 +39,23 @@
                 <em>返回时间</em>
             </div>
             <div class="time">
-                <em><date:date value="${CarRental.startDate}" format="yyyy-MM-dd hh:mm"></date:date></em>
-                <em><date:date value="${CarRental.endDate}" format="yyyy-MM-dd hh:mm"></date:date></em>
+                <em><date:date value="${CarRental.startDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
+                <em><date:date value="${CarRental.endDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
             </div>
             <div class="bus">
-                <b>宝骏730（豪华商务七座）</b>
-                <span>鄂TF0809</span>
+                <b>${modelNo} ${CarRental.carType.name}</b>
                 <i>|</i>
-                <span>鄂TF0809</span>
-                <i>|</i>
-                <span>鄂TF0809</span>
-                <i>|</i>
-                <span>鄂TF0809</span>
+                <c:forEach items="${busSend}" var="v">
+                    <span>${v.bus.carNo}</span>
+                    <i>|</i>
+                </c:forEach>
             </div>
             <div class="button">
-                <a href="${contextPath}/wechat-html/oldFile/order_modify_date.html" class="ubtn ubtn-ghost">我要改期</a>
-                <a href="${contextPath}/wechat-html/oldFile/order_cancel.html" class="ubtn ubtn-blue">我要退订</a>
+                <c:if test="${CarRental.isRewrite ne 1 && CarRental.startDate >= toDayDate}">
+                    <a onclick="rewrite(${CarRental.id},1)" class="ubtn ubtn-ghost" >我要改期</a>
+                </c:if>
+
+                <a onclick="rewrite(${CarRental.id},2)" class="ubtn ubtn-blue">我要退订</a>
                 <p><a href="#" class="blue">退改规则</a></p>
                 <span>（出行前如有车辆变更会有系统提示）</span>
             </div>
@@ -75,11 +76,11 @@
             </dd>
             <dd>
                 <span>发车时间</span>
-                <em><date:date value="${CarRental.startDate}" format="yyyy-MM-dd hh:mm"></date:date></em>
+                <em><date:date value="${CarRental.startDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
             </dd>
             <dd>
                 <span>返程时间</span>
-                <em><date:date value="${CarRental.endDate}" format="yyyy-MM-dd hh:mm"></date:date></em>
+                <em><date:date value="${CarRental.endDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
             </dd>
             <dd>
                 <span>乘车人数</span>
@@ -103,7 +104,7 @@
             </dd>
             <dd>
                 <span>提交时间</span>
-                <em><date:date value="${CarRental.createDate}" format="yyyy-MM-dd hh:mm"></date:date></em>
+                <em><date:date value="${CarRental.createDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
             </dd>
         </dl>
         <dl>
@@ -121,42 +122,46 @@
                         </div>
                     </c:forEach>
                     <div class="item blue" id="couponsUsed">
-                            <span>${coupon.name}</span>
-                        <c:if test="${coupon.couponWay eq 1}">
-                            <c:if test="${coupon.isLimit eq 1 && CarRental.totalAmount >= coupon.limitMoney}">
+                            <span>${myCoupon.name}</span>
+                        <c:if test="${myCoupon.couponWay eq 1}">
+                            <c:if test="${myCoupon.isLimit eq 1 && CarRental.totalAmount >= myCoupon.limitMoney}">
                                 <%-- 最高立减金额不为空 --%>
-                                <c:if test="${coupon.discountTopMoney ne null}">
+                                <c:if test="${myCoupon.discountTopMoney ne null}">
                                     <%-- 减免金额小于最高金额 --%>
-                                    <c:if test="${CarRental.totalAmount * (1-coupon.discountPercent) <= coupon.discountTopMoney}">
-                                        <em>- &yen; ${CarRental.totalAmount * (1-coupon.discountPercent)}</em>
+                                    <c:if test="${CarRental.totalAmount * (1-myCoupon.discountPercent) <= myCoupon.discountTopMoney}">
+                                        <em>- &yen; ${CarRental.totalAmount * (1-myCoupon.discountPercent)}</em>
+                                        <input type="hidden" value="${CarRental.totalAmount * (1-myCoupon.discountPercent)}" id="discount">
                                     </c:if>
                                     <%-- 减免金额大于最高金额 --%>
-                                    <c:if test="${CarRental.totalAmount * (1-coupon.discountPercent) > coupon.discountTopMoney}">
-                                        <em>- &yen; ${coupon.discountTopMoney}</em>
+                                    <c:if test="${CarRental.totalAmount * (1-myCoupon.discountPercent) > myCoupon.discountTopMoney}">
+                                        <em>- &yen; ${myCoupon.discountTopMoney}</em>
+                                        <input type="hidden" value=" ${myCoupon.discountTopMoney}" id="discount">
                                     </c:if>
                                 </c:if>
                                 <%-- 最高立减金额为空 --%>
-                                <c:if test="${coupon.discountTopMoney eq null}">
-                                    <em>- &yen; ${coupon.discountPercent}</em>
+                                <c:if test="${myCoupon.discountTopMoney eq null}">
+                                    <em>- &yen; ${myCoupon.discountPercent}</em>
+                                    <input type="hidden" value="${myCoupon.discountPercent}" id="discount">
                                 </c:if>
                             </c:if>
                         </c:if>
 
-                        <c:if test="${coupon.couponWay eq 2}">
-                            <em>- &yen; ${coupon.reduceMoney}</em>
+                        <c:if test="${myCoupon.couponWay eq 2}">
+                            <em>- &yen; ${myCoupon.reduceMoney}</em>
+                            <input type="hidden" value="${myCoupon.reduceMoney}" id="discount">
                         </c:if>
                     </div>
                 </div>
             </dd>
         </dl>
-
+        <input type="hidden" id="id" value="${CarRental.id}">
         <div class="ft"></div>
         <div class="state state4"></div>
     </div>
 
     <div class="button">
         <a href="${contextPath}/wechat-html/oldFile/disclaimer.html">免责申明</a>
-        <a href="#" class="ubtn ubtn-blue">确认完成</a>
+        <a id="submit" class="ubtn ubtn-blue">确认完成</a>
     </div>
 </section>
 
@@ -165,9 +170,48 @@
 
 
 <script>
-    $(function() {
+    var price = $("#price").val(),
+        discount = $("#discount").val(),
+        val = price - discount;
 
+    $(function() {
+        $("#priceTotal").html("&yen; "+val);
+    });
+
+    function rewrite(id,type){
+        window.location.href = "${contextPath}/wechat/order/rewrite?id="+id + "&type="+type + "&val=" + val;
+    }
+
+    $('#submit').on('click', function() {
+        var id = $("#id").val();
+        $.ajax({
+            "url": "${contextPath}/wechat/order/complete/save",
+            "data": {
+                id:id,
+                val : val
+            },
+            "dataType": "json",
+            "type": "POST",
+            success: function (result) {
+                if (result.status==0) {
+                    layer.open({
+                        content: '<i class="ico ico-right2"></i><br /><br />确认订单已完成'
+                        ,btn: '确定'
+                        ,yes: function(index, layero){
+                            window.location.href = "${contextPath}/wechat/order/myOrder/index";
+                        }
+                    });
+                }else {
+                    layer.open({
+                        content: '<i class="ico ico-right2"></i><br /><br />确认失败'
+                        ,btn: '确定'
+                    });
+                }
+            }
+        });
+        return false;
     })
+
 
 </script>
 </body>

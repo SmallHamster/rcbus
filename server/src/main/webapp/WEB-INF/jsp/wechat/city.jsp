@@ -11,7 +11,7 @@
     <meta name="author" content="">
     <link rel="icon" href="favicon.ico">
 
-    <link rel="stylesheet" href="${contextPath}/wechat/css/app.css">
+    <link rel="stylesheet" href="${contextPath}/wechat-html/css/app.css">
 </head>
 
 <body>
@@ -63,8 +63,8 @@
 </section>
 
 
-<script src="${contextPath}/wechat/js/zepto.min.js"></script>
-<script src="${contextPath}/wechat/js/jquery.nav.js"></script>
+<script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
+<script src="${contextPath}/wechat-html/js/jquery.nav.js"></script>
 <script>
     $(function() {
         $('.elevator').onePageNav();
