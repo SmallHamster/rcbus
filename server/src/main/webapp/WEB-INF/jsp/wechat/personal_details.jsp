@@ -38,7 +38,7 @@
             </div>
             <div class="item">
                 <img src="${contextPath}/wechat-html/images/f/4.png" alt="">
-                <a href="myTrip">我的行程</a>
+                <a id="myTrip">我的行程</a>
                 <i></i>
             </div>
             <div class="item">

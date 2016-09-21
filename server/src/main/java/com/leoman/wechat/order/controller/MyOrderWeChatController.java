@@ -16,6 +16,7 @@ import com.leoman.coupon.service.CouponService;
 import com.leoman.order.entity.Order;
 import com.leoman.order.service.OrderService;
 import com.leoman.order.service.impl.OrderServiceImpl;
+import com.leoman.user.entity.UserInfo;
 import com.leoman.user.service.UserCouponService;
 import com.leoman.utils.DateUtils;
 import com.leoman.utils.JsonUtil;
@@ -75,6 +76,9 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
      */
     @RequestMapping(value = "/myTrip/index")
     public String myTripIndex(Model model, HttpServletRequest request){
+        UserInfo userInfo = new CommonController().getSessionUser(request);
+        model.addAttribute("carRentalList",carRentalService.findList(userInfo.getId()));
+        model.addAttribute("routeOrderList",routeOrderService.findList(userInfo.getId()));
         return "wechat/my_trip";
     }
 
