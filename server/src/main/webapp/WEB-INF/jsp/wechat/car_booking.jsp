@@ -38,6 +38,7 @@
                     <li>
                         <div class="img">
                             <img src="${contextPath}/wechat-html/uploads/pro1.jpg" alt="">
+                            <img src="${v.image.uploadUrl}" alt="">
                         </div>
                         <div class="txt">
                             <em>${v.name}</em>

@@ -49,14 +49,16 @@
                     <i>&gt;</i>
                 </div>
             </div>
-            <div class="item">
-                <div class="txt">返回时间</div>
-                <div class="cnt">
-                    <input type="text" class="ipt arrow" id="time2" placeholder="" readonly value="<date:date value="${CarRental.endDate}" format="yyyy-MM-dd HH:mm"></date:date>">
-                    <span class="error"></span>
-                    <i>&gt;</i>
+            <c:if test="${CarRental.rentalWay ne 0 }">
+                <div class="item">
+                    <div class="txt">返回时间</div>
+                    <div class="cnt">
+                        <input type="text" class="ipt arrow" id="time2" placeholder="" readonly value="<date:date value="${CarRental.endDate}" format="yyyy-MM-dd HH:mm"></date:date>">
+                        <span class="error"></span>
+                        <i>&gt;</i>
+                    </div>
                 </div>
-            </div>
+            </c:if>
         </div>
         <input type="hidden" value="${CarRental.id}" id="id">
         <div class="ft"></div>
@@ -203,8 +205,6 @@
         }
     });
 
-
-
     $('#submit').on('click', function() {
         var time1 = $("#time1").val();
         var time2 = $("#time2").val();
@@ -222,7 +222,7 @@
             success: function (result) {
                 if (result.status==0) {
                     layer.open({
-                        content: '<i class="ico ico-right2"></i><br /><br />您的订单已改签成功，请等待<br />客服人员与您联系'
+                        content: '<i class="ico ico-right2"></i><br /><br />改签成功'
                         ,btn: '确定'
                         ,yes: function(index, layero){
                             window.location.href = "${contextPath}/wechat/order/myOrder/index";
@@ -230,7 +230,7 @@
                     });
                 }else {
                     layer.open({
-                        content: '<i class="ico ico-right2"></i><br /><br />退订失败'
+                        content: '<i class="ico ico-right2"></i><br /><br />改签失败'
                         ,btn: '确定'
                     });
                 }

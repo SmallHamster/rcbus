@@ -14,4 +14,5 @@ public interface CarRentalDao extends IBaseJpaRepository<CarRental>{
     @Query("SELECT b FROM CarRental b WHERE b.order.id IN (SELECT a.id FROM Order a WHERE a.userInfo.id =?1)")
     public List<CarRental> findList(Long id);
 
+
 }

@@ -20,13 +20,11 @@
     <div class="title">订单详情</div>
 </header>
 
-<div class="share-guide"></div>
-
 <section class="wrap order-box">
     <div class="box-info">
         <div class="hd">
-            <em>进行中</em>
-            <span>如有问题可与客服联系</span>
+            <em class="state6">已结束</em>
+            <span>完成评价可获得优惠券</span>
         </div>
         <div class="detail">
             <div class="fromto">
@@ -49,15 +47,6 @@
                     <span>${v.bus.carNo}</span>
                     <i>|</i>
                 </c:forEach>
-            </div>
-            <div class="button">
-                <c:if test="${CarRental.isRewrite ne 1 && CarRental.startDate >= toDayDate}">
-                    <a onclick="rewrite(${CarRental.id},1)" class="ubtn ubtn-ghost" >我要改期</a>
-                </c:if>
-
-                <a onclick="rewrite(${CarRental.id},2)" class="ubtn ubtn-blue">我要退订</a>
-                <p><a href="#" class="blue">退改规则</a></p>
-                <span>（出行前如有车辆变更会有系统提示）</span>
             </div>
         </div>
         <dl>
@@ -155,57 +144,143 @@
             </dd>
         </dl>
         <input type="hidden" id="id" value="${CarRental.id}">
+
         <div class="ft"></div>
-        <div class="state state4"></div>
+        <div class="state state6"></div>
     </div>
 
     <div class="button">
         <a href="${contextPath}/wechat-html/oldFile/disclaimer.html">免责申明</a>
-        <a id="submit" class="ubtn ubtn-blue">确认完成</a>
+        <c:if test="${CarRental.order.isComment eq 0}">
+            <button type="button" class="ubtn ubtn-red" id="comments">评价</button>
+        </c:if>
+        <c:if test="${CarRental.order.isComment eq 1}">
+            <button type="button" class="ubtn ubtn-gray" disabled>点击分享可以获得优惠券哦~</button>
+        </c:if>
     </div>
+
+    <!-- <div class="share-tips">点此右上角分享可获得优惠券哦</div> -->
+
 </section>
+
+<div id="commentsbox" class="hide">
+    <div class="hd">行程评价</div>
+    <div class="hd-s">评价行程，即得优惠礼券</div>
+    <div class="bd">
+        <dl>
+            <dt>司机服务</dt>
+            <dd>
+                <i class="star"><i></i><i></i><i></i><i></i><i></i></i>
+                <input type="hidden" name="driverService" class="star">
+            </dd>
+        </dl>
+        <dl>
+            <dt>汽车环境</dt>
+            <dd>
+                <i class="star"><i></i><i></i><i></i><i></i><i></i></i>
+                <input type="hidden" name="busEnvironment" class="star">
+            </dd>
+        </dl>
+        <dl>
+            <dt>安全驾驶</dt>
+            <dd>
+                <i class="star"><i></i><i></i><i></i><i></i><i></i></i>
+                <input type="hidden" name="safeDriving" class="star">
+            </dd>
+        </dl>
+        <dl>
+            <dt>准时到达</dt>
+            <dd>
+                <i class="star"><i></i><i></i><i></i><i></i><i></i></i>
+                <input type="hidden" name="arriveTime" class="star">
+            </dd>
+        </dl>
+    </div>
+</div>
 
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
-
-
 <script>
-    var price = $("#price").val();
 
-    function rewrite(id,type){
-        window.location.href = "${contextPath}/wechat/order/rewrite?id="+id + "&type="+type + "&val=" + price;
-    }
+//    var price = $("#price").val(),
+//        discount = $("#discount").val(),
+//        val = price - discount;
 
-    $('#submit').on('click', function() {
-        var id = $("#id").val();
-        $.ajax({
-            "url": "${contextPath}/wechat/order/complete/save",
-            "data": {
-                id : id
-            },
-            "dataType": "json",
-            "type": "POST",
-            success: function (result) {
-                if (result.status==0) {
-                    layer.open({
-                        content: '<i class="ico ico-right2"></i><br /><br />确认订单已完成'
-                        ,btn: '确定'
-                        ,yes: function(index, layero){
-                            window.location.href = "${contextPath}/wechat/order/myOrder/index";
+    $(function() {
+
+        var modal = $('#commentsbox').html();
+
+        $('#comments').on('click', function() {
+            layer.open({
+                content: modal
+                ,className: 'popup'
+                ,btn: ['取消', '确定']
+                ,yes: function(index) {
+                    layer.close(index);
+                }
+                ,no: function(index){
+                    var driverService = $("input[name=driverService]").eq(1).val();
+                    var busEnvironment = $("input[name=busEnvironment]").eq(1).val();
+                    var safeDriving = $("input[name=safeDriving]").eq(1).val();
+                    var arriveTime = $("input[name=arriveTime]").eq(1).val();
+                    var id = $("#id").val();
+
+                    $.ajax({
+                        "url": "${contextPath}/wechat/order/evaluation",
+                        "data": {
+                            id:id,
+                            driverService : driverService,
+                            busEnvironment : busEnvironment,
+                            safeDriving : safeDriving,
+                            arriveTime : arriveTime,
+                            type : 1
+                        },
+                        "dataType": "json",
+                        "type": "POST",
+                        success: function (result) {
+                            if (result.status==0) {
+                                layer.open({
+                                    content: '<i class="ico ico-right2"></i><br /><br />评价成功！'
+                                    ,btn: '确定'
+                                    ,yes: function(index) {
+                                        window.location.reload();
+                                    }
+                                });
+                            }else {
+                                layer.open({
+                                    content: '<i class="ico ico-right2"></i><br /><br />评价失败!'
+                                    ,btn: '确定'
+                                });
+                            }
                         }
                     });
-                }else {
-                    layer.open({
-                        content: '<i class="ico ico-right2"></i><br /><br />确认失败'
-                        ,btn: '确定'
-                    });
+
                 }
-            }
+            });
+
+            return false;
+        })
+
+        $('body').on('touchstart', '.star i', function(e) {
+            var idx = $(this).index();
+            $(this).parent().find('i').each(function(i) {
+                if (idx >= i) {
+                    $(this).addClass('on');
+                } else {
+                    $(this).removeClass('on');
+                }
+            }).parent().next().val(1 + $(this).index());
+
+            e.preventDefault();
         });
-        return false;
+
+
+        $('body').on('touchstart', '.layui-m-layershade', function(e) {
+            e.preventDefault();
+        })
     })
 
-
 </script>
+
 </body>
 </html>

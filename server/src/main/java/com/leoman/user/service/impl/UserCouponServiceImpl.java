@@ -7,6 +7,8 @@ import com.leoman.user.service.UserCouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  *
  * Created by 史龙 on 2016/9/14.
@@ -17,4 +19,8 @@ public class UserCouponServiceImpl extends GenericManagerImpl<UserCoupon,UserCou
     @Autowired
     private UserCouponDao userCouponDao;
 
+    @Override
+    public List<UserCoupon> findList(Long userId, Long couponId) {
+        return userCouponDao.findList(userId,couponId);
+    }
 }

@@ -20,13 +20,11 @@
     <div class="title">订单详情</div>
 </header>
 
-<div class="share-guide"></div>
-
 <section class="wrap order-box">
     <div class="box-info">
         <div class="hd">
-            <em>进行中</em>
-            <span>如有问题可与客服联系</span>
+            <em class="state5">已取消</em>
+            <span>已使用${myCoupon.name}</span>
         </div>
         <div class="detail">
             <div class="fromto">
@@ -49,15 +47,6 @@
                     <span>${v.bus.carNo}</span>
                     <i>|</i>
                 </c:forEach>
-            </div>
-            <div class="button">
-                <c:if test="${CarRental.isRewrite ne 1 && CarRental.startDate >= toDayDate}">
-                    <a onclick="rewrite(${CarRental.id},1)" class="ubtn ubtn-ghost" >我要改期</a>
-                </c:if>
-
-                <a onclick="rewrite(${CarRental.id},2)" class="ubtn ubtn-blue">我要退订</a>
-                <p><a href="#" class="blue">退改规则</a></p>
-                <span>（出行前如有车辆变更会有系统提示）</span>
             </div>
         </div>
         <dl>
@@ -111,8 +100,8 @@
             <dt>报价详情：</dt>
             <dd class="extra">
                 <div class="price">
-                    <em id="priceTotal">&yen; ${CarRental.income}</em>
-                    <input type="hidden" value="${CarRental.income}" id="price">
+                    <em id="priceTotal">&yen; <fmt:formatNumber value="${CarRental.income}" type="currency" pattern=".0"/></em>
+                    <input type="hidden" value="<fmt:formatNumber value="${CarRental.income}" type="currency" pattern=".0"/>" id="price">
                 </div>
                 <div class="cost">
                     <c:forEach var="v" items="${carRentalOffer}">
@@ -155,56 +144,20 @@
             </dd>
         </dl>
         <input type="hidden" id="id" value="${CarRental.id}">
+
         <div class="ft"></div>
-        <div class="state state4"></div>
+        <div class="state state5"></div>
     </div>
 
     <div class="button">
         <a href="${contextPath}/wechat-html/oldFile/disclaimer.html">免责申明</a>
-        <a id="submit" class="ubtn ubtn-blue">确认完成</a>
+        <span class="ubtn ubtn-gray">已取消（退款 &yen; ${CarRental.refund}）</span>
     </div>
 </section>
 
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
-
-
 <script>
-    var price = $("#price").val();
-
-    function rewrite(id,type){
-        window.location.href = "${contextPath}/wechat/order/rewrite?id="+id + "&type="+type + "&val=" + price;
-    }
-
-    $('#submit').on('click', function() {
-        var id = $("#id").val();
-        $.ajax({
-            "url": "${contextPath}/wechat/order/complete/save",
-            "data": {
-                id : id
-            },
-            "dataType": "json",
-            "type": "POST",
-            success: function (result) {
-                if (result.status==0) {
-                    layer.open({
-                        content: '<i class="ico ico-right2"></i><br /><br />确认订单已完成'
-                        ,btn: '确定'
-                        ,yes: function(index, layero){
-                            window.location.href = "${contextPath}/wechat/order/myOrder/index";
-                        }
-                    });
-                }else {
-                    layer.open({
-                        content: '<i class="ico ico-right2"></i><br /><br />确认失败'
-                        ,btn: '确定'
-                    });
-                }
-            }
-        });
-        return false;
-    })
-
 
 </script>
 </body>

@@ -164,6 +164,7 @@
                 </div>
             </dd>
         </dl>
+        <input type="hidden" id="id" value="${CarRental.id}">
 
         <div class="ft"></div>
         <div class="state state2"></div>
@@ -225,12 +226,43 @@
 
     function pay (){
         var text = $("#coupons .hd").text();
+        var couponId = 0;
         $("#coupons .bd div").each(function(){
             if($(this).text() == text){
                 //获取优惠券的ID 使用后改变状态
-                console.log($(this).find("input").val())
+                couponId = $(this).find("input").val();
             }
         });
+
+        var id = $("#id").val();
+        var price = $("#priceTotal2").text();
+        $.ajax({
+            "url": "${contextPath}/wechat/order/pay/save",
+            "data": {
+                id:id,
+                price:price,
+                couponId : couponId
+            },
+            "dataType": "json",
+            "type": "POST",
+            success: function (result) {
+                if (result.status==0) {
+                    layer.open({
+                        content: '<i class="ico ico-right2"></i><br /><br />确认付款'
+                        ,btn: '确定'
+                        ,yes: function(index, layero){
+                            window.location.href = "${contextPath}/wechat/order/myOrder/index";
+                        }
+                    });
+                }else {
+                    layer.open({
+                        content: '<i class="ico ico-right2"></i><br /><br />付款失败'
+                        ,btn: '确定'
+                    });
+                }
+            }
+        });
+        return false;
     }
 </script>
 

@@ -12,8 +12,8 @@ import java.util.List;
  */
 public interface CouponDao extends IBaseJpaRepository<Coupon>{
 
-    //有效期以内的
-    @Query("SELECT a FROM Coupon a WHERE a.validDateFrom <= ?1 AND a.validDateTo >= ?1 AND a.id IN (SELECT b.couponId FROM UserCoupon b WHERE b.userId=?2)")
+    //有效期以内未使用的的
+    @Query("SELECT a FROM Coupon a WHERE a.validDateFrom <= ?1 AND a.validDateTo >= ?1 AND a.id IN (SELECT b.couponId FROM UserCoupon b WHERE b.userId=?2 AND b.isUse='1')")
     public List<Coupon> findList(Long data,Long userId);
 
     //租车订单所用的优惠券

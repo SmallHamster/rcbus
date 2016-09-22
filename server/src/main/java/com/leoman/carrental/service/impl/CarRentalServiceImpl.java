@@ -1,7 +1,9 @@
 package com.leoman.carrental.service.impl;
 
+import com.leoman.bus.entity.RouteOrder;
 import com.leoman.bus.service.BusService;
 import com.leoman.bus.service.CarTypeService;
+import com.leoman.bus.service.RouteOrderService;
 import com.leoman.bussend.entity.BusSend;
 import com.leoman.bussend.service.BusSendService;
 import com.leoman.carrental.dao.CarRentalDao;
@@ -52,6 +54,8 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
     private CarTypeService carTypeService;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private RouteOrderService routeOrderService;
 
 
     @Override
@@ -328,27 +332,53 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
 
     @Override
     @Transactional
-    public void del(String ids) {
-        Long[] ss = JsonUtil.json2Obj(ids,Long[].class);
-        for (Long _id : ss) {
-            //删除租单
-            CarRental carRental = queryByPK(_id);
-            delete(carRental);
-            //删除订单
-            Order order = carRental.getOrder();
-            orderService.delete(order);
-            if(order.getStatus()!=0){
-                //删除价钱
-                List<CarRentalOffer> carRentalOfferList = carRentalOfferService.queryByProperty("rentalId",carRental.getId());
-                for(CarRentalOffer carRentalOffer : carRentalOfferList){
-                    carRentalOfferService.delete(carRentalOffer);
-                }
-                //删除租车
-                List<BusSend> busSendLis = busSendService.findBus(carRental.getId(),1);
-                for(BusSend busSend : busSendLis){
-                    busSendService.delete(busSend);
-                }
+    public void del(String ro_ids,String cr_ids) {
+        if(StringUtils.isBlank(ro_ids) && StringUtils.isBlank(cr_ids)){
+            return;
+        }
+
+        //删除班车订单
+        if(StringUtils.isNotBlank(ro_ids)){
+            Long[] ro_ss = JsonUtil.json2Obj(ro_ids,Long[].class);
+            for (Long _id : ro_ss) {
+                //删除班车订单
+                RouteOrder routeOrder = routeOrderService.queryByPK(_id);
+                Order order = routeOrder.getOrder();
+                orderService.delete(order);
+
+                routeOrderService.delete(routeOrder);
             }
         }
+
+        //删除租车订单
+        if(StringUtils.isNotBlank(cr_ids)){
+            Long[] cr_ss = JsonUtil.json2Obj(cr_ids,Long[].class);
+            for (Long _id : cr_ss) {
+                //删除租单
+                CarRental carRental = queryByPK(_id);
+                Long carRentalId = carRental.getId();
+                //删除订单
+                Order order = carRental.getOrder();
+
+                if(order.getStatus()!=0){
+                    //删除订单价钱
+                    List<CarRentalOffer> carRentalOfferList = carRentalOfferService.queryByProperty("rentalId",_id);
+                    for(CarRentalOffer carRentalOffer : carRentalOfferList){
+                        carRentalOfferService.delete(carRentalOffer);
+                    }
+                    //删除订单车辆
+                    List<BusSend> busSendLis = busSendService.findBus(_id,2);
+                    for(BusSend busSend : busSendLis){
+                        busSendService.delete(busSend);
+                    }
+                }
+                carRental.setBusSends(null);
+                carRental.setCarRentalOffers(null);
+                delete(carRental);
+                orderService.delete(order);
+
+            }
+        }
+
     }
 }

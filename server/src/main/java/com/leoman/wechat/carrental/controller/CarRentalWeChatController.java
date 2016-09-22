@@ -11,6 +11,7 @@ import com.leoman.common.controller.common.CommonController;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.system.banner.service.BannerService;
+import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -60,12 +61,14 @@ public class CarRentalWeChatController extends GenericEntityController<CarRental
      */
     @RequestMapping(value = "/add")
     public String line(Long carTypeId,HttpServletRequest request,Model model,Integer index,String city,Long id) throws ParseException {
+        UserInfo userInfo = new CommonController().getSessionUser(request);
         HttpSession session = request.getSession();
         CarRentalVo carRentalVo = new CarRentalVo();
         if(index == 1){
             if(carTypeId != null){
                 carRentalVo.setCarTypeId(carTypeId);
             }
+            carRentalVo.setMobile(userInfo.getMobile());
             session.setAttribute("carRentalVo",carRentalVo);
         }else if(index == 2) {
             carRentalVo = (CarRentalVo) session.getAttribute("carRentalVo");

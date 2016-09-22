@@ -20,11 +20,38 @@
     <div class="title">我的订单</div>
 </header>
 
-
 <section class="wrap">
     <div class="ui-list3">
         <ul>
-            <c:forEach items="${CarRentalList}" var="cr" >
+            <c:forEach items="${routeOrderList}" var="ro" >
+                <li class="c1">
+                    <a onclick="carRoute(${ro.id})">
+                        <div class="cat">通勤班车</div>
+                        <div class="state state1">待发车</div>
+                        <div class="inner">
+                            <div class="date"><date:date format='yyyy年MM月dd日' value='${ro.order.createDate}'></date:date></div>
+                            <div class="fromto">
+                                <em>${ro.startStation}</em>
+                                <i></i>
+                                <em>${ro.endStation}</em>
+                            </div>
+                            <div class="detail">
+                                <c:forEach items="${ro.route.busSends}" var="bs" begin="0" end="0">
+                                    <span>${bs.bus.modelNo}</span>
+                                    <span>发车时间：${ro.departTime}</span>
+                                    <span>车牌：${bs.bus.carNo}</span>
+                                    <span>保险单号：${bs.bus.policyNo}</span>
+                                </c:forEach>
+                            </div>
+                        </div>
+                        <div class="check">
+                            <input type="checkbox" class="rdo2" name="ro_id" value="${ro.id}">
+                        </div>
+                    </a>
+                </li>
+            </c:forEach>
+
+            <c:forEach items="${carRentalList}" var="cr" >
                 <c:if test="${cr.order.status ne 3 && cr.order.status ne 4}">
                     <li class="c2">
                         <a onclick="carRental(${cr.id},${cr.order.status})">
@@ -50,7 +77,7 @@
                                 </div>
                             </div>
                             <div class="check">
-                                <input type="checkbox" class="rdo2" value="${cr.id}">
+                                <input type="checkbox" class="rdo2" name="cr_id" value="${cr.id}">
                             </div>
                         </a>
                     </li>
@@ -63,7 +90,7 @@
     </div>
 </section>
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
-
+<script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
 <script>
     $(function() {
         var sX = 0;    // 手指初始x坐标
@@ -83,7 +110,7 @@
         });
 
         $('.ui-list3').on('touchmove', 'li', function(e){
-            if($(this).find(".state4").length==1){
+            if($(this).find(".state4").length>=1 || $(this).find(".state1").length>=1){
                 return;
             }
             disX = e.changedTouches[0].pageX - sX;
@@ -115,21 +142,32 @@
     });
 
     function carRental(id,status){
-        window.location.href = "${contextPath}/wechat/order/detail?id=" + id +"&status=" + status;
+        window.location.href = "${contextPath}/wechat/order/myOrder/detail?id=" + id +"&status=" + status;
+    }
+
+    function carRoute(id){
+        window.location.href = "${contextPath}/wechat/order/myRoute/detail?id=" + id +"&status=" + 0;
     }
 
     function del(){
-        var ids = [];
+        var ro_ids = [];
+        var cr_ids = [];
 
-        $(".rdo2:checked").each(function (){
+        $("input[name=ro_id]:checked").each(function (){
             var id = $(this).val();
-            ids.push(id);
+            ro_ids.push(id);
+        });
+
+        $("input[name=cr_id]:checked").each(function (){
+            var id = $(this).val();
+            cr_ids.push(id);
         });
 
         $.ajax({
             "url": "${contextPath}/wechat/order/del",
             "data": {
-                ids:JSON.stringify(ids)
+                ro_ids:JSON.stringify(ro_ids),
+                cr_ids:JSON.stringify(cr_ids)
             },
             "dataType": "json",
             "type": "POST",
@@ -139,14 +177,14 @@
                         content: '<i class="ico ico-right2"></i><br /><br />删除成功'
                         ,btn: '确定'
                         ,yes: function(index, layero){
-                            window.location.href = "${contextPath}/wechat/order/myOrder/index";
+                            window.location.reload();
                         }
                     });
                 }else {
                     layer.open({
                         content: '<i class="ico ico-right2"></i><br /><br />删除失败'
                         ,btn: '确定'
-                    });;
+                    });
                 }
             }
         });
