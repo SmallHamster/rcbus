@@ -9,6 +9,8 @@ import com.leoman.bus.service.impl.RouteServiceImpl;
 import com.leoman.bus.util.GpxUtil;
 import com.leoman.bussend.entity.BusSend;
 import com.leoman.bussend.service.BusSendService;
+import com.leoman.carrental.entity.Commuting;
+import com.leoman.carrental.service.CommutingService;
 import com.leoman.common.controller.common.CommonController;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
@@ -19,6 +21,7 @@ import com.leoman.entity.Constant;
 import com.leoman.system.banner.entity.Banner;
 import com.leoman.system.banner.service.BannerService;
 import com.leoman.user.entity.UserInfo;
+import com.leoman.utils.JsonUtil;
 import com.leoman.utils.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -61,6 +64,9 @@ public class RouteWeChatController extends CommonController {
 
     @Autowired
     private RouteCollectionService routeCollectionService;
+
+    @Autowired
+    private CommutingService commutingService;
 
     /**
      * 班车路线页面
@@ -163,24 +169,29 @@ public class RouteWeChatController extends CommonController {
             if(bus != null){
                 Double curLat = bus.getCurLat();//当前纬度
                 Double curLng = bus.getCurLng();//当前经度
-                Map map = new HashMap();
-                Double minDistance = 0d;
-                for (int i=0; i < stationList.size(); i++) {
-                    Double rsLat = stationList.get(i).getLat();
-                    Double rsLng = stationList.get(i).getLng();
-                    if(rsLat != null && rsLng != null){
-                        Double distance = GpxUtil.getDistance(curLng,curLat,rsLng,rsLat);
-                        if(i==0){
-                            minDistance = distance;
-                        }else{
-                            minDistance = minDistance>distance?distance:minDistance;
+                if(curLat != null && curLng != null){
+                    Map map = new HashMap();
+                    Double minDistance = 0d;
+                    for (int i=0; i < stationList.size(); i++) {
+                        Double rsLat = stationList.get(i).getLat();
+                        Double rsLng = stationList.get(i).getLng();
+                        if(rsLat != null && rsLng != null){
+                            Double distance = GpxUtil.getDistance(curLng,curLat,rsLng,rsLat);
+                            if(i==0){
+                                minDistance = distance;
+                            }else{
+                                minDistance = minDistance>distance?distance:minDistance;
+                            }
+                            map.put(distance,stationList.get(i).getId());
                         }
-                        map.put(distance,stationList.get(i).getId());
+                    }
+                    //如果最短距离小于2km，则算作在某个站，否则不在任何站
+                    if(minDistance <= 20000){
+                        Long stationId = (Long) map.get(minDistance);
+                        bus.setStationId(stationId);
+                        busService.save(bus);
                     }
                 }
-                Long stationId = (Long) map.get(minDistance);
-                bus.setStationId(stationId);
-                busService.save(bus);
             }
         }
     }
@@ -263,6 +274,59 @@ public class RouteWeChatController extends CommonController {
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();
+        }
+        return Result.success();
+    }
+
+    /**
+     * 跳转至百度地图页面
+     * @param model
+     * @param routeId
+     * @return
+     */
+    @RequestMapping(value = "/toPosition")
+    public String toPosition(Model model,Long routeId) {
+        List<BusSend> bsList = busSendService.findBus(routeId,1);//1--表示班车
+        model.addAttribute("bsList", JsonUtil.obj2Json(bsList));
+        model.addAttribute("routeId",routeId);
+        return "wechat/bus_position";
+    }
+
+    @RequestMapping(value = "/findBus", method = RequestMethod.POST)
+    @ResponseBody
+    public Result findBus(HttpServletRequest request,
+                           HttpServletResponse response,
+                           Long routeId) {
+        try {
+            List<BusSend> bsList = busSendService.findBus(routeId,1);//1--表示班车
+            WebUtil.printJson(response,new Result().success(createMap("bsList", bsList)));
+        } catch (Exception e) {
+            e.printStackTrace();
+            Result.failure();
+        }
+        return Result.success();
+    }
+
+    /**
+     * 跳转至个人通勤申请页面
+     * @param model
+     * @return
+     */
+    @RequestMapping(value = "/toCommuting")
+    public String toCommuting(Model model) {
+        return "wechat/commuting_apply";
+    }
+
+    @RequestMapping(value = "/saveCommuting", method = RequestMethod.POST)
+    @ResponseBody
+    public Result saveCommuting(HttpServletRequest request,
+                                HttpServletResponse response,
+                                Commuting commuting) {
+        try {
+            commutingService.save(commuting);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure();
         }
         return Result.success();
     }

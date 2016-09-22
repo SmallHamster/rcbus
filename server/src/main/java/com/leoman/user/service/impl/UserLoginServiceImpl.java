@@ -43,4 +43,9 @@ public class UserLoginServiceImpl extends GenericManagerImpl<UserLogin, UserLogi
         return user;
     }
 
+    @Override
+    public UserLogin findByUsername(String username) {
+        return userLoginDao.findByUsername(username);
+    }
+
 }

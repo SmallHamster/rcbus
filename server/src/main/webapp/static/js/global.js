@@ -24,7 +24,6 @@ $(function () {
 
 })
 
-
 var $leoman = {
     v: {
         ajaxOption: {method: 'POST', dataType: 'json', async: true},
@@ -390,3 +389,10 @@ $(document).on('click', '.notifyjs-foo-base .yes', function () {
     };
 })(jQuery);
 
+//弹出提示消息
+function alertMsg(msg){
+    layer.open({
+        content: msg
+        ,btn: '确定'
+    });
+}

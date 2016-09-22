@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>注册-江城巴士</title>
+    <title>忘记密码-江城巴士</title>
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="${contextPath}/wechat-html/favicon.ico">
@@ -17,12 +17,12 @@
 <body class="bg-reg">
 
 <header>
-    <div class="title">注册</div>
+    <div class="title">忘记密码</div>
 </header>
 
 <section class="wrap reg-box">
     <form id="formId" action="">
-        <input type="hidden" name="type" value="register">
+        <input type="hidden" name="type" value="findPwd">
         <div class="form">
             <div class="item">
                 <label class="for">手机号</label>
@@ -37,9 +37,6 @@
                 <span class="btn-wrap"><button type="button" class="btn-code" id="getcode">获取验证码</button></span>
             </div>
 
-            <div class="item">
-                <label><input type="checkbox" checked class="cbx">我已阅读并同意江城巴士的<a href="javascript:;" onclick="toAgree()" class="agreement" target="_blank">服务条款</a></label>
-            </div>
         </div>
 
         <div class="button">
@@ -80,18 +77,9 @@
             $code.focus();
             return false;
         }
-        function checkCbx(){
-            $cbx = $("input[type=checkbox]");
-            if(!$cbx.is(':checked')){
-                alert("请勾选同意服务条款");
-            }else {
-                return true;
-            }
-            $cbx.focus();
-            return false;
-        }
+
         function checkIpt() {
-            if (checkMobile() && checkCode() && checkCbx()) {
+            if (checkMobile() && checkCode() ) {
                 return true;
             }
             return false;
@@ -105,7 +93,7 @@
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            location.href = "${contextPath}/wechat/register2??type=findPwd&mobile="+$("#mobile").val();
+                            location.href = "${contextPath}/wechat/register2?type=findPwd&mobile="+$("#mobile").val();
                         }else {
                             alert(result.msg);
                         }
@@ -136,33 +124,13 @@
                 if (self.delay) {
                     return;
                 }
-                $.post("${contextPath}/wechat/sms/code",{'mobile':$("#mobile").val(),'type':'register'},function(res){
+                $.post("${contextPath}/wechat/sms/code",{'mobile':$("#mobile").val(),'type':'findPwd'},function(res){
                     if(res.status == 0){
                         self.lock(time);
                     }else{
                         alertMsg(res.msg);
                     }
                 })
-                /*$.ajax({
-                    url: "${contextPath}/wechat/sms/code",
-                    // dataType: 'json',
-                    data: 'mobile=' + $mobile.val(),
-                    // type: 'post',
-                    success: function(data) {
-                        data = {
-                            status: 'success'
-                        }
-                        if (data.status === 'success') {
-                            self.lock(time);
-                            alertMsg(data.message);
-                        }else{
-                            alertMsg(data.message);
-                        }
-                    },
-                    error: function() {
-                        alertMsg('网络连接超时，请您稍后重试!');
-                    }
-                })*/
             },
             lock: function(time) {
                 var self = this;
@@ -189,9 +157,6 @@
         })
     });
 
-    function toAgree(){
-        location.href = "${contextPath}/wechat/agreement";
-    }
 
 </script>
 

@@ -87,5 +87,7 @@
 <script src="${contextPath}/static/html/js/iCheck/jquery.icheck.js"></script>
 <script src="${contextPath}/static/html/js/icheck-init.js"></script>
 
+<script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
+
 
 

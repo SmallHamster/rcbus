@@ -51,7 +51,7 @@
         <div class="floor">
             <div class="item">
                 <img src="${contextPath}/wechat-html/images/f/6.png" alt="">
-                <a href="#">个人通勤</a>
+                <a href="javascript:;" onclick="toCommuting()">个人通勤</a>
                 <i></i>
             </div>
             <div class="item">
@@ -64,7 +64,7 @@
         <div class="floor">
             <div class="item">
                 <img src="${contextPath}/wechat-html/images/f/7.png" alt="">
-                <a href="modify_password.html">修改密码</a>
+                <a href="javascript:;" onclick="toUpdPwd()">修改密码</a>
                 <i></i>
             </div>
             <div class="item">
@@ -101,6 +101,16 @@
     $("#myTrip").on("click",function(){
         window.location.href = "${contextPath}/wechat/order/myTrip/index";
     })
+
+    //个人通勤
+    function toCommuting(){
+        location.href = "${contextPath}/wechat/route/toCommuting";
+    }
+
+    //修改密码
+    function toUpdPwd(){
+        location.href = "${contextPath}/wechat/toUpdPwd";
+    }
 
 
 </script>

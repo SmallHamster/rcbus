@@ -35,7 +35,7 @@
 
     <div class="hd">
         <span><img src="${contextPath}/wechat-html/images/road.png" />发车线路</span>
-        <em>实时线路</em>
+        <em onclick="toPosition()">实时线路</em>
     </div>
     <div class="location">
         <ul id="line">
@@ -92,6 +92,7 @@
     })
 
     var sidArr = [];//所有车辆当前站点id数组
+    var carNoArr = [];//所有车辆车牌号数组
 
     //初始化班车，路线，时间
     function initOther(){
@@ -109,6 +110,7 @@
                 template.find(".detail .col").eq(0).find("span").text(bsList[i].bus.brand);
                 template.find(".detail .col").eq(1).find("span").text(bsList[i].bus.modelNo);
                 sidArr.push(bsList[i].bus.stationId);
+                carNoArr.push(bsList[i].bus.carNo);
                 template.show();
                 $(".slide ul").append(template);
             }
@@ -147,7 +149,7 @@
             }
             var nav = ['<div class="nav">'];
             for (var i = 0 ; i < length; i++) {
-                nav.push( i === 0 ? '<i cursid="'+sidArr[i]+'" class="current"></i>' : '<i cursid="'+sidArr[i]+'"></i>');
+                nav.push( i === 0 ? '<i cursid="'+sidArr[i]+'" cno="'+carNoArr[i]+'" class="current"></i>' : '<i cursid="'+sidArr[i]+'" cno="'+carNoArr[i]+'"></i>');
             }
             nav.push('</div>');
             $self.append(nav.join(''));
@@ -180,8 +182,14 @@
         $("#line li[sid='"+cursid+"']").addClass("current");
     }
 
+    //跳转至订单页
     function toOrder(){
-        location.href = "${contextPath}/wechat/route/toOrder?routeId="+"${routeId}";
+        location.href = "${contextPath}/wechat/route/toOrder?routeId=${routeId}";
+    }
+
+    function toPosition(){
+        location.href = "http://221.234.42.20:89/Interface/findPosition.action?carNum=鄂ALB229";
+        location.href = "${contextPath}/wechat/route/toPosition?routeId=${routeId}";
     }
 
 </script>

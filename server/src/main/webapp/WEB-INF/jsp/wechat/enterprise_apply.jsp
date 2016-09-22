@@ -61,8 +61,8 @@
     </form>
 </section>
 
-<%@ include file="../inc/new2/foot.jsp" %>
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
+<%@ include file="../inc/new2/foot.jsp" %>
 <script>
     $enApply = {
         v: {
@@ -75,28 +75,29 @@
 
                 $("input[notnull]").each(function(){
                     if($(this).val() == ''){
-                        alert($(this).attr("notnull"));
+                        alertMsg($(this).attr("notnull"));
                         flag = false;
                         return false;
                     }
                 });
 
-                var regPhone = /^1([3578]\d|4[57])\d{8}$/;
-                if(!regPhone.test( $("[name=mobile]").val() )){
-                    alert("请输入正确的手机号");
-                    flag = false;
-                }
-
                 if(flag){
+
+                    var regPhone = /^1([3578]\d|4[57])\d{8}$/;
+                    if(!regPhone.test( $("[name=mobile]").val() )){
+                        alertMsg("请输入正确的手机号");
+                        flag = false;
+                    }
+
                     $("#formId").ajaxSubmit({
                         url : "${contextPath}/wechat/enterprise/apply/save",
                         type : "POST",
                         success : function(result) {
                             if(result.status == 0) {
-                                alert("保存成功");
+                                alertMsg("申请成功");
                                 $("#formId input,#formId textarea").val("");
                             }else {
-                                alert("保存失败");
+                                alertMsg("申请失败");
                             }
                         }
                     });

@@ -464,6 +464,7 @@
                     $("#confirm").modal("hide");
                     $("#myModal").modal("hide");
                     $route.v.dTable.ajax.reload();
+                    $("#operTableId").val("dataTables");
                 });
 
             },

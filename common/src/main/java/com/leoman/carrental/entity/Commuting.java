@@ -36,20 +36,22 @@ public class Commuting extends BaseEntity{
 
     //出发时间
     @Column(name = "start_date")
-    private Long startDate;
+    private String startDate;
 
     //到达时间
     @Column(name = "end_date")
-    private Long endDate;
+    private String endDate;
 
     //返程时间
     @Column(name = "return_date")
-    private Long returnDate;
+    private String returnDate;
 
     //0: 每天 1:工作日 2:周末
     @Column(name = "status")
     private Integer status;
 
+    @Column(name = "remark")
+    private String remark;
 
     public String getUserName() {
         return userName;
@@ -91,27 +93,27 @@ public class Commuting extends BaseEntity{
         this.endPoint = endPoint;
     }
 
-    public Long getStartDate() {
+    public String getStartDate() {
         return startDate;
     }
 
-    public void setStartDate(Long startDate) {
+    public void setStartDate(String startDate) {
         this.startDate = startDate;
     }
 
-    public Long getEndDate() {
+    public String getEndDate() {
         return endDate;
     }
 
-    public void setEndDate(Long endDate) {
+    public void setEndDate(String endDate) {
         this.endDate = endDate;
     }
 
-    public Long getReturnDate() {
+    public String getReturnDate() {
         return returnDate;
     }
 
-    public void setReturnDate(Long returnDate) {
+    public void setReturnDate(String returnDate) {
         this.returnDate = returnDate;
     }
 
@@ -121,5 +123,13 @@ public class Commuting extends BaseEntity{
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getRemark() {
+        return remark;
+    }
+
+    public void setRemark(String remark) {
+        this.remark = remark;
     }
 }

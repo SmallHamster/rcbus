@@ -10,4 +10,6 @@ import com.leoman.user.entity.UserLogin;
 public interface UserLoginService extends GenericManager<UserLogin>{
 
     public UserInfo login(String username, String password);
+
+    public UserLogin findByUsername(String username);
 }

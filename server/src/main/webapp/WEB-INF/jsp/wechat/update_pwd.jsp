@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>设置密码-江城巴士</title>
+    <title>修改密码-江城巴士</title>
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="${contextPath}/wechat-html/favicon.ico">
@@ -17,31 +17,32 @@
 <body class="bg-reg">
 
 <header>
-    <div class="title">设置密码</div>
+    <div class="title">修改密码</div>
 </header>
 
-<section class="wrap reg-box">
-    <div class="form form-extal">
-
-        <form id="formId">
-            <input type="hidden" name="mobile" value="${mobile}">
-            <input type="hidden" name="type" value="${type}">
+<section class="wrap ui-form">
+    <form id="formId">
+        <div class="form">
             <div class="item">
-                <input type="password" class="ipt" value="" name="password" id="oldpwd" placeholder="请输入登录密码" />
+                <input type="password" class="ipt ipt-row" id="oldpwd" name="oldPwd" value="" placeholder="请输入登录密码" />
                 <span class="error"></span>
             </div>
 
             <div class="item">
-                <input type="password" class="ipt" name="" id="newpwd" placeholder="请输入确认密码" />
+                <input type="password" class="ipt ipt-row" id="newpwd" name="newPwd" value="" placeholder="请输入新密码" />
                 <span class="error"></span>
             </div>
 
-            <div class="button">
-                <button type="button" class="ubtn ubtn-blue" id="submit">确定</button>
+            <div class="item">
+                <input type="password" class="ipt ipt-row" id="reppwd" value="" placeholder="请确认新密码" />
+                <span class="error"></span>
             </div>
-        </form>
+        </div>
 
-    </div>
+        <div class="button">
+            <button type="button" class="ubtn ubtn-blue" id="submit">确认</button>
+        </div>
+    </form>
 </section>
 
 
@@ -50,7 +51,8 @@
 <script>
     $(function() {
         var $oldpwd = $('#oldpwd'),
-                $newpwd = $('#newpwd');
+                $newpwd = $('#newpwd'),
+                $reppwd = $('#reppwd');
 
         function checkOldpwd() {
             var val = $oldpwd.val();
@@ -66,7 +68,7 @@
         function checkNewpwd() {
             var val = $newpwd.val();
             if (!val) {
-                $newpwd.next().html('请输入确认密码').show();
+                $newpwd.next().html('请输入新密码').show();
             } else {
                 $newpwd.next().html('').hide();
                 return true;
@@ -74,8 +76,21 @@
             $newpwd.focus();
             return false;
         }
+        function checkReppwd() {
+            var val = $reppwd.val();
+            if (!val) {
+                $reppwd.next().html('请输入确认密码').show();
+            } else if (val !== $newpwd.val()) {
+                $reppwd.next().html('两次密码不一致').show();
+            } else {
+                $reppwd.next().html('').hide();
+                return true;
+            }
+            $reppwd.focus();
+            return false;
+        }
         function checkIpt() {
-            if (checkOldpwd() && checkNewpwd()) {
+            if (checkOldpwd() && checkNewpwd() && checkReppwd()) {
                 return true;
             }
             return false;
@@ -85,16 +100,19 @@
             var flag = checkIpt();
             if(flag){
                 $("#formId").ajaxSubmit({
-                    url : "${contextPath}/wechat/register",
+                    url : "${contextPath}/wechat/updatePwd",
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            location.href = "${contextPath}/wechat/index";
+                            alertMsg("修改成功");
+                            location.href = "${contextPath}/wechat/login";
                         }else {
-                            alert(result.msg);
+                            alertMsg(result.msg);
                         }
                     }
                 });
+            }else{
+                return flag;
             }
         });
 
