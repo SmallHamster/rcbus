@@ -64,7 +64,7 @@ public class EnterpriseServiceImpl extends GenericManagerImpl<Enterprise,Enterpr
                 UserInfo userInfo = new UserInfo();
                 userInfo.setUserId(admin.getId());
                 userInfo.setMobile(admin.getMobile());
-                userInfo.setPassword(admin.getPassword());
+//                userInfo.setPassword(admin.getPassword());
                 userInfo.setEnterprise(admin.getEnterprise());
                 //企业管理
                 userInfo.setType(0);

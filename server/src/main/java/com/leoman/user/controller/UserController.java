@@ -110,8 +110,14 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Result save(UserInfo userInfo, Long id, @RequestParam(value = "enterpriseId",required = false) Long enterpriseId) {
-        return userService.save(userInfo,id,enterpriseId);
+    public Result save(UserInfo userInfo, Long id, @RequestParam(value = "enterpriseId",required = false) Long enterpriseId, @RequestParam(value = "password",required = false) String password) {
+        try{
+            userService.save(userInfo,id,enterpriseId,password);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.failure();
+        }
+        return Result.success();
     }
 
     /**

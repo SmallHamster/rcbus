@@ -344,9 +344,9 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
                 //删除班车订单
                 RouteOrder routeOrder = routeOrderService.queryByPK(_id);
                 Order order = routeOrder.getOrder();
+                routeOrderService.delete(routeOrder);
                 orderService.delete(order);
 
-                routeOrderService.delete(routeOrder);
             }
         }
 

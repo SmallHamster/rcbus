@@ -55,28 +55,23 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
     }
 
     @Override
-    @Transient
-    public Result save(UserInfo userInfo, Long id, Long enterpriseId) {
+    @Transactional
+    public void save(UserInfo userInfo, Long id, Long enterpriseId , String password) {
         Enterprise enterprise = enterpriseService.queryByPK(enterpriseId);
         UserLogin userLogin  = new UserLogin();
-        try {
-            //新增一条用户登录
-            userLogin.setUsername(userInfo.getMobile());
-            userLogin.setPassword(MD5Util.MD5Encode(userInfo.getPassword(),"UTF-8"));
-            userLoginService.save(userLogin);
+        //新增一条用户登录
+        userLogin.setUsername(userInfo.getMobile());
+        userLogin.setPassword(MD5Util.MD5Encode(password,"UTF-8"));
+        userLoginService.save(userLogin);
 
-            //新增一条企业会员
-            userInfo.setEnterprise(enterprise);
-            userInfo.setUserId(userLogin.getId());
-            userInfo.setPassword(MD5Util.MD5Encode(userInfo.getPassword(),"UTF-8"));
-            userInfo.setType(1);
-            save(userInfo);
+        //新增一条企业会员
+        userInfo.setEnterprise(enterprise);
+        userInfo.setUserId(userLogin.getId());
+//            userInfo.setPassword(MD5Util.MD5Encode(userInfo.getPassword(),"UTF-8"));
+        userInfo.setType(1);
+        save(userInfo);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-            Result.failure();
-        }
-        return Result.success();
+
     }
 
     @Override
@@ -132,7 +127,7 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
                 //新建一条用户信息 存号码 固定密码 员工身份
                 userInfo = new UserInfo();
                 userInfo.setMobile(userExportVo.getMobile());
-                userInfo.setPassword(MD5Util.MD5Encode("888888","UTF-8"));
+//                userInfo.setPassword(MD5Util.MD5Encode("888888","UTF-8"));
                 userInfo.setType(1);
 
                 //判断账号是否存在
@@ -188,7 +183,7 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
 
         UserInfo userInfo = new UserInfo();
         userInfo.setMobile(mobile);
-        userInfo.setPassword(password);
+//        userInfo.setPassword(password);
         userInfo.setUserId(userLogin.getId());
         userInfo.setType(2);//普通会员
         userInfoDao.save(userInfo);

@@ -16,7 +16,7 @@ public interface UserService extends GenericManager<UserInfo> {
 
     public UserInfo findByMobile(String mobile);
 
-    public Result save(UserInfo userInfo, Long id, Long enterpriseId);
+    public void save(UserInfo userInfo, Long id, Long enterpriseId,String password);
 
     public Integer del(Long id,String ids);
 

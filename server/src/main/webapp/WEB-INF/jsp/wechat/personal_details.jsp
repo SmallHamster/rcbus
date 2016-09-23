@@ -23,7 +23,7 @@
 <section class="wrap user-box">
     <div class="info">
         <div class="inner">
-            <img src="images/f/avatar.png" alt="">
+            <img src="${contextPath}/wechat-html/images/f/avatar.png" alt="">
             <em><a href="#">点击修改</a></em>
             <em>186****0989</em>
         </div>
@@ -56,7 +56,7 @@
             </div>
             <div class="item">
                 <img src="${contextPath}/wechat-html/images/f/11.png" alt="">
-                <a href="coupons_list.html">我的礼券</a>
+                <a id="myCoupon" >我的礼券</a>
                 <i></i>
             </div>
         </div>
@@ -94,13 +94,20 @@
 
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script>
+    $("#myOrder").off();
     $("#myOrder").on("click",function(){
         window.location.href = "${contextPath}/wechat/order/myOrder/index";
     });
 
+    $("#myTrip").off();
     $("#myTrip").on("click",function(){
         window.location.href = "${contextPath}/wechat/order/myTrip/index";
-    })
+    });
+
+    $("#myCoupon").off();
+    $("#myCoupon").on("click",function(){
+        window.location.href = "${contextPath}/wechat/coupon/index";
+    });
 
     //个人通勤
     function toCommuting(){

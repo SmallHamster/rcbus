@@ -108,13 +108,13 @@ public class AdminServiceImpl extends GenericManagerImpl<Admin, AdminDao> implem
                 if(!userInfos.isEmpty() && userInfos.size()>0){
                     UserInfo _userInfo = userInfos.get(0);
                     _userInfo.setMobile(admin.getMobile());
-                    _userInfo.setPassword(admin.getPassword());
+//                    _userInfo.setPassword(admin.getPassword());
                     _userInfo.setEnterprise(admin.getEnterprise());
                     userService.save(_userInfo);
                 }else {
                     userInfo.setUserId(admin.getId());
                     userInfo.setMobile(admin.getMobile());
-                    userInfo.setPassword(admin.getPassword());
+//                    userInfo.setPassword(admin.getPassword());
                     userInfo.setEnterprise(admin.getEnterprise());
                     userInfo.setType(0);
                     userService.save(userInfo);

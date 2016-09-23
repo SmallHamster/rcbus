@@ -19,8 +19,8 @@ public class UserInfo extends BaseEntity {
     @Column(name = "mobile")
     private String mobile;
 
-    @Column(name = "password")
-    private String password;
+//    @Column(name = "password")
+//    private String password;
 
     @ManyToOne
     @JoinColumn(name = "enterprise_id")
@@ -44,14 +44,6 @@ public class UserInfo extends BaseEntity {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
     }
 
     public Enterprise getEnterprise() {
