@@ -11,9 +11,4 @@ import java.util.List;
  */
 public interface CouponService extends GenericManager<Coupon>{
 
-//    //有效期
-//    public List<Coupon> findList(Long userId);
-//
-//    public Coupon findOne(Long userId,Long orderId);
-
 }

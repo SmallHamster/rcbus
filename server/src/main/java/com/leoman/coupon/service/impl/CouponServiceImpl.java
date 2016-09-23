@@ -18,15 +18,4 @@ public class CouponServiceImpl extends GenericManagerImpl<Coupon,CouponDao> impl
 
     @Autowired
     private CouponDao couponDao;
-
-//    @Override
-//    public List<Coupon> findList(Long userId) {
-////        return couponDao.findList(System.currentTimeMillis(),userId);
-//        return null;
-//    }
-//
-//    @Override
-//    public Coupon findOne(Long userId, Long orderId) {
-//        return couponDao.findOne(userId,orderId);
-//    }
 }
