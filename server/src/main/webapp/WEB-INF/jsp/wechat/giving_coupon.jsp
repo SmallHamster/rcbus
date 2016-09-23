@@ -28,16 +28,27 @@
 
 
     <div class="coupons-list">
+        <input type="hidden" id="id" value="${userCoupon.id}">
         <ul>
+            <c:if test="${userCoupon.coupon.couponWay eq 1}">
             <li class="c1">
+            </c:if>
+            <c:if test="${userCoupon.coupon.couponWay eq 2}">
+            <li class="c2">
+            </c:if>
                 <div class="hd">
-                    <em>6.8</em>
+                    <em>${fn:substring(userCoupon.coupon.name ,0,fn:length(userCoupon.coupon.name)-4)}</em>
                     <sub>折</sub>
                 </div>
                 <div class="bd">
-                    <h4>折扣券</h4>
-                    <p>限15座以下车型使用</p>
-                    <p>有效期至2016-09-09</p>
+                    <h4>${fn:substring(userCoupon.coupon.name ,fn:length(userCoupon.coupon.name)-3,fn:length(userCoupon.coupon.name))}</h4>
+                    <c:if test="${userCoupon.coupon.isLimit eq 0}">
+                        <p>无限制</p>
+                    </c:if>
+                    <c:if test="${userCoupon.coupon.isLimit eq 1}">
+                        <p>限${userCoupon.coupon.limitMoney}元以上使用</p>
+                    </c:if>
+                    <p style="font-size: 10px">有效期<date:date value="${userCoupon.coupon.validDateFrom}" format="yyyy-MM-dd HH:ss" ></date:date> 至<date:date value="${userCoupon.coupon.validDateTo}" format="yyyy-MM-dd HH:ss" ></date:date></p>
                 </div>
             </li>
         </ul>
@@ -84,8 +95,29 @@
                     } else if (!/^1[3-9]\d{9}$/.test(val)) {
                         alertMsg('手机号码格式错误', 3e3);
                     } else {
-                        layer.close(index);
+                        var id = $("#id").val();
+                        $.ajax({
+                            "url": "${contextPath}/wechat/coupon/givingSave",
+                            "data": {
+                                id:id,
+                                mobile:val
+                            },
+                            "dataType": "json",
+                            "type": "POST",
+                            success: function (result) {
+                                if (result==1) {
+                                    layer.close(index);
+                                    window.location.href = "${contextPath}/wechat/coupon/index";
+                                    alertMsg('转赠完成', 3e3);
+                                }else if (result==2){
+                                    alertMsg('手机号不存在', 3e3);
+                                }else{
+                                    alertMsg('转赠失败', 3e3);
+                                }
+                            }
+                        });
                     }
+
                 }
             });
         });

@@ -12,4 +12,8 @@ import java.util.List;
 public interface UserCouponService extends GenericManager<UserCoupon> {
 
     public List<UserCoupon> findList(Long userId, Long couponId);
+
+    public List<UserCoupon> findList(Long userId);
+
+    public UserCoupon findOne(Long userId, Long orderId);
 }

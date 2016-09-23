@@ -91,60 +91,60 @@
                     <div class="bd">
 
                         <div class="option" data-value="0" data-operator="-">请选择优惠券</div>
-                        <c:forEach items="${coupon}" var="v">
+                        <c:forEach items="${userCoupon}" var="v">
 
                             <%-- 折扣 --%>
-                            <c:if test="${v.couponWay eq 1}">
+                            <c:if test="${v.coupon.couponWay eq 1}">
                                 <%-- 有限制金额的 --%>
-                                <c:if test="${v.isLimit eq 1 && CarRental.totalAmount >= v.limitMoney}">
+                                <c:if test="${v.coupon.isLimit eq 1 && CarRental.totalAmount >= v.coupon.limitMoney}">
                                     <%-- 最高立减金额不为空 --%>
-                                    <c:if test="${v.discountTopMoney ne null}">
+                                    <c:if test="${v.coupon.discountTopMoney ne null}">
                                         <%-- 减免金额小于最高金额 --%>
-                                        <c:if test="${CarRental.totalAmount * (1-v.discountPercent) <= v.discountTopMoney}">
-                                            <div class="option" data-value="${v.discountPercent}" data-operator="*">${v.name}<input type="hidden" name="couponId" value="${v.id}"/></div>
+                                        <c:if test="${CarRental.totalAmount * (1-v.coupon.discountPercent) <= v.coupon.discountTopMoney}">
+                                            <div class="option" data-value="${v.coupon.discountPercent}" data-operator="*">${v.coupon.name}<input type="hidden" name="couponId" value="${v.coupon.id}"/></div>
                                         </c:if>
                                         <%-- 减免金额大于最高金额 --%>
-                                        <c:if test="${CarRental.totalAmount * (1-v.discountPercent) > v.discountTopMoney}">
-                                            <div class="option" data-value="${v.discountTopMoney}" data-operator="-">${v.name}(最多减免${v.discountTopMoney})<input type="hidden" name="couponId" value="${v.id}"/></div>
+                                        <c:if test="${CarRental.totalAmount * (1-v.coupon.discountPercent) > v.coupon.discountTopMoney}">
+                                            <div class="option" data-value="${v.coupon.discountTopMoney}" data-operator="-">${v.coupon.name}(最多减免${v.coupon.discountTopMoney})<input type="hidden" name="couponId" value="${v.coupon.id}"/></div>
                                         </c:if>
                                     </c:if>
 
                                     <%-- 最高立减金额为空 --%>
-                                    <c:if test="${v.discountTopMoney eq null}">
-                                        <div class="option" data-value="${v.discountPercent}" data-operator="*">${v.name}<input type="hidden" name="couponId" value="${v.id}"/></div>
+                                    <c:if test="${v.coupon.discountTopMoney eq null}">
+                                        <div class="option" data-value="${v.coupon.discountPercent}" data-operator="*">${v.coupon.name}<input type="hidden" name="couponId" value="${v.coupon.id}"/></div>
                                     </c:if>
                                 </c:if>
 
                                 <%-- 没限制金额的 --%>
-                                <c:if test="${v.isLimit eq 0}">
+                                <c:if test="${v.coupon.isLimit eq 0}">
                                     <%-- 最高立减金额不为空 --%>
-                                    <c:if test="${v.discountTopMoney ne null}">
+                                    <c:if test="${v.coupon.discountTopMoney ne null}">
                                         <%-- 减免金额小于最高金额 --%>
-                                        <c:if test="${CarRental.totalAmount * (1-v.discountPercent) <= v.discountTopMoney}">
-                                            <div class="option" data-value="${v.discountPercent}" data-operator="*">${v.name}<input type="hidden" name="couponId" value="${v.id}"/></div>
+                                        <c:if test="${CarRental.totalAmount * (1-v.coupon.discountPercent) <= v.coupon.discountTopMoney}">
+                                            <div class="option" data-value="${v.coupon.discountPercent}" data-operator="*">${v.coupon.name}<input type="hidden" name="couponId" value="${v.coupon.id}"/></div>
                                         </c:if>
                                         <%-- 减免金额大于最高金额 --%>
-                                        <c:if test="${CarRental.totalAmount * (1-v.discountPercent) > v.discountTopMoney}">
-                                            <div class="option" data-value="${v.discountTopMoney}" data-operator="-">${v.name}(最多减免${v.discountTopMoney})<input type="hidden" name="couponId" value="${v.id}"/></div>
+                                        <c:if test="${CarRental.totalAmount * (1-v.coupon.discountPercent) > v.coupon.discountTopMoney}">
+                                            <div class="option" data-value="${v.coupon.discountTopMoney}" data-operator="-">${v.coupon.name}(最多减免${v.coupon.discountTopMoney})<input type="hidden" name="couponId" value="${v.coupon.id}"/></div>
                                         </c:if>
                                     </c:if>
 
                                     <%-- 最高立减金额为空 --%>
-                                    <c:if test="${v.discountTopMoney eq null}">
-                                        <div class="option" data-value="${v.discountPercent}" data-operator="*">${v.name}<input type="hidden" name="couponId" value="${v.id}"/></div>
+                                    <c:if test="${v.coupon.discountTopMoney eq null}">
+                                        <div class="option" data-value="${v.coupon.discountPercent}" data-operator="*">${v.coupon.name}<input type="hidden" name="couponId" value="${v.coupon.id}"/></div>
                                     </c:if>
                                 </c:if>
                             </c:if>
 
                             <%-- 减免金额 --%>
-                            <c:if test="${v.couponWay eq 2}">
+                            <c:if test="${v.coupon.couponWay eq 2}">
                                 <%-- 有限制金额的 --%>
-                                <c:if test="${v.isLimit eq 1 && CarRental.totalAmount >= v.limitMoney}">
-                                    <div class="option" data-value="${v.reduceMoney}" data-operator="-">${v.name}<input type="hidden" name="couponId" value="${v.id}"/></div>
+                                <c:if test="${v.coupon.isLimit eq 1 && CarRental.totalAmount >= v.coupon.limitMoney}">
+                                    <div class="option" data-value="${v.coupon.reduceMoney}" data-operator="-">${v.coupon.name}<input type="hidden" name="couponId" value="${v.coupon.id}"/></div>
                                 </c:if>
                                 <%-- 没限制金额的 --%>
-                                <c:if test="${v.isLimit eq 0}">
-                                    <div class="option" data-value="${v.reduceMoney}" data-operator="-">${v.name}<input type="hidden" name="couponId" value="${v.id}"/></div>
+                                <c:if test="${v.coupon.isLimit eq 0}">
+                                    <div class="option" data-value="${v.coupon.reduceMoney}" data-operator="-">${v.coupon.name}<input type="hidden" name="couponId" value="${v.coupon.id}"/></div>
                                 </c:if>
                             </c:if>
                         </c:forEach>

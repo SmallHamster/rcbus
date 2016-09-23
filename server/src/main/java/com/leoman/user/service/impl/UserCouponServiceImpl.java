@@ -21,6 +21,17 @@ public class UserCouponServiceImpl extends GenericManagerImpl<UserCoupon,UserCou
 
     @Override
     public List<UserCoupon> findList(Long userId, Long couponId) {
+
         return userCouponDao.findList(userId,couponId);
+    }
+
+    @Override
+    public List<UserCoupon> findList(Long userId) {
+        return userCouponDao.findList(userId);
+    }
+
+    @Override
+    public UserCoupon findOne(Long userId, Long orderId) {
+        return userCouponDao.findOne(userId,orderId);
     }
 }

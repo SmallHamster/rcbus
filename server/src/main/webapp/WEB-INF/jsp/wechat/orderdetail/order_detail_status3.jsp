@@ -111,33 +111,33 @@
                         </div>
                     </c:forEach>
                     <div class="item blue" id="couponsUsed">
-                        <span>${myCoupon.name}</span>
-                        <c:if test="${myCoupon.couponWay eq 1}">
+                        <span>${myCoupon.coupon.name}</span>
+                        <c:if test="${myCoupon.coupon.couponWay eq 1}">
                             <%-- 最高立减金额不为空 --%>
-                            <c:if test="${myCoupon.discountTopMoney ne null}">
+                            <c:if test="${myCoupon.coupon.discountTopMoney ne null}">
                                 <%-- 减免金额小于最高金额 --%>
-                                <c:if test="${CarRental.totalAmount * (1-myCoupon.discountPercent) <= myCoupon.discountTopMoney}">
-                                    <em>- &yen; ${CarRental.totalAmount * (1-myCoupon.discountPercent)}</em>
-                                    <input type="hidden" value="${CarRental.totalAmount * (1-myCoupon.discountPercent)}" id="discount">
+                                <c:if test="${CarRental.totalAmount * (1-myCoupon.coupon.discountPercent) <= myCoupon.coupon.discountTopMoney}">
+                                    <em>- &yen; ${CarRental.totalAmount * (1-myCoupon.coupon.discountPercent)}</em>
+                                    <input type="hidden" value="${CarRental.totalAmount * (1-myCoupon.coupon.discountPercent)}" id="discount">
                                 </c:if>
                                 <%-- 减免金额大于最高金额 --%>
-                                <c:if test="${CarRental.totalAmount * (1-myCoupon.discountPercent) > myCoupon.discountTopMoney}">
-                                    <em>- &yen; ${myCoupon.discountTopMoney}</em>
-                                    <input type="hidden" value=" ${myCoupon.discountTopMoney}" id="discount">
+                                <c:if test="${CarRental.totalAmount * (1-myCoupon.coupon.discountPercent) > myCoupon.coupon.discountTopMoney}">
+                                    <em>- &yen; ${myCoupon.coupon.discountTopMoney}</em>
+                                    <input type="hidden" value=" ${myCoupon.coupon.discountTopMoney}" id="discount">
                                 </c:if>
                             </c:if>
 
                             <%-- 最高立减金额为空 --%>
-                            <c:if test="${myCoupon.discountTopMoney eq null}">
-                                <em>- &yen; ${myCoupon.discountPercent}</em>
-                                <input type="hidden" value="${myCoupon.discountPercent}" id="discount">
+                            <c:if test="${myCoupon.coupon.discountTopMoney eq null}">
+                                <em>- &yen; ${myCoupon.coupon.discountPercent}</em>
+                                <input type="hidden" value="${myCoupon.coupon.discountPercent}" id="discount">
                             </c:if>
 
                         </c:if>
 
-                        <c:if test="${myCoupon.couponWay eq 2}">
-                            <em>- &yen; ${myCoupon.reduceMoney}</em>
-                            <input type="hidden" value="${myCoupon.reduceMoney}" id="discount">
+                        <c:if test="${myCoupon.coupon.couponWay eq 2}">
+                            <em>- &yen; ${myCoupon.coupon.reduceMoney}</em>
+                            <input type="hidden" value="${myCoupon.coupon.reduceMoney}" id="discount">
                         </c:if>
                     </div>
                 </div>

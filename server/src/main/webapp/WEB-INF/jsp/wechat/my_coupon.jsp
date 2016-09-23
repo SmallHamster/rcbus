@@ -27,18 +27,18 @@
             <c:forEach var="cw1" items="${couponWay1}">
                 <li class="c1" onclick="giving(${cw1.id})">
                     <div class="hd">
-                        <em>${fn:substring(cw1.name ,0,fn:length(cw1.name)-4)}</em>
+                        <em>${fn:substring(cw1.coupon.name ,0,fn:length(cw1.coupon.name)-4)}</em>
                         <sub>折</sub>
                     </div>
                     <div class="bd">
-                        <h4>${fn:substring(cw1.name ,fn:length(cw1.name)-3,fn:length(cw1.name))}</h4>
-                        <c:if test="${cw1.isLimit eq 0}">
+                        <h4>${fn:substring(cw1.coupon.name ,fn:length(cw1.coupon.name)-3,fn:length(cw1.coupon.name))}</h4>
+                        <c:if test="${cw1.coupon.isLimit eq 0}">
                             <p>无限制</p>
                         </c:if>
-                        <c:if test="${cw1.isLimit eq 1}">
-                            <p>限${cw1.limitMoney}元以上使用</p>
+                        <c:if test="${cw1.coupon.isLimit eq 1}">
+                            <p>限${cw1.coupon.limitMoney}元以上使用</p>
                         </c:if>
-                        <p style="font-size: 10px">有效期<date:date value="${cw1.validDateFrom}" format="yyyy-MM-dd HH:ss" ></date:date> 至<date:date value="${cw1.validDateTo}" format="yyyy-MM-dd HH:ss" ></date:date></p>
+                        <p style="font-size: 10px">有效期<date:date value="${cw1.coupon.validDateFrom}" format="yyyy-MM-dd HH:ss" ></date:date> 至<date:date value="${cw1.coupon.validDateTo}" format="yyyy-MM-dd HH:ss" ></date:date></p>
                     </div>
                 </li>
             </c:forEach>
@@ -46,18 +46,18 @@
             <c:forEach var="cw2" items="${couponWay2}">
                 <li class="c2" onclick="giving(${cw2.id})">
                     <div class="hd">
-                        <em>${fn:substring(cw2.name ,0,fn:length(cw2.name)-4)}</em>
+                        <em>${fn:substring(cw2.coupon.name ,0,fn:length(cw2.coupon.name)-4)}</em>
                         <sub>折</sub>
                     </div>
                     <div class="bd">
-                        <h4>${fn:substring(cw2.name ,fn:length(cw2.name)-3,fn:length(cw2.name))}</h4>
-                        <c:if test="${cw2.isLimit eq 0}">
+                        <h4>${fn:substring(cw2.coupon.name ,fn:length(cw2.coupon.name)-3,fn:length(cw2.coupon.name))}</h4>
+                        <c:if test="${cw2.coupon.isLimit eq 0}">
                             <p>无限制</p>
                         </c:if>
-                        <c:if test="${cw2.isLimit eq 1}">
-                            <p>限${cw2.limitMoney}元以上使用</p>
+                        <c:if test="${cw2.coupon.isLimit eq 1}">
+                            <p>限${cw2.coupon.limitMoney}元以上使用</p>
                         </c:if>
-                        <p style="font-size: 10px">有效期<date:date value="${cw2.validDateFrom}" format="yyyy-MM-dd HH:ss" ></date:date> 至<date:date value="${cw2.validDateTo}" format="yyyy-MM-dd HH:ss" ></date:date></p>
+                        <p style="font-size: 10px">有效期<date:date value="${cw2.coupon.validDateFrom}" format="yyyy-MM-dd HH:ss" ></date:date> 至<date:date value="${cw2.coupon.validDateTo}" format="yyyy-MM-dd HH:ss" ></date:date></p>
                     </div>
                 </li>
             </c:forEach>
@@ -67,7 +67,9 @@
 </section>
 
 <script>
-
+    function giving(id){
+        window.location.href = "${contextPath}/wechat/coupon/giving?id="+id;
+    }
 
 </script>
 

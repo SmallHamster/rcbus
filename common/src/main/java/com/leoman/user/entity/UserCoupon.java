@@ -1,10 +1,9 @@
 package com.leoman.user.entity;
 
+import com.leoman.coupon.entity.Coupon;
 import com.leoman.entity.BaseEntity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * 用户拥有的优惠券
@@ -19,8 +18,9 @@ public class UserCoupon extends BaseEntity{
     private Long userId;
 
     //优惠券
-    @Column(name = "coupon_id")
-    private Long couponId;
+    @ManyToOne
+    @JoinColumn(name= "coupon_id")
+    private Coupon coupon;
 
     //是否使用 1:没使用 2:已使用
     @Column(name = "is_use")
@@ -55,11 +55,11 @@ public class UserCoupon extends BaseEntity{
         this.userId = userId;
     }
 
-    public Long getCouponId() {
-        return couponId;
+    public Coupon getCoupon() {
+        return coupon;
     }
 
-    public void setCouponId(Long couponId) {
-        this.couponId = couponId;
+    public void setCoupon(Coupon coupon) {
+        this.coupon = coupon;
     }
 }

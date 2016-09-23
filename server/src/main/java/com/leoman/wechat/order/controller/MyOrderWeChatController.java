@@ -118,15 +118,26 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
     @RequestMapping(value = "/myOrder/detail")
     public String myOrderDetail(Model model,Long id,Integer status,HttpServletRequest request) throws ParseException {
         CarRental carRental = new CarRental();
+        UserInfo userInfo = new CommonController().getSessionUser(request);
         if(id!=null){
             carRental = carRentalService.queryByPK(id);
             model.addAttribute("CarRental",carRental);
             //分类收费
             model.addAttribute("carRentalOffer",carRentalOfferService.queryByProperty("rentalId",id));
             //优惠券
-            model.addAttribute("coupon",couponService.findList(new CommonController().getSessionUser(request).getId()));
+            List<UserCoupon> userCoupons = userCouponService.findList(userInfo.getId());
+            List<UserCoupon> userCoupons1 = new ArrayList<>();
+            if(!userCoupons.isEmpty() && userCoupons.size()>0){
+                for(UserCoupon userCoupon : userCoupons){
+                    //有效期
+                    if(userCoupon.getCoupon().getValidDateFrom()<System.currentTimeMillis() && userCoupon.getCoupon().getValidDateTo()>System.currentTimeMillis()){
+                        userCoupons1.add(userCoupon);
+                    }
+                }
+            }
+            model.addAttribute("userCoupon",userCoupons1);
             //用户使用的优惠券
-            model.addAttribute("myCoupon",couponService.findOne((new CommonController().getSessionUser(request).getId()),id));
+            model.addAttribute("myCoupon",userCouponService.findOne(userInfo.getId(),id));
             //用户的租车
             model.addAttribute("busSend",busSendService.findBus(id,2));
 

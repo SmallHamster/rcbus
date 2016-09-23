@@ -184,14 +184,14 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
             if(id!=null && coupon!=null){
                 UserCoupon userCoupon = new UserCoupon();
                 userCoupon.setUserId(id);
-                userCoupon.setCouponId(coupon);
+                userCoupon.setCoupon(couponService.queryByPK(coupon));
                 userCouponService.save(userCoupon);
             }else {
                 Long[] ss = JsonUtil.json2Obj(ids,Long[].class);
                 for (Long _id : ss) {
                     UserCoupon userCoupon = new UserCoupon();
                     userCoupon.setUserId(_id);
-                    userCoupon.setCouponId(coupon);
+                    userCoupon.setCoupon(couponService.queryByPK(coupon));
                     userCouponService.save(userCoupon);
                 }
             }
