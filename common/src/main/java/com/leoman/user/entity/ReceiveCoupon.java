@@ -3,11 +3,15 @@ package com.leoman.user.entity;
 import com.leoman.entity.BaseEntity;
 
 import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 /**
  * 用户优惠券领取表
  * Created by 史龙 on 2016/9/23.
  */
+@Entity
+@Table(name = "t_receive_coupon")
 public class ReceiveCoupon extends BaseEntity{
 
     @Column(name = "mobile")
