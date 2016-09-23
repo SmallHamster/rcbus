@@ -25,7 +25,7 @@
         <div class="inner">
             <img src="${contextPath}/wechat-html/images/f/avatar.png" alt="">
             <em><a href="#">点击修改</a></em>
-            <em>186****0989</em>
+            <em>${user.mobile}</em>
         </div>
     </div>
 

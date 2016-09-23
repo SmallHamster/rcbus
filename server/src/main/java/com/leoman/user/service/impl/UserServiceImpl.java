@@ -3,14 +3,20 @@ package com.leoman.user.service.impl;
 import com.leoman.common.controller.common.CommonController;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
+import com.leoman.coupon.entity.Coupon;
+import com.leoman.coupon.service.CouponService;
 import com.leoman.pay.util.MD5Util;
 import com.leoman.permissions.admin.service.AdminService;
 import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
 import com.leoman.user.dao.UserInfoDao;
+import com.leoman.user.entity.NotUserCoupon;
+import com.leoman.user.entity.UserCoupon;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.user.entity.UserLogin;
 import com.leoman.user.entity.vo.UserExportVo;
+import com.leoman.user.service.NotUserCouponService;
+import com.leoman.user.service.UserCouponService;
 import com.leoman.user.service.UserLoginService;
 import com.leoman.user.service.UserService;
 import com.leoman.utils.JsonUtil;
@@ -48,6 +54,13 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
     private AdminService adminService;
     @Autowired
     private EnterpriseService enterpriseService;
+    @Autowired
+    private CouponService couponService;
+    @Autowired
+    private UserCouponService userCouponService;
+    @Autowired
+    private NotUserCouponService notUserCouponService;
+
 
     @Override
     public UserInfo findByMobile(String mobile) {
@@ -183,10 +196,40 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
 
         UserInfo userInfo = new UserInfo();
         userInfo.setMobile(mobile);
-//        userInfo.setPassword(password);
         userInfo.setUserId(userLogin.getId());
         userInfo.setType(2);//普通会员
         userInfoDao.save(userInfo);
+
+        Coupon _c = new Coupon();
+        List<Coupon> coupons =  couponService.queryAll();
+        for(Coupon coupon : coupons){
+            //3-注册
+            if(coupon.getGainWay()==3){
+                _c = coupon;
+            }
+        }
+        //新增注册优惠券
+        UserCoupon userCoupon = new UserCoupon();
+        userCoupon.setCoupon(_c);
+        userCoupon.setUserId(userInfo.getId());
+        userCoupon.setIsUse(1);
+        userCouponService.save(userCoupon);
+
+        //非用户时领取了过优惠券
+        List<NotUserCoupon> notUserCoupons = notUserCouponService.queryByProperty("mobile",mobile);
+        if(!notUserCoupons.isEmpty() && notUserCoupons.size()>0){
+            for(NotUserCoupon notUserCoupon : notUserCoupons){
+                //新增之前领取的优惠券
+                userCoupon = new UserCoupon();
+                userCoupon.setUserId(userInfo.getId());
+                userCoupon.setCoupon(couponService.queryByPK(notUserCoupon.getCouponId()));
+                userCoupon.setIsUse(1);
+                userCouponService.save(userCoupon);
+            }
+
+        }
+
+
     }
 
 }

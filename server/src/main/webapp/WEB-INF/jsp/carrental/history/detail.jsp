@@ -73,13 +73,13 @@
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">安全驾驶</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="safeDriving" name="safeDriving" value="${carRental.order.driverService}" class="form-control" disabled/>
+                                        <input type="text" id="safeDriving" name="safeDriving" value="${carRental.order.safeDriving}" class="form-control" disabled/>
                                     </div>
                                 </div>
                                 <div class="form-group">
                                     <label class="col-sm-2 control-label">准时到达</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="arriveTime" name="arriveTime" value="${carRental.order.driverService}" class="form-control" disabled/>
+                                        <input type="text" id="arriveTime" name="arriveTime" value="${carRental.order.arriveTime}" class="form-control" disabled/>
                                     </div>
                                 </div>
                                 <header class="panel-heading">
