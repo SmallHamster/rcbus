@@ -64,7 +64,7 @@
                         <header class="panel-heading">
                             会员列表
                             <span class="tools pull-right">
-                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
+                               <button class="btn btn-default " type="button" id="c_refresh"><i class="fa fa-refresh"></i>刷新</button>
                             </span>
                         </header>
                         <div class="panel-body">
@@ -110,6 +110,11 @@
                 //清空
                 $("#c_clear").click(function () {
                     $(this).parents(".panel-body").find("input,select").val("");
+                });
+                //刷新
+                $("#c_refresh").click(function () {
+                    $("#c_clear").parents(".panel-body").find("input,select").val("");
+                    $carRental.v.dTable.ajax.reload();
                 });
                 //时间控件初始化
                 $('.form_datetime').datetimepicker({

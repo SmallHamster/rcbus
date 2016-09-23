@@ -51,7 +51,7 @@
                         <header class="panel-heading">
                             收入明细
                             <span class="tools pull-right">
-                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
+                               <button class="btn btn-default " type="button" id="c_refresh"><i class="fa fa-refresh"></i>刷新</button>
                             </span>
                         </header>
                         <div class="panel-body">
@@ -97,6 +97,11 @@
                 //清空
                 $("#c_clear").click(function () {
                     $(this).parents(".panel-body").find("input,select").val("");
+                });
+                //刷新
+                $("#c_refresh").click(function () {
+                    $("#c_clear").parents(".panel-body").find("input,select").val("");
+                    $carTravel.v.dTable.ajax.reload();
                 });
                 //时间控件初始化
                 $('.form_datetime').datetimepicker({
@@ -169,7 +174,7 @@
                         {
                             "data": "content",
                             "render": function (data, type, row, meta) {
-                                var content  = data;
+                                var content  = data !=null ? data : " ";
                                 var detail = "<button title='详细' class='btn btn-primary btn-circle add' onclick=\"$carTravel.fn.detail(\'" + content.trim() + "\')\">" +
                                         "<i class='fa fa-eye'></i> 详细</button>";
                                 return  detail ;

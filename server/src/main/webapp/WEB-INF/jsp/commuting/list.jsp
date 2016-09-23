@@ -51,7 +51,7 @@
                         <header class="panel-heading">
                             收入明细
                             <span class="tools pull-right">
-                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
+                               <button class="btn btn-default " type="button" id="c_refresh"><i class="fa fa-refresh"></i>刷新</button>
                             </span>
                         </header>
                         <div class="panel-body">
@@ -83,20 +83,25 @@
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
 <script>
-    $carTravel = {
+    $commuting = {
         v: {
             list: [],
             dTable: null
         },
         fn: {
             init: function () {
-                $carTravel.fn.dataTableInit();
+                $commuting.fn.dataTableInit();
                 $("#c_search").click(function () {
-                    $carTravel.v.dTable.ajax.reload();
+                    $commuting.v.dTable.ajax.reload();
                 });
                 //清空
                 $("#c_clear").click(function () {
                     $(this).parents(".panel-body").find("input,select").val("");
+                });
+                //刷新
+                $("#c_refresh").click(function () {
+                    $("#c_clear").parents(".panel-body").find("input,select").val("");
+                    $commuting.v.dTable.ajax.reload();
                 });
                 //时间控件初始化
                 $('.form_datetime').datetimepicker({
@@ -109,7 +114,7 @@
                 });
             },
             dataTableInit: function () {
-                $carTravel.v.dTable = $leoman.dataTable($('#dataTables'), {
+                $commuting.v.dTable = $leoman.dataTable($('#dataTables'), {
                     "processing": true,
                     "serverSide": true,
                     "searching": false,
@@ -148,31 +153,31 @@
                         },
                         {
                             "data": "startDate",
-                            "render": function (data) {
-                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
-                            },
+//                            "render": function (data) {
+//                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
+//                            },
                             "sDefaultContent" : ""
                         },
                         {
                             "data": "endDate",
-                            "render": function (data) {
-                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
-                            },
+//                            "render": function (data) {
+//                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
+//                            },
                             "sDefaultContent" : ""
                         },
                         {
                             "data": "returnDate",
-                            "render": function (data) {
-                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
-                            },
+//                            "render": function (data) {
+//                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
+//                            },
                             "sDefaultContent" : ""
                         },
                         {
                             "data": "status",
                             "render": function (data) {
-                                if(data = 0){
+                                if(data == 0){
                                     return "每天";
-                                }else if(data = 1){
+                                }else if(data == 1){
                                     return "工作日";
                                 }else{
                                     return "周末";
@@ -194,9 +199,9 @@
             responseComplete: function (result, action) {
                 if (result.status == "0") {
                     if (action) {
-                        $carTravel.v.dTable.ajax.reload(null, false);
+                        $commuting.v.dTable.ajax.reload(null, false);
                     } else {
-                        $carTravel.v.dTable.ajax.reload();
+                        $commuting.v.dTable.ajax.reload();
                     }
                     $leoman.notify(result.msg, "success");
                 } else {
@@ -206,7 +211,7 @@
         }
     }
     $(function () {
-        $carTravel.fn.init();
+        $commuting.fn.init();
     })
 </script>
 </body>

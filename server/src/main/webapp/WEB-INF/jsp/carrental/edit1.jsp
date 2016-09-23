@@ -59,6 +59,7 @@
                             <input type="hidden" id="rwType" value="${carRental.rentalWay}">
                             <input type="hidden" id="isInvoice" value="${carRental.isInvoice}">
                             <input type="hidden" id="city" value="${carRental.city.id}">
+                            <input type="hidden" id="carType" value="${carRental.carType.id}">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
                                 <input id="id" name="id" type="hidden" value="${carRental.id}">
                                 <header class="panel-heading">
@@ -287,6 +288,17 @@
                             console.log($(this));
                             $(this).attr("selected",true)
                             $("#cityId").parent().find("button").find("span").eq(0).text($(this).text())
+                        }
+                    })
+                }
+
+                var carType = $("#carType").val();
+                if(carType!=null && carType!=""){
+                    console.log(carType);
+                    $("#carTypeId option").each(function(){
+                        if($(this).val() == carType){
+                            console.log($(this));
+                            $(this).attr("selected",true);
                         }
                     })
                 }

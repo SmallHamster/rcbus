@@ -126,7 +126,7 @@
                             }
                         },
                         {
-                            "data": "userInfo.mobile",
+                            "data": "mobile",
                             "sDefaultContent" : ""
                         },
                         {

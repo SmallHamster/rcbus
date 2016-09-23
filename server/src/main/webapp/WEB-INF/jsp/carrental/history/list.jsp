@@ -42,7 +42,7 @@
                             </div>
                             <div class="form-group col-sm-2">
                                 <button id="c_search" class="btn btn-info">搜索</button>
-                                <button id="c_clear" class="btn btn-info"><i class="fa fa-recycle"></i> 清空</button>
+                                <button id="c_clear" class="btn btn-info" ><i class="fa fa-recycle"></i> 清空</button>
                             </div>
                         </div>
                     </section>
@@ -54,7 +54,7 @@
                         <header class="panel-heading">
                             会员列表
                             <span class="tools pull-right">
-                               <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i>刷新</button>
+                               <button class="btn btn-default " type="button" id="c_refresh"><i class="fa fa-refresh"></i>刷新</button>
                             </span>
                         </header>
                         <div class="panel-body">
@@ -98,6 +98,11 @@
                 //清空
                 $("#c_clear").click(function () {
                     $(this).parents(".panel-body").find("input,select").val("");
+                });
+                //刷新
+                $("#c_refresh").click(function () {
+                    $("#c_clear").parents(".panel-body").find("input,select").val("");
+                    $carRental.v.dTable.ajax.reload();
                 });
                 //时间控件初始化
                 $('.form_datetime').datetimepicker({

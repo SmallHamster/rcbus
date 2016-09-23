@@ -17,6 +17,9 @@ public class Report extends BaseEntity{
     @JoinColumn(name = "user_id")
     private UserInfo userInfo;
 
+    @Column(name = "mobile")
+    private String mobile;
+
     @Column(name = "content")
     private String content;
 
@@ -34,5 +37,13 @@ public class Report extends BaseEntity{
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public String getMobile() {
+        return mobile;
+    }
+
+    public void setMobile(String mobile) {
+        this.mobile = mobile;
     }
 }

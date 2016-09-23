@@ -33,12 +33,12 @@
         <div class="floor">
             <div class="item">
                 <img src="${contextPath}/wechat-html/images/f/3.png" alt="">
-                <a id="myOrder">我的订单</a>
+                <a href="javascript:;" onclick="toMyOrder()">我的订单</a>
                 <i></i>
             </div>
             <div class="item">
                 <img src="${contextPath}/wechat-html/images/f/4.png" alt="">
-                <a id="myTrip">我的行程</a>
+                <a href="javascript:;" onclick="toMyTrip()">我的行程</a>
                 <i></i>
             </div>
             <div class="item">
@@ -56,7 +56,7 @@
             </div>
             <div class="item">
                 <img src="${contextPath}/wechat-html/images/f/11.png" alt="">
-                <a id="myCoupon" >我的礼券</a>
+                <a href="javascript:;" onclick="toMyCoupon()">我的礼券</a>
                 <i></i>
             </div>
         </div>
@@ -74,7 +74,7 @@
             </div>
             <div class="item">
                 <img src="${contextPath}/wechat-html/images/f/9.png" alt="">
-                <a href="#">反馈意见</a>
+                <a href="javascript:;" onclick="toReport()">反馈意见</a>
                 <i></i>
             </div>
             <div class="item">
@@ -94,20 +94,23 @@
 
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script>
-    $("#myOrder").off();
-    $("#myOrder").on("click",function(){
+
+    //我的订单
+    function toMyOrder(){
         window.location.href = "${contextPath}/wechat/order/myOrder/index";
-    });
-
-    $("#myTrip").off();
-    $("#myTrip").on("click",function(){
+    }
+    //我的行程
+    function toMyTrip(){
         window.location.href = "${contextPath}/wechat/order/myTrip/index";
-    });
-
-    $("#myCoupon").off();
-    $("#myCoupon").on("click",function(){
+    }
+    //我的优惠券
+    function toMyCoupon(){
         window.location.href = "${contextPath}/wechat/coupon/index";
-    });
+    }
+    //意见反馈
+    function toReport(){
+        window.location.href = "${contextPath}/wechat/report/index";
+    }
 
     //个人通勤
     function toCommuting(){
