@@ -64,6 +64,9 @@ public class Bus extends BaseEntity{
     @Transient
     private Long stationId;//当前站点id
 
+    @Transient
+    private String stationName;//当前站点名称
+
     public String getCarNo() {
         return carNo;
     }
@@ -196,5 +199,13 @@ public class Bus extends BaseEntity{
 
     public void setStationId(Long stationId) {
         this.stationId = stationId;
+    }
+
+    public String getStationName() {
+        return stationName;
+    }
+
+    public void setStationName(String stationName) {
+        this.stationName = stationName;
     }
 }

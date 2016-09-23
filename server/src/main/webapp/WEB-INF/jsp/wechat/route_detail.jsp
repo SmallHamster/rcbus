@@ -99,18 +99,18 @@
         $.post("${contextPath}/wechat/route/other",{'routeId':"${routeId}"},function(res){
 
             //班车
-            var bsList = res.data.object.map.bsList;
+            var busList = res.data.object.map.busList;
             $(".slide ul").empty();
-            for(var i=0; i<bsList.length;i++){
+            for(var i=0; i<busList.length;i++){
                 var template = $("#busTemplate").clone().removeAttr("id");
-                template.find(".avatar img").attr("src",bsList[i].bus.image==null?'':bsList[i].bus.image.path);
-                template.find(".avatar span").text(bsList[i].bus.carNo);
-                template.find(".detail span").eq(0).text(bsList[i].bus.driverName);
-                template.find(".detail span").eq(1).text(bsList[i].bus.driverPhone);
-                template.find(".detail .col").eq(0).find("span").text(bsList[i].bus.brand);
-                template.find(".detail .col").eq(1).find("span").text(bsList[i].bus.modelNo);
-                sidArr.push(bsList[i].bus.stationId);
-                carNoArr.push(bsList[i].bus.carNo);
+                template.find(".avatar img").attr("src",busList[i].image==null?'':busList[i].image.path);
+                template.find(".avatar span").text(busList[i].carNo);
+                template.find(".detail span").eq(0).text(busList[i].driverName);
+                template.find(".detail span").eq(1).text(busList[i].driverPhone);
+                template.find(".detail .col").eq(0).find("span").text(busList[i].brand);
+                template.find(".detail .col").eq(1).find("span").text(busList[i].modelNo);
+                sidArr.push(busList[i].stationId);
+                carNoArr.push(busList[i].carNo);
                 template.show();
                 $(".slide ul").append(template);
             }

@@ -4,6 +4,7 @@ import com.leoman.bus.dao.RouteStationDao;
 import com.leoman.bus.entity.Route;
 import com.leoman.bus.entity.RouteOrder;
 import com.leoman.bus.entity.RouteStation;
+import com.leoman.bus.entity.RouteTime;
 import com.leoman.bus.service.RouteOrderService;
 import com.leoman.bus.service.RouteService;
 import com.leoman.bus.service.RouteStationService;
@@ -79,6 +80,9 @@ public class RouteController extends GenericEntityController<Route, Route, Route
     @Autowired
     private RouteStationService routeStationService;
 
+    @Autowired
+    private RouteTimeService routeTimeService;
+
     /**
      * 列表页面
      */
@@ -127,10 +131,11 @@ public class RouteController extends GenericEntityController<Route, Route, Route
     public String add(Long id, Model model) {
         if (id != null) {
             Route route = routeService.queryByPK(id);
+            List<RouteTime> times = routeTimeService.findByRouteId(route.getId());
 
             //路线时间
             model.addAttribute("route", route);//路线
-            model.addAttribute("timeJson", JsonUtil.obj2Json(route.getTimes()));
+            model.addAttribute("timeJson", JsonUtil.obj2Json(times));
 
             //已派遣的班车ids
             String busIdsStr = "";

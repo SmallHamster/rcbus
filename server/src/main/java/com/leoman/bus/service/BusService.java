@@ -5,6 +5,8 @@ import com.leoman.bus.entity.Bus;
 import com.leoman.common.service.GenericManager;
 import org.springframework.data.domain.Page;
 
+import java.util.List;
+
 /**
  * 班车
  * Created by Daisy on 2016/9/6.
@@ -14,5 +16,7 @@ public interface BusService extends GenericManager<Bus> {
     public Page<Bus> page(Integer pageNum, Integer pageSize);
 
     public Bus findByUuid(String uuid);
+
+    public List<Bus> findBusOrderByDistance(Long routeId, Double userLat, Double userLng);
 
 }

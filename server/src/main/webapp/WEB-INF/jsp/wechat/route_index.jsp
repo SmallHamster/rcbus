@@ -32,6 +32,8 @@
     </div>
     <form action="" id="formId">
         <input type="hidden" name="type" value="${type}">
+        <input type="hidden" id="userLat" name="userLat" value="">
+        <input type="hidden" id="userLng" name="userLng" value="">
         <div class="search">
             <div class="item from">
                 <em>从</em>
@@ -85,7 +87,10 @@
 <%@ include file="../inc/new2/foot.jsp" %>
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat-html/js/app.js"></script>
+<script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
+
+
 
     $(function() {
         $('.slide').each(function() {
@@ -124,7 +129,8 @@
         });
 
         //初始化查询
-        search();
+        init();
+
     });
 
     function initFav(){
@@ -146,6 +152,21 @@
 
     }
 
+    function init(){
+        var geolocation = new BMap.Geolocation();
+        geolocation.getCurrentPosition(function(r){
+            if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                $("#userLat").val(r.point.lat);
+                $("#userLng").val(r.point.lng);
+                console.info('您的位置：'+r.point.lng+','+r.point.lat);
+            }
+            else {
+                console.info('failed'+this.getStatus());
+            }
+            search();
+        },{enableHighAccuracy: true});
+    }
+
     //查询
     function search(){
         $("#formId").ajaxSubmit({
@@ -165,6 +186,11 @@
                         if(list[i].isCollect == 1){
                             template.find(".fav").addClass("faved");//给已收藏的路线添加已收藏的样式
                         }
+                        template.find(".detail").find("span").eq(0).text((list[i].bus.modelNo==null)?'':(list[i].bus.modelNo));
+                        var times = list[i].times;
+                        template.find(".detail").find("span").eq(1).text("即将出发："+times[0].departTime);
+                        template.find(".detail").find("span").eq(2).text("车牌号："+list[i].bus.carNo);
+                        template.find(".bus").text(list[i].bus.stationName);//当前站点名称
                         template.show();
                         $(".ui-list ul").append(template);
                     }

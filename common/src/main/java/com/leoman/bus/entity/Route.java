@@ -43,6 +43,9 @@ public class Route extends BaseEntity{
     @Transient
     private Integer isCollect;//是否收藏（1-是，0-否）
 
+    @Transient
+    private Bus bus;//当前距离最近的车辆
+
     public String getStartStation() {
         return startStation;
     }
@@ -103,5 +106,13 @@ public class Route extends BaseEntity{
 
     public void setIsCollect(Integer isCollect) {
         this.isCollect = isCollect;
+    }
+
+    public Bus getBus() {
+        return bus;
+    }
+
+    public void setBus(Bus bus) {
+        this.bus = bus;
     }
 }
