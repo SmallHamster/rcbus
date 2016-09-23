@@ -390,9 +390,20 @@ $(document).on('click', '.notifyjs-foo-base .yes', function () {
 })(jQuery);
 
 //弹出提示消息
-function alertMsg(msg){
-    layer.open({
-        content: msg
-        ,btn: '确定'
-    });
+function alertMsg(msg,func){
+    if(func == '' || func == undefined){
+        layer.open({
+            content: msg
+            ,btn: '确定'
+        });
+    }else{
+        layer.open({
+            content: msg
+            ,btn: ['确定']
+            ,yes: function(index){
+                layer.close(index);
+                func();
+            }
+        });
+    }
 }

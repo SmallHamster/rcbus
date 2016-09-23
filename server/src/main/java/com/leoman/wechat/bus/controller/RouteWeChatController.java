@@ -1,9 +1,6 @@
 package com.leoman.wechat.bus.controller;
 
-import com.leoman.bus.entity.Bus;
-import com.leoman.bus.entity.Route;
-import com.leoman.bus.entity.RouteStation;
-import com.leoman.bus.entity.RouteTime;
+import com.leoman.bus.entity.*;
 import com.leoman.bus.service.*;
 import com.leoman.bus.service.impl.RouteServiceImpl;
 import com.leoman.bus.util.GpxUtil;
@@ -65,9 +62,6 @@ public class RouteWeChatController extends CommonController {
     @Autowired
     private RouteCollectionService routeCollectionService;
 
-    @Autowired
-    private CommutingService commutingService;
-
     /**
      * 班车路线页面
      */
@@ -103,9 +97,12 @@ public class RouteWeChatController extends CommonController {
             query.like("endStation",route.getEndStation());
             query.eq("enterprise.type",type);
 
-            UserInfo user = getSessionUser(request);
-            System.out.println("--------login user mobile--------"+user.getMobile());
             List<Route> list = routeService.queryAll(query);
+
+            UserInfo user = getSessionUser(request);
+            if(user != null){
+                handleRouteIsCollect(list, user.getId());
+            }
             WebUtil.printJson(response,new Result().success(createMap("list",list)));
         } catch (Exception e) {
             e.printStackTrace();
@@ -185,16 +182,18 @@ public class RouteWeChatController extends CommonController {
                             map.put(distance,stationList.get(i).getId());
                         }
                     }
+                    Long stationId = null;
                     //如果最短距离小于2km，则算作在某个站，否则不在任何站
                     if(minDistance <= 20000){
-                        Long stationId = (Long) map.get(minDistance);
-                        bus.setStationId(stationId);
-                        busService.save(bus);
+                        stationId = (Long) map.get(minDistance);
                     }
+                    bus.setStationId(stationId);
                 }
             }
         }
     }
+
+
 
     /**
      * 获取路线的所有班车时间
@@ -211,30 +210,6 @@ public class RouteWeChatController extends CommonController {
         try {
             List<RouteTime> timeList = routeTimeService.findByRouteId(routeId);
             WebUtil.printJson(response,new Result().success(createMap("timeList", timeList)));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Result.failure();
-        }
-        return Result.success();
-    }
-
-    /**
-     * 收藏
-     * @param request
-     * @param response
-     * @param routeId
-     * @param isCollect
-     * @return
-     */
-    @RequestMapping(value = "/collect")
-    @ResponseBody
-    public Result collect(HttpServletRequest request,
-                        HttpServletResponse response,
-                        Long routeId,
-                          Boolean isCollect) {
-        try {
-            UserInfo user = super.getSessionUser(request);
-            routeCollectionService.doCollect(routeId,user.getUserId(),isCollect);
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();
@@ -292,14 +267,26 @@ public class RouteWeChatController extends CommonController {
         return "wechat/bus_position";
     }
 
+    /**
+     * 位置页面获取路线和车辆当前位置
+     * @param request
+     * @param response
+     * @param routeId
+     * @return
+     */
     @RequestMapping(value = "/findBus", method = RequestMethod.POST)
     @ResponseBody
     public Result findBus(HttpServletRequest request,
                            HttpServletResponse response,
                            Long routeId) {
         try {
+            List<RouteStation> stationList = routeStationService.findByRouteId(routeId);
             List<BusSend> bsList = busSendService.findBus(routeId,1);//1--表示班车
-            WebUtil.printJson(response,new Result().success(createMap("bsList", bsList)));
+            Map map = new HashMap();
+            map.put("stationList",stationList);
+            map.put("bsList",bsList);
+
+            WebUtil.printJson(response,new Result().success(createMap("map", map)));
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();
@@ -307,28 +294,15 @@ public class RouteWeChatController extends CommonController {
         return Result.success();
     }
 
-    /**
-     * 跳转至个人通勤申请页面
-     * @param model
-     * @return
-     */
-    @RequestMapping(value = "/toCommuting")
-    public String toCommuting(Model model) {
-        return "wechat/commuting_apply";
-    }
-
-    @RequestMapping(value = "/saveCommuting", method = RequestMethod.POST)
-    @ResponseBody
-    public Result saveCommuting(HttpServletRequest request,
-                                HttpServletResponse response,
-                                Commuting commuting) {
-        try {
-            commutingService.save(commuting);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Result.failure();
+    private void handleRouteIsCollect(List<Route> routeList, Long userId){
+        for (Route route:routeList) {
+            RouteCollection rc = routeCollectionService.findOne(route.getId(),userId);
+            if(rc != null){
+                route.setIsCollect(1);
+            }else{
+                route.setIsCollect(0);
+            }
         }
-        return Result.success();
     }
 
 }

@@ -146,13 +146,14 @@
             }
 
             $("#formId").ajaxSubmit({
-                url : "${contextPath}/wechat/route/saveCommuting",
+                url : "${contextPath}/wechat/commuting/save",
                 type : "POST",
                 success : function(result) {
 
                     if(result.status == 0) {
-                        alertMsg("申请成功");
-                        $("#formId input,#formId textarea").val("");
+                        /*alertMsg("申请成功");
+                        $("#formId input,#formId textarea").val("");*/
+                        location.href = "${contextPath}/wechat/user/index";
                     }else {
                         alertMsg("申请失败");
                     }

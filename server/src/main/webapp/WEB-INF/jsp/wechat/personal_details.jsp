@@ -43,7 +43,7 @@
             </div>
             <div class="item">
                 <img src="${contextPath}/wechat-html/images/f/5.png" alt="">
-                <a href="fav.html">我的收藏</a>
+                <a href="javascript:;" onclick="toCollection()">我的收藏</a>
                 <i></i>
             </div>
         </div>
@@ -117,6 +117,11 @@
     //修改密码
     function toUpdPwd(){
         location.href = "${contextPath}/wechat/toUpdPwd";
+    }
+
+    //我的收藏
+    function toCollection(){
+        location.href = "${contextPath}/wechat/route/collect/index";
     }
 
 

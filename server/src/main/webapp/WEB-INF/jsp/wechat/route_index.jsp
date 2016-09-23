@@ -133,7 +133,7 @@
             $(this).toggleClass('faved');
             var isFaved = $(this).hasClass('faved');
             $.ajax({
-                url: "${contextPath}/wechat/route/collect",
+                url: "${contextPath}/wechat/route/collect/oper",
                 data: {'isCollect': isFaved,'routeId': $(this).attr("val")},
                 success: function(res) {
                     if(res.status != 0){
@@ -162,6 +162,9 @@
                         template.find("b").text(i+1);
                         template.find(".fromto").attr('onclick','toDetail('+list[i].id+')');
                         template.find(".fav").attr("val",list[i].id);
+                        if(list[i].isCollect == 1){
+                            template.find(".fav").addClass("faved");//给已收藏的路线添加已收藏的样式
+                        }
                         template.show();
                         $(".ui-list ul").append(template);
                     }

@@ -37,11 +37,25 @@
 <script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
 
+    var stationArr = [];
     var locArr = [];
 
     $.post("${contextPath}/wechat/route/findBus",{'routeId':"${routeId}"},function(res){
         if(res.status == 0){
-            var bsList = res.data.object.bsList;
+
+            //站点路线
+            var stationList = res.data.object.map.stationList;
+            for(var i=0; i<stationList.length; i++){
+                var station = {
+                    'name':stationList[i].stationName,
+                    'lat': stationList[i].lat,
+                    'lng': stationList[i].lng
+                };
+                stationArr.push(station);
+            }
+
+            //车辆位置
+            var bsList = res.data.object.map.bsList;
             for(var i=0; i<bsList.length;i++){
                 var loc = {
                     'lat':bsList[i].bus.curLat,
@@ -52,15 +66,33 @@
                 };
                 locArr.push(loc);
             }
+
             initMap();
         }
     });
 
     function initMap(){
+
         // 百度地图API功能
         map = new BMap.Map("map");
         map.centerAndZoom(new BMap.Point(locArr[0].lng,locArr[0].lat), 12);
 
+        //路线站点连线显示
+        if(stationArr != null && stationArr != undefined && stationArr.length >= 2){
+            var p1 = new BMap.Point(stationArr[0].lng,stationArr[0].lat);
+            var p2 = new BMap.Point(stationArr[stationArr.length-1].lng,stationArr[stationArr.length-1].lat);
+
+            var waypArr = [];
+            for(var i=1 ; i<stationArr.length-1;i++){
+                var wayp = new BMap.Point(stationArr[i].lng,stationArr[i].lat);
+                waypArr.push(wayp);
+            }
+
+            var driving = new BMap.DrivingRoute(map, {renderOptions:{map: map, autoViewport: true}});
+            driving.search(p1, p2,{waypoints:waypArr});//waypoints表示途经点
+        }
+
+        //给该路线的多个车创建标注
         var opts = {
             width : 100,     // 信息窗口宽度
             height: 40,     // 信息窗口高度
@@ -92,33 +124,6 @@
     function toOrder(){
         location.href = "${contextPath}/wechat/route/toOrder?routeId=${routeId}";
     }
-
-
-    // 百度地图API功能
-    /*var map = new BMap.Map("map");
-
-    var point = new BMap.Point(114.410231,30.481782);
-
-    // 创建标注
-    var marker = new BMap.Marker(point);
-
-    // 将标注添加到地图中
-    map.addOverlay(marker);
-
-    marker.setAnimation(BMAP_ANIMATION_BOUNCE); // BMAP_ANIMATION_DROP
-    // marker.enableDragging(); // 标注可拖拽
-
-    map.centerAndZoom(point, 18); // 定位到中心点
-
-    // 启用滚轮放大缩小
-    map.enableScrollWheelZoom();
-    map.enableContinuousZoom();
-
-    // 地图平移缩放控件，默认位于地图左上方，它包含控制地图的平移和缩放的功能。
-    map.addControl(new BMap.NavigationControl());
-
-    // 比例尺控件，默认位于地图左下方，显示地图的比例关系。
-    map.addControl(new BMap.ScaleControl());*/
 
 </script>
 

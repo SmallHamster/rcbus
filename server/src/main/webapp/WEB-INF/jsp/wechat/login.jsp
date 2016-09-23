@@ -37,7 +37,7 @@
             </div>
 
             <div class="item cf">
-                <a href="javascript:;" class="fr">忘记密码？</a>
+                <a href="javascript:;" class="fr" onclick="toFindPwd()">忘记密码？</a>
                 <a href="javascript:;" onclick="toRegister1()">注册</a>
             </div>
 
@@ -110,6 +110,10 @@
 
     function toRegister1(){
         location.href = "${contextPath}/wechat/register1";
+    }
+
+    function toFindPwd(){
+        location.href = "${contextPath}/wechat/toFindPwd";
     }
 
 </script>

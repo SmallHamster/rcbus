@@ -65,4 +65,21 @@ public class RouteCollectionImpl extends GenericManagerImpl<RouteCollection, Rou
             }
         }
     }
+
+    @Override
+    @Transactional
+    public void multiDel(String routeIds, Long userId){
+        String [] routeIdArr = routeIds.split("\\,");
+        for (String routeId:routeIdArr) {
+            RouteCollection rc = routeCollectionDao.findOne(Long.valueOf(routeId), userId);
+            if(rc != null){
+                routeCollectionDao.delete(rc);
+            }
+        }
+    }
+
+    @Override
+    public RouteCollection findOne(Long routeId, Long userId) {
+        return routeCollectionDao.findOne(routeId,userId);
+    }
 }

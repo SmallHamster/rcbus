@@ -40,6 +40,9 @@ public class Route extends BaseEntity{
     @JoinColumn(name = "route_id")
     private List<RouteTime> times;//该路线所有的时间
 
+    @Transient
+    private Integer isCollect;//是否收藏（1-是，0-否）
+
     public String getStartStation() {
         return startStation;
     }
@@ -92,5 +95,13 @@ public class Route extends BaseEntity{
 
     public void setBusSends(Set<BusSend> busSends) {
         this.busSends = busSends;
+    }
+
+    public Integer getIsCollect() {
+        return isCollect;
+    }
+
+    public void setIsCollect(Integer isCollect) {
+        this.isCollect = isCollect;
     }
 }

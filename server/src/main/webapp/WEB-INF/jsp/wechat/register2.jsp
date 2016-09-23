@@ -27,12 +27,12 @@
             <input type="hidden" name="mobile" value="${mobile}">
             <input type="hidden" name="type" value="${type}">
             <div class="item">
-                <input type="password" class="ipt" value="" name="password" id="oldpwd" placeholder="请输入登录密码" />
+                <input type="password" class="ipt" value="" name="password" id="newpwd" placeholder="请输入新密码" />
                 <span class="error"></span>
             </div>
 
             <div class="item">
-                <input type="password" class="ipt" name="" id="newpwd" placeholder="请输入确认密码" />
+                <input type="password" class="ipt" name="" id="reppwd" placeholder="请输入确认密码" />
                 <span class="error"></span>
             </div>
 
@@ -49,24 +49,12 @@
 <%@ include file="../inc/new2/foot.jsp" %>
 <script>
     $(function() {
-        var $oldpwd = $('#oldpwd'),
-                $newpwd = $('#newpwd');
-
-        function checkOldpwd() {
-            var val = $oldpwd.val();
-            if (!val) {
-                $oldpwd.next().html('请输入登录密码').show();
-            } else {
-                $oldpwd.next().html('').hide();
-                return true;
-            }
-            $oldpwd.focus();
-            return false;
-        }
+        var $newpwd = $('#newpwd'),
+                $reppwd = $('#reppwd');
         function checkNewpwd() {
             var val = $newpwd.val();
             if (!val) {
-                $newpwd.next().html('请输入确认密码').show();
+                $newpwd.next().html('请输入新密码').show();
             } else {
                 $newpwd.next().html('').hide();
                 return true;
@@ -74,8 +62,21 @@
             $newpwd.focus();
             return false;
         }
+        function checkReppwd() {
+            var val = $reppwd.val();
+            if (!val) {
+                $reppwd.next().html('请输入确认密码').show();
+            } else if (val !== $newpwd.val()) {
+                $reppwd.next().html('两次密码不一致').show();
+            } else {
+                $reppwd.next().html('').hide();
+                return true;
+            }
+            $reppwd.focus();
+            return false;
+        }
         function checkIpt() {
-            if (checkOldpwd() && checkNewpwd()) {
+            if (checkNewpwd() && checkReppwd()) {
                 return true;
             }
             return false;
@@ -95,6 +96,8 @@
                         }
                     }
                 });
+            }else{
+                return flag;
             }
         });
 

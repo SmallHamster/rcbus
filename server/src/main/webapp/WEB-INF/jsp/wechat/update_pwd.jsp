@@ -104,8 +104,9 @@
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            alertMsg("修改成功");
-                            location.href = "${contextPath}/wechat/login";
+                            alertMsg("修改成功",function(){
+                                location.href = "${contextPath}/wechat/login";
+                            });
                         }else {
                             alertMsg(result.msg);
                         }

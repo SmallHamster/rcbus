@@ -16,4 +16,8 @@ public interface RouteCollectionService extends GenericManager<RouteCollection>{
 
     public void doCollect(Long routeId, Long userId, Boolean isCollect);
 
+    public RouteCollection findOne(Long routeId, Long userId);
+
+    public void multiDel(String routeIds, Long userId);
+
 }

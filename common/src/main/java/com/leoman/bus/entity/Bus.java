@@ -61,7 +61,7 @@ public class Bus extends BaseEntity{
     @Column(name = "cur_lng")
     private Double curLng;//当前经度
 
-    @Column(name = "station_id")
+    @Transient
     private Long stationId;//当前站点id
 
     public String getCarNo() {

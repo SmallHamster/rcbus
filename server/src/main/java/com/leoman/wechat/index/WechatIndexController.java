@@ -130,77 +130,6 @@ public class WechatIndexController extends CommonController {
     }
 
     /**
-     * 跳转只注册页的第二步
-     * @param model
-     * @param mobile
-     * @return
-     */
-    @RequestMapping(value = "/register2")
-    public String toRegister2(ModelMap model, String mobile, String type) {
-        model.addAttribute("mobile",mobile);
-        model.addAttribute("type",type);
-        return "wechat/register2";
-    }
-
-    /**
-     * 跳转至服务协议
-     * @return
-     */
-    @RequestMapping(value = "/agreement")
-    public String toAgree() {
-        return "wechat/agreement";
-    }
-
-    /**
-     * 注册
-     * @param request
-     * @param response
-     * @param mobile
-     * @param password
-     * @throws Exception
-     */
-    @RequestMapping("/register")
-    public Result register(HttpServletRequest request,
-                         HttpServletResponse response,
-                         @RequestParam(required = true) String mobile,
-                         @RequestParam(required = true) String password,
-                           @RequestParam(required = true) String type) throws Exception {
-
-        try {
-
-            UserInfo user = userService.findByMobile(mobile);
-            //注册
-            if("register".equals(type)){
-                if(user != null){
-                    WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0009));//用户已存在
-                }else{
-                    //新增用户
-                    userService.saveUser(mobile, Md5Util.md5(password),HttpRequestUtil.getUserIpByRequest(request));
-                }
-            }
-            //忘记密码
-            else if("findPwd".equals(type)){
-                if(user == null){
-                    WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0003));//用户已存在
-                }else{
-                    //修改密码
-                    UserLogin login = loginService.findByUsername(mobile);
-                    if(login != null){
-                        login.setPassword(Md5Util.md5(password));
-                        loginService.save(login);
-                    }
-                }
-            }
-
-            WebUtil.printJson(response,new Result().success());
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Result.failure();
-        }
-        return Result.success();
-    }
-
-    /**
      * 获取验证码
      * @param request
      * @param response
@@ -256,9 +185,9 @@ public class WechatIndexController extends CommonController {
      */
     @RequestMapping("/check/code")
     public void checkCode(HttpServletRequest request,
-                         HttpServletResponse response,
-                         @RequestParam(required = true) String mobile,
-                         @RequestParam(required = true) String code,
+                          HttpServletResponse response,
+                          @RequestParam(required = true) String mobile,
+                          @RequestParam(required = true) String code,
                           @RequestParam(required=true) String type) throws Exception {
 
         UserInfo user = userService.findByMobile(mobile);
@@ -293,6 +222,71 @@ public class WechatIndexController extends CommonController {
         //新增用户
         WebUtil.printJson(response,new Result().success());
     }
+
+    /**
+     * 跳转只注册页的第二步
+     * @param model
+     * @param mobile
+     * @return
+     */
+    @RequestMapping(value = "/register2")
+    public String toRegister2(ModelMap model, String mobile, String type) {
+        model.addAttribute("mobile",mobile);
+        model.addAttribute("type",type);
+        return "wechat/register2";
+    }
+
+
+
+    /**
+     * 注册
+     * @param request
+     * @param response
+     * @param mobile
+     * @param password
+     * @throws Exception
+     */
+    @RequestMapping("/register")
+    public Result register(HttpServletRequest request,
+                         HttpServletResponse response,
+                         @RequestParam(required = true) String mobile,
+                         @RequestParam(required = true) String password,
+                           @RequestParam(required = true) String type) throws Exception {
+
+        try {
+
+            UserInfo user = userService.findByMobile(mobile);
+            //注册
+            if("register".equals(type)){
+                if(user != null){
+                    WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0009));//用户已存在
+                }else{
+                    //新增用户
+                    userService.saveUser(mobile, Md5Util.md5(password),HttpRequestUtil.getUserIpByRequest(request));
+                }
+            }
+            //忘记密码
+            else if("findPwd".equals(type)){
+                if(user == null){
+                    WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0003));//用户已存在
+                }else{
+                    //修改密码
+                    UserLogin login = loginService.findByUsername(mobile);
+                    if(login != null){
+                        login.setPassword(Md5Util.md5(password));
+                        loginService.save(login);
+                    }
+                }
+            }
+
+            WebUtil.printJson(response,new Result().success());
+        } catch (Exception e) {
+            e.printStackTrace();
+            return Result.failure();
+        }
+        return Result.success();
+    }
+
 
     /**
      * 跳转至修改密码页面
@@ -339,6 +333,24 @@ public class WechatIndexController extends CommonController {
             e.printStackTrace();
             WebUtil.printJson(response,new Result().failure());
         }
+    }
+
+    /**
+     * 跳转至忘记密码页面
+     * @return
+     */
+    @RequestMapping(value = "/toFindPwd")
+    public String toFindPwd() {
+        return "wechat/find_pwd";
+    }
+
+    /**
+     * 跳转至服务协议
+     * @return
+     */
+    @RequestMapping(value = "/agreement")
+    public String toAgree() {
+        return "wechat/agreement";
     }
 
 
