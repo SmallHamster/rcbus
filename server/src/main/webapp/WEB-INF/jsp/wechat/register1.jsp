@@ -83,7 +83,7 @@
         function checkCbx(){
             $cbx = $("input[type=checkbox]");
             if(!$cbx.is(':checked')){
-                alert("请勾选同意服务条款");
+                alertMsg("请勾选同意服务条款");
             }else {
                 return true;
             }
@@ -107,7 +107,7 @@
                         if(result.status == 0) {
                             location.href = "${contextPath}/wechat/register2??type=findPwd&mobile="+$("#mobile").val();
                         }else {
-                            alert(result.msg);
+                            alertMsg(result.msg);
                         }
                     }
                 });
@@ -143,26 +143,6 @@
                         alertMsg(res.msg);
                     }
                 })
-                /*$.ajax({
-                    url: "${contextPath}/wechat/sms/code",
-                    // dataType: 'json',
-                    data: 'mobile=' + $mobile.val(),
-                    // type: 'post',
-                    success: function(data) {
-                        data = {
-                            status: 'success'
-                        }
-                        if (data.status === 'success') {
-                            self.lock(time);
-                            alertMsg(data.message);
-                        }else{
-                            alertMsg(data.message);
-                        }
-                    },
-                    error: function() {
-                        alertMsg('网络连接超时，请您稍后重试!');
-                    }
-                })*/
             },
             lock: function(time) {
                 var self = this;
@@ -189,6 +169,7 @@
         })
     });
 
+    //服务协议
     function toAgree(){
         location.href = "${contextPath}/wechat/agreement";
     }

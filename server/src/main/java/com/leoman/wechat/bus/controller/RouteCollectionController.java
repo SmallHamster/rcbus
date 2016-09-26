@@ -23,7 +23,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping(value = "/wechat/route/collect")
-public class RouteCollectionController extends CommonController {
+public class RouteCollectionController extends RouteBaseController {
 
     @Autowired
     private RouteCollectionService routeCollectionService;
@@ -48,12 +48,17 @@ public class RouteCollectionController extends CommonController {
     @RequestMapping(value = "/list")
     @ResponseBody
     public Result list(HttpServletRequest request,
-                          HttpServletResponse response) {
+                          HttpServletResponse response,
+                       Double userLat,
+                       Double userLng) {
         Result result = Result.success();
         try {
             UserInfo user = getSessionUser(request);
             if(user != null){
                 List<Route> routeList = routeCollectionService.findByUser(user.getId());
+
+                super.handleRoute(routeList, userLat, userLng, 0l);
+
                 result = new Result().success(createMap("routeList",routeList));
             }
 

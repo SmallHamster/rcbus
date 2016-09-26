@@ -208,4 +208,5 @@ public class Bus extends BaseEntity{
     public void setStationName(String stationName) {
         this.stationName = stationName;
     }
+
 }

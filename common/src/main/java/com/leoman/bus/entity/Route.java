@@ -46,6 +46,12 @@ public class Route extends BaseEntity{
     @Transient
     private Bus bus;//当前距离最近的车辆
 
+    @Transient
+    private Integer orderNum;//预定人数
+
+    @Transient
+    private List<RouteTime> tempTimes;//瞬时数据
+
     public String getStartStation() {
         return startStation;
     }
@@ -114,5 +120,21 @@ public class Route extends BaseEntity{
 
     public void setBus(Bus bus) {
         this.bus = bus;
+    }
+
+    public Integer getOrderNum() {
+        return orderNum;
+    }
+
+    public void setOrderNum(Integer orderNum) {
+        this.orderNum = orderNum;
+    }
+
+    public List<RouteTime> getTempTimes() {
+        return tempTimes;
+    }
+
+    public void setTempTimes(List<RouteTime> tempTimes) {
+        this.tempTimes = tempTimes;
     }
 }

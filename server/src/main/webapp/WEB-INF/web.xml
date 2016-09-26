@@ -72,7 +72,7 @@
         <init-param>
             <param-name>skipUrls</param-name>
             <param-value>/wechat/login/*,/wechat/login,/wechat/register,/wechat/register1,/wechat/register2,
-                /wechat/agreement,/wechat/index,/wechat/sms/code,/wechat/check/code,/wechat/toFindPwd</param-value>
+                /wechat/agreement,/wechat/index,/wechat/sms/code,/wechat/check/code,/wechat/toFindPwd,/wechat/error</param-value>
         </init-param>
     </filter>
     <filter-mapping>

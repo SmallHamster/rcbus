@@ -18,6 +18,7 @@ import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
 import com.leoman.order.entity.Order;
 import com.leoman.order.service.OrderService;
+import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
 import com.leoman.user.entity.UserInfo;
@@ -41,6 +42,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -105,7 +107,7 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(Route route,Long enterpriseId, Integer draw, Integer start, Integer length) {
+    public Map<String, Object> list(HttpServletRequest request,Route route, Long enterpriseId, Integer draw, Integer start, Integer length) {
         int pagenum = getPageNum(start, length);
         Query query = Query.forClass(Route.class, routeService);
         query.setPagenum(pagenum);
@@ -117,6 +119,11 @@ public class RouteController extends GenericEntityController<Route, Route, Route
             enterprise.setId(enterpriseId);
             query.eq("enterprise",enterprise);
         }
+        Admin admin = getSessionAdmin(request);
+        if(admin != null && admin.getEnterprise() != null){
+            query.eq("enterprise.id",admin.getEnterprise().getId());
+        }
+
         Page<Route> page = routeService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
     }

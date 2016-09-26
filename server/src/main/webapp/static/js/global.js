@@ -228,21 +228,7 @@ var $leoman = {
         return "";
     },
 
-    /**
-     * 将form表单中带name属性的dom节点系列化成object
-     * @author Chenwq
-     */
-    serializeObject : function(form) {
-        var o = {};
-        $.each(form.serializeArray(), function(index) {
-            if (o[this["name"]]) {
-                o[this["name"]] = o[this["name"]] + "," + this["value"];
-            } else {
-                o[this["name"]] = this["value"];
-            }
-        });
-        return o;
-    },
+
 
     /**
      * 描述：点击click事件提交表单，跳转页面，兼容所有的浏览器
@@ -406,4 +392,39 @@ function alertMsg(msg,func){
             }
         });
     }
+}
+
+//弹出提示消息
+function alertConfirm(msg,func){
+    if(func == '' || func == undefined){
+        layer.open({
+            content: msg
+            ,btn: '确定'
+        });
+    }else{
+        layer.open({
+            content: msg
+            ,btn: ['确定','取消']
+            ,yes: function(index){
+                layer.close(index);
+                func();
+            }
+        });
+    }
+}
+
+/**
+ * 将form表单中带name属性的dom节点系列化成object
+ * @author Chenwq
+ */
+function serializeObject(form) {
+    var o = {};
+    $.each(form.serializeArray(), function(index) {
+        if (o[this["name"]]) {
+            o[this["name"]] = o[this["name"]] + "," + this["value"];
+        } else {
+            o[this["name"]] = this["value"];
+        }
+    });
+    return o;
 }

@@ -26,4 +26,11 @@ public class RouteOrderServiceImpl extends GenericManagerImpl<RouteOrder,RouteOr
     public List<RouteOrder> findList(Long id) {
         return routeOrderDao.findList(id);
     }
+
+    @Override
+    public Integer findOrderNum(Long routeId, String departTime) {
+        return routeOrderDao.findOrderNum(routeId,departTime);
+    }
+
+
 }

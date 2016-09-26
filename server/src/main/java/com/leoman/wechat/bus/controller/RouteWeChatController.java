@@ -1,20 +1,13 @@
 package com.leoman.wechat.bus.controller;
 
-import com.leoman.bus.entity.*;
+import com.leoman.bus.entity.Bus;
+import com.leoman.bus.entity.Route;
+import com.leoman.bus.entity.RouteStation;
+import com.leoman.bus.entity.RouteTime;
 import com.leoman.bus.service.*;
-import com.leoman.bus.service.impl.RouteServiceImpl;
-import com.leoman.bus.util.GpxUtil;
-import com.leoman.bussend.entity.BusSend;
-import com.leoman.bussend.service.BusSendService;
-import com.leoman.carrental.entity.Commuting;
-import com.leoman.carrental.service.CommutingService;
-import com.leoman.common.controller.common.CommonController;
-import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.Query;
-import com.leoman.coupon.entity.SystemConfig;
 import com.leoman.entity.Configue;
-import com.leoman.entity.Constant;
 import com.leoman.system.banner.entity.Banner;
 import com.leoman.system.banner.service.BannerService;
 import com.leoman.user.entity.UserInfo;
@@ -23,12 +16,14 @@ import com.leoman.utils.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +34,7 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping(value = "/wechat/route")
-public class RouteWeChatController extends CommonController {
+public class RouteWeChatController extends RouteBaseController {
 
     @Autowired
     private RouteService routeService;
@@ -56,17 +51,14 @@ public class RouteWeChatController extends CommonController {
     @Autowired
     private BusService busService;
 
-    @Autowired
-    private RouteCollectionService routeCollectionService;
-
     /**
      * 班车路线页面
      */
-    @RequestMapping(value = "/index")
+    @RequestMapping(value = "/index/{type}")
     public String index(HttpServletRequest request,
                         HttpServletResponse response,
                         Model model,
-                        Integer type) {
+                        @PathVariable("type") Integer type) {
         List<Banner> bannerList = bannerService.findList(type);
         for (Banner banner:bannerList) {
             if(banner.getImage() != null){
@@ -100,10 +92,13 @@ public class RouteWeChatController extends CommonController {
             List<Route> list = routeService.queryAll(query);
 
             UserInfo user = getSessionUser(request);
-            if(user != null){
-                handleRouteIsCollect(list, user.getId());//处理路线的收藏状态
-            }
-            handleRouteBus(list, userLat, userLng);//处理路线的最近车辆信息
+            Date d1 =  new Date();
+            System.out.println("-------- 开始处理："+d1);
+            //处理路线的最近车辆信息，收藏状态
+            handleRoute(list, userLat, userLng, user.getId());
+            Date d2 =  new Date();
+            System.out.println("-------- 结束处理："+new Date());
+            System.out.println("-------- 处理时间："+(d2.getTime() - d1.getTime()));
 
             WebUtil.printJson(response,new Result().success(createMap("list",list)));
         } catch (Exception e) {
@@ -135,14 +130,16 @@ public class RouteWeChatController extends CommonController {
     @ResponseBody
     public Result stations(HttpServletRequest request,
                         HttpServletResponse response,
-                        Long routeId) {
+                        Long routeId,
+                           Double userLat,
+                           Double userLng) {
         try {
             List<RouteStation> stationList = routeStationService.findByRouteId(routeId);
             List<RouteTime> timeList = routeTimeService.findByRouteId(routeId);
-            List<Bus> busList =  busService.findBusOrderByDistance(routeId,null,null);
+            List<Bus> busList =  busService.findBusOrderByDistance(routeId,userLat,userLng);
 
             //设置当前班车所在站点
-            handleBusCurStation(busList,stationList);
+            super.handleBusCurStation(busList,stationList);
 
             Map map = new HashMap();
             map.put("stationList",stationList);
@@ -155,49 +152,6 @@ public class RouteWeChatController extends CommonController {
             Result.failure();
         }
         return Result.success();
-    }
-
-    /**
-     * 设置当前班车所在站点
-     * @param busList
-     * @param stationList
-     */
-    private void handleBusCurStation(List<Bus> busList, List<RouteStation> stationList){
-        for (Bus bus:busList) {
-            handleBusCurStation(bus,stationList);
-        }
-    }
-
-    private void handleBusCurStation(Bus bus, List<RouteStation> stationList){
-        if(bus != null){
-            Double curLat = bus.getCurLat();//当前纬度
-            Double curLng = bus.getCurLng();//当前经度
-            if(curLat != null && curLng != null){
-                Map map = new HashMap();
-                Double minDistance = 0d;
-                for (int i=0; i < stationList.size(); i++) {
-                    Double rsLat = stationList.get(i).getLat();
-                    Double rsLng = stationList.get(i).getLng();
-                    if(rsLat != null && rsLng != null){
-                        Double distance = GpxUtil.getDistance(curLng,curLat,rsLng,rsLat);
-                        if(i==0){
-                            minDistance = distance;
-                        }else{
-                            minDistance = minDistance>distance?distance:minDistance;
-                        }
-                        map.put(distance,stationList.get(i).getId());
-                    }
-                }
-//                Long stationId = null;
-                //如果最短距离小于2km，则算作在某个站，否则不在任何站
-                if(minDistance <= 20000){
-                    Long stationId = (Long) map.get(minDistance);
-                    RouteStation station = routeStationService.queryByPK(stationId);
-                    bus.setStationId(stationId);
-                    bus.setStationName(station.getStationName());
-                }
-            }
-        }
     }
 
     /**
@@ -297,40 +251,6 @@ public class RouteWeChatController extends CommonController {
             Result.failure();
         }
         return Result.success();
-    }
-
-    /**
-     * 判断用户是否收藏
-     * @param routeList
-     * @param userId
-     */
-    private void handleRouteIsCollect(List<Route> routeList, Long userId){
-        for (Route route:routeList) {
-            RouteCollection rc = routeCollectionService.findOne(route.getId(),userId);
-            if(rc != null){
-                route.setIsCollect(1);
-            }else{
-                route.setIsCollect(0);
-            }
-        }
-    }
-
-    /**
-     * 处理路线距离用户最近的一班车
-     * @param routeList
-     * @param userLat
-     * @param userLng
-     */
-    private void handleRouteBus(List<Route> routeList, Double userLat, Double userLng){
-        for (Route route:routeList) {
-            List<Bus> busList =  busService.findBusOrderByDistance(route.getId(),userLat,userLng);
-            if(busList != null && busList.size() >= 1){
-                Bus bus = busList.get(0);
-                List<RouteStation> stationList = routeStationService.findByRouteId(route.getId());
-                handleBusCurStation(bus,stationList);//设置当前车在哪个站点
-                route.setBus(busList.get(0));
-            }
-        }
     }
 
 }

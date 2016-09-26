@@ -60,34 +60,82 @@
 
 
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
-<%@ include file="../inc/new2/foot.jsp" %>
+<script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
     $(function() {
 
         initList();
+        init();
 
     })
 
+    var userLat;
+    var userLng;
+
+    function init(){
+        var geolocation = new BMap.Geolocation();
+        geolocation.getCurrentPosition(function(r){
+            if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                userLat = r.point.lat;
+                userLng = r.point.lng;
+            }
+            else {
+                console.info('failed'+this.getStatus());
+            }
+            initList();
+        },{enableHighAccuracy: true});
+    }
+
     function initList(){
-        $.post("${contextPath}/wechat/route/collect/list",null,function(res){
+        var data = {
+            'userLat':userLat,
+            'userLng':userLng,
+        };
+        $.post("${contextPath}/wechat/route/collect/list",data,function(res){
             if(res.status == 0){
                 var list = res.data.object.routeList;
                 $(".ui-list ul").empty();
                 for(var i=0; i<list.length; i++){
-                    console.info(list[i].id);
                     var template = $("#routeTemplate").clone().removeAttr("id");
                     template.find("em").eq(0).text(list[i].startStation);
                     template.find("em").eq(1).text(list[i].endStation);
                     template.find("b").text(i+1);
                     template.find(".fromto").attr('onclick','toDetail('+list[i].id+')');
+                    template.find(".fav").attr("val",list[i].id);
                     template.find("[type=checkbox]").val(list[i].id);
+                    template.find(".detail").find("span").eq(0).text((list[i].bus.modelNo==null)?'':(list[i].bus.modelNo));
+                    var times = list[i].tempTimes;
+                    template.find(".detail").find("span").eq(1).text("即将出发："+(times==null||times.length==0?"无":times[0].departTime));
+                    template.find(".detail").find("span").eq(2).text("车牌号："+list[i].bus.carNo);
+                    template.find(".detail").find("span").eq(3).text("预定人数："+(list[i].orderNum==null?0:list[i].orderNum));
+                    template.find(".bus").text(list[i].bus.stationName==null?'':list[i].bus.stationName);//当前站点名称
                     template.show();
                     $(".ui-list ul").append(template);
                 }
 
-                initTouch();
+                initFav();
             }
         });
+    }
+
+    function initFav(){
+        // 收藏&取消收藏
+        $('.fav').on('click', function() {
+            $(this).toggleClass('faved');
+            var isFaved = $(this).hasClass('faved');
+            $.ajax({
+                url: "${contextPath}/wechat/route/collect/oper",
+                data: {'isCollect': isFaved,'routeId': $(this).attr("val")},
+                success: function(res) {
+                    if(res.status == 0){
+                        window.location.reload();
+                    }else{
+                        alertMsg("操作失败");
+                        $(this).toggleClass('faved');
+                    }
+                }
+            })
+        })
     }
 
     function initTouch(){
@@ -153,6 +201,10 @@
                 }
             })
         })
+    }
+
+    function toDetail(id){
+        location.href = "${contextPath}/wechat/route/detail?routeId="+id;
     }
 </script>
 </body>

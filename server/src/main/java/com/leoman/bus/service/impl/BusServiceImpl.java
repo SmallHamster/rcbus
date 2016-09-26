@@ -4,6 +4,7 @@ import com.leoman.bus.dao.BusDao;
 import com.leoman.bus.entity.Bus;
 import com.leoman.bus.service.BusService;
 import com.leoman.bussend.entity.BusSend;
+import com.leoman.common.service.GenericManager;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,9 +32,6 @@ public class BusServiceImpl extends GenericManagerImpl<Bus, BusDao> implements B
 
     @Autowired
     private BusDao busDao;
-
-    @Autowired
-    private EntityManagerFactory factory;
 
     @Override
     public Page<Bus> page(Integer pageNum, Integer pageSize) {
@@ -69,7 +67,6 @@ public class BusServiceImpl extends GenericManagerImpl<Bus, BusDao> implements B
      * @return
      */
     public List<Bus> findBusOrderByDistance(Long routeId, Double userLat, Double userLng) {
-        EntityManager em = factory.createEntityManager();
         StringBuffer sql = new StringBuffer();
         sql.append(" SELECT \n" +
                 "  b.*\n" +
@@ -84,9 +81,7 @@ public class BusServiceImpl extends GenericManagerImpl<Bus, BusDao> implements B
             sql.append(" ORDER BY ROUND(6378.138*2*ASIN(SQRT(POW(SIN((30.475322*PI()/180-b.`cur_lat`*PI()/180)/2),2)+COS(30.475322*PI()/180)*COS(b.`cur_lat`*PI()/180)*POW(SIN((114.330368*PI()/180-b.`cur_lng`*PI()/180)/2),2)))*1000) ");
         }
 
-        Query query = em.createNativeQuery(sql.toString(),Bus.class);
-        List<Bus> busList = query.getResultList();
-        em.close();
+        List<Bus> busList = queryBySql(sql.toString(),Bus.class);
         return busList;
     }
 }

@@ -68,18 +68,13 @@
                 <i></i>
             </div>
             <div class="item">
-                <img src="${contextPath}/wechat-html/images/f/8.png" alt="">
-                <a href="#">在线客服</a>
-                <i></i>
-            </div>
-            <div class="item">
                 <img src="${contextPath}/wechat-html/images/f/9.png" alt="">
                 <a href="javascript:;" onclick="toReport()">反馈意见</a>
                 <i></i>
             </div>
             <div class="item">
                 <img src="${contextPath}/wechat-html/images/f/10.png" alt="">
-                <a href="#">帮助</a>
+                <a href="javascript:;" onclick="toHelp()">帮助</a>
                 <i></i>
             </div>
         </div>
@@ -114,7 +109,7 @@
 
     //个人通勤
     function toCommuting(){
-        location.href = "${contextPath}/wechat/route/toCommuting";
+        location.href = "${contextPath}/wechat/commuting/apply";
     }
 
     //修改密码
@@ -125,6 +120,11 @@
     //我的收藏
     function toCollection(){
         location.href = "${contextPath}/wechat/route/collect/index";
+    }
+
+    //我的收藏
+    function toHelp(){
+        location.href = "${contextPath}/wechat/help";
     }
 
 

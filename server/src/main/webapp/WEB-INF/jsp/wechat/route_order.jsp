@@ -43,22 +43,14 @@
 
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
+<%@ include file="../inc/new2/foot.jsp" %>
 <script>
     $(function() {
         $('#submit').on('click', function() {
-            layer.open({
-                content: '确定要预定此班次吗？'
-                ,btn: ['确定', '取消']
-                ,yes: function(index){
-                    layer.close(index);
-                    submitOrder();
-                }
-            });
 
-            /*layer.open({
-                content: '<i class="ico ico-right2"></i><br /><br />预定成功！'
-                ,btn: '确定'
-            });*/
+            alertConfirm('确定要预定此班次吗？',function(){
+                submitOrder();
+            });
             return false;
         })
 
@@ -83,20 +75,16 @@
     function submitOrder(){
         var departTime = $("input[name=time]:checked").parent("label").text();
         if(departTime == ''){
-            alert("请选择发车时间");
+            alertMsg("请选择发车时间");
             return ;
         }
         $.post("${contextPath}/wechat/route/saveOrder",{'routeId':"${routeId}",'departTime':departTime},function(res){
             if(res.status == 0){
-                layer.open({
-                    content: '<i class="ico ico-right2"></i><br /><br />预定成功！'
-                    ,btn: '确定'
+                alertMsg("预定成功",function(){
+                    location.href = "${contextPath}/wechat/route/detail?routeId=${routeId}";
                 });
             }else{
-                layer.open({
-                    content: '预定失败！'
-                    ,btn: '确定'
-                });
+                alertMsg("预定失败");
             }
         });
     }

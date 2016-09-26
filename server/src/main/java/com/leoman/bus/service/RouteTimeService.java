@@ -14,4 +14,6 @@ public interface RouteTimeService extends GenericManager<RouteTime> {
 
     public List<RouteTime> findByRouteId(Long routeId);
 
+    public List<RouteTime> findByCurrentTime(Long routeId);
+
 }

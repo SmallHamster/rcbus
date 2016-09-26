@@ -25,7 +25,12 @@
         <ul>
             <c:forEach items="${bannerList}" var="banner">
                 <li>
-                    <img src="${banner.image.path}" />
+                    <c:if test="${banner.isOc == 0}">
+                        <img src="${banner.image.path}" />
+                    </c:if>
+                    <c:if test="${banner.isOc == 1}">
+                        <a href="http://${banner.outsideChain}" ><img src="${banner.image.path}"/></a>
+                    </c:if>
                 </li>
             </c:forEach>
         </ul>
@@ -76,7 +81,7 @@
         </div>
         <div class="bus">野芷湖西路保利心语</div>
         <div class="op">
-            <a href="#1" class="place">实时位置</a>
+            <a href="javascript:;" class="place">实时位置</a>
         </div>
         <div class="fav">
             <a href="javascript:;"></a>
@@ -84,13 +89,10 @@
     </div>
 </li>
 
-<%@ include file="../inc/new2/foot.jsp" %>
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat-html/js/app.js"></script>
 <script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
-
-
 
     $(function() {
         $('.slide').each(function() {
@@ -109,7 +111,7 @@
             $self.append(nav.join(''));
             $nav = $self.find('i');
 
-            /*$(this).swipeSlide({
+            $(this).swipeSlide({
                 index : 0,
                 continuousScroll : true,
                 autoSwipe : false,
@@ -119,8 +121,9 @@
                 },
                 callback : function(i,sum){
                     $nav.eq(i).addClass('current').siblings().removeClass('current');
+
                 }
-            });*/
+            });
         })
 
         // 清空输入框文本
@@ -129,6 +132,7 @@
         });
 
         //初始化查询
+        search();
         init();
 
     });
@@ -143,13 +147,12 @@
                 data: {'isCollect': isFaved,'routeId': $(this).attr("val")},
                 success: function(res) {
                     if(res.status != 0){
-                        alert("操作失败");
+                        alertMsg("操作失败");
                         $(this).toggleClass('faved');
                     }
                 }
             })
         })
-
     }
 
     function init(){
@@ -158,7 +161,7 @@
             if(this.getStatus() == BMAP_STATUS_SUCCESS){
                 $("#userLat").val(r.point.lat);
                 $("#userLng").val(r.point.lng);
-                console.info('您的位置：'+r.point.lng+','+r.point.lat);
+                search();
             }
             else {
                 console.info('failed'+this.getStatus());
@@ -169,36 +172,34 @@
 
     //查询
     function search(){
-        $("#formId").ajaxSubmit({
-            url : "${contextPath}/wechat/route/list",
-            type : "POST",
-            success : function(result) {
-                if(result.status == 0) {
-                    var list = result.data.object.list;
-                    $(".ui-list ul").empty();
-                    for(var i=0; i<list.length;i++){
-                        var template = $("#routeTemplate").clone().removeAttr("id");
-                        template.find("em:eq(0)").text(list[i].startStation);
-                        template.find("em:eq(1)").text(list[i].endStation);
-                        template.find("b").text(i+1);
-                        template.find(".fromto").attr('onclick','toDetail('+list[i].id+')');
-                        template.find(".fav").attr("val",list[i].id);
-                        if(list[i].isCollect == 1){
-                            template.find(".fav").addClass("faved");//给已收藏的路线添加已收藏的样式
-                        }
-                        template.find(".detail").find("span").eq(0).text((list[i].bus.modelNo==null)?'':(list[i].bus.modelNo));
-                        var times = list[i].times;
-                        template.find(".detail").find("span").eq(1).text("即将出发："+times[0].departTime);
-                        template.find(".detail").find("span").eq(2).text("车牌号："+list[i].bus.carNo);
-                        template.find(".bus").text(list[i].bus.stationName);//当前站点名称
-                        template.show();
-                        $(".ui-list ul").append(template);
+        $.post("${contextPath}/wechat/route/list",$("#formId").serialize(),function(result){
+            if(result.status == 0) {
+                var list = result.data.object.list;
+                $(".ui-list ul").empty();
+                for(var i=0; i<list.length;i++){
+                    var template = $("#routeTemplate").clone().removeAttr("id");
+                    template.find("em").eq(0).text(list[i].startStation);
+                    template.find("em").eq(1).text(list[i].endStation);
+                    template.find("b").text(i+1);
+                    template.find(".fromto").attr('onclick','toDetail('+list[i].id+')');
+                    template.find(".fav").attr("val",list[i].id);
+                    if(list[i].isCollect == 1){
+                        template.find(".fav").addClass("faved");//给已收藏的路线添加已收藏的样式
                     }
-                    initFav();
-
-                }else {
-                    alert("查询失败");
+                    template.find(".detail").find("span").eq(0).text((list[i].bus.modelNo==null)?'':(list[i].bus.modelNo));
+                    var times = list[i].tempTimes;
+                    template.find(".detail").find("span").eq(1).text("即将出发："+(times==null||times.length==0?"无":times[0].departTime));
+                    template.find(".detail").find("span").eq(2).text("车牌号："+list[i].bus.carNo);
+                    template.find(".detail").find("span").eq(3).text("预定人数："+(list[i].orderNum==null?0:list[i].orderNum));
+                    template.find(".bus").text(list[i].bus.stationName==null?'':list[i].bus.stationName);//当前站点名称
+                    template.find(".op a").attr('onclick','toPosition('+list[i].id+')');
+                    template.show();
+                    $(".ui-list ul").append(template);
                 }
+                initFav();
+
+            }else {
+                alertMsg("查询失败");
             }
         });
     }
@@ -206,6 +207,12 @@
     function toDetail(id){
         location.href = "${contextPath}/wechat/route/detail?routeId="+id;
     }
+
+    function toPosition(id){
+//        location.href = "http://221.234.42.20:89/Interface/findPosition.action?carNum=鄂ALB229";
+        location.href = "${contextPath}/wechat/route/toPosition?routeId="+id;
+    }
+
 </script>
 </body>
 </html>

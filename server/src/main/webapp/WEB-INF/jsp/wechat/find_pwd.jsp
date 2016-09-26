@@ -95,7 +95,7 @@
                         if(result.status == 0) {
                             location.href = "${contextPath}/wechat/register2?type=findPwd&mobile="+$("#mobile").val();
                         }else {
-                            alert(result.msg);
+                            alertMsg(result.msg);
                         }
                     }
                 });

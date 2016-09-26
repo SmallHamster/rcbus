@@ -5,6 +5,8 @@ import com.leoman.entity.Constant;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.WebUtil;
+import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
+import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.*;
@@ -13,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -23,7 +26,15 @@ public class WechatFilter implements Filter {
 
     private static String[] SKIP_URLS = new String[]{};
 
+    private static String[] USER_2_FORBID_URLS = new String[]{"/wechat/route/index/0"};//普通会员不能访问的路径
+
+    private static String[] USER_0_FORBID_URLS = new String[]{"/wechat/enterprise/apply"};//企业不能访问的路径
+
+    private static Map<Integer,String[]> FORBID_URL_Map = new HashedMap();
+
     public WechatFilter() {
+        FORBID_URL_Map.put(0,USER_0_FORBID_URLS);
+        FORBID_URL_Map.put(2,USER_2_FORBID_URLS);
     }
 
     @Override
@@ -69,7 +80,23 @@ public class WechatFilter implements Filter {
 
         UserInfo user = (UserInfo) httpRequest.getSession().getAttribute(Constant.SESSION_MEMBER_USER);
         if (null != user) {
-            chain.doFilter(request, response);
+            //如果该用户为普通会员，则只能访问部分菜单
+            if(user.getType().equals(2) || user.getType().equals(0)){
+                String [] FORBID_URLS = FORBID_URL_Map.get(user.getType());
+                for (String forbinUrl : FORBID_URLS) {
+                    Pattern pattern = Pattern.compile(forbinUrl, Pattern.DOTALL);
+                    Matcher matcher = pattern.matcher(url);
+                    if (matcher.find()) {
+                        httpResponse.sendRedirect(contextPath + "/wechat/error?errorMsg=您的权限无法访问");
+                    }else{
+                        chain.doFilter(request, response);
+                        return;
+                    }
+                }
+            }
+            else{
+                chain.doFilter(request, response);
+            }
             return;
         }
 

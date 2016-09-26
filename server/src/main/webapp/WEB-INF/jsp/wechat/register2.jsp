@@ -92,7 +92,7 @@
                         if(result.status == 0) {
                             location.href = "${contextPath}/wechat/index";
                         }else {
-                            alert(result.msg);
+                            alertMsg(result.msg);
                         }
                     }
                 });

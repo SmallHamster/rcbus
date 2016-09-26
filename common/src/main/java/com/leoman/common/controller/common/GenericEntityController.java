@@ -1,11 +1,15 @@
 package com.leoman.common.controller.common;
 
 import com.leoman.common.controller.editor.*;
+import com.leoman.entity.Constant;
+import com.leoman.permissions.admin.entity.Admin;
+import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.ServiceLocator;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletRequest;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -57,5 +61,10 @@ public class GenericEntityController<V, T, M>  {
 
 		int pageNum = (start/length)+1;
 		return pageNum;
+	}
+
+	public Admin getSessionAdmin(HttpServletRequest request){
+		Admin admin = (Admin) request.getSession().getAttribute(Constant.SESSION_MEMBER_GLOBLE);
+		return admin;
 	}
 }

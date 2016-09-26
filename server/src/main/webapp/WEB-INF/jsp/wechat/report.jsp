@@ -10,7 +10,7 @@
     <title>意见反馈-江城巴士</title>
     <meta name="description" content="">
     <meta name="author" content="">
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="${contextPath}/wechat-html/favicon.ico">
 
     <link rel="stylesheet" href="${contextPath}/wechat-html/css/app.css">
     <style>

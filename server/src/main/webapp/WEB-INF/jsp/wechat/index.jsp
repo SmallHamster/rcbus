@@ -45,14 +45,14 @@
 
                 <li class="menu-list"><a href="javascript:void(0);"><i class="fa fa fa-users"></i><span>企业用户</span></a>
                     <ul class="sub-menu-list">
-                        <li><a href="${contextPath}/wechat/enterprise/apply/">企业申请</a></li>
-                        <li><a href="${contextPath}/wechat/route/index?type=0">通勤班车</a></li>
+                        <li><a href="${contextPath}/wechat/enterprise/apply">企业申请</a></li>
+                        <li><a href="${contextPath}/wechat/route/index/0">通勤班车</a></li>
                     </ul>
                 </li>
 
                 <li class="menu-list"><a href="javascript:void(0);"><i class="fa fa fa-users"></i><span>个人用户</span></a>
                     <ul class="sub-menu-list">
-                        <li><a href="${contextPath}/wechat/route/index?type=1">永旺专线</a></li>
+                        <li><a href="${contextPath}/wechat/route/index/1">永旺专线</a></li>
                         <li><a href="${contextPath}/wechat/carrental/index">租车预定</a></li>
                     </ul>
                 </li>
@@ -62,8 +62,6 @@
                         <li><a href="${contextPath}/wechat/order/myOrder/index">我的订单</a></li>
                         <li><a href="${contextPath}/wechat/user/index">个人信息</a></li>
                         <li><a href="${contextPath}/admin/admin/index">反馈建议</a></li>
-                        <li><a href="${contextPath}/admin/admin/index">在线客服</a></li>
-
                     </ul>
                 </li>
 

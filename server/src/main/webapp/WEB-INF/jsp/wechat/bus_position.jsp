@@ -37,16 +37,6 @@
 <script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
 
-    var geolocation = new BMap.Geolocation();
-    geolocation.getCurrentPosition(function(r){
-        if(this.getStatus() == BMAP_STATUS_SUCCESS){
-            console('您的位置：'+r.point.lng+','+r.point.lat);
-        }
-        else {
-            alert('failed'+this.getStatus());
-        }
-    },{enableHighAccuracy: true});
-
     var stationArr = [];
     var locArr = [];
 
@@ -65,14 +55,14 @@
             }
 
             //车辆位置
-            var bsList = res.data.object.map.bsList;
-            for(var i=0; i<bsList.length;i++){
+            var busList = res.data.object.map.busList;
+            for(var i=0; i<busList.length;i++){
                 var loc = {
-                    'lat':bsList[i].bus.curLat,
-                    'lng':bsList[i].bus.curLng,
-                    'carNo':bsList[i].bus.carNo,
-                    'dn':bsList[i].bus.driverName==null?'':bsList[i].bus.driverName,
-                    'dp':bsList[i].bus.driverPhone==null?'':bsList[i].bus.driverPhone
+                    'lat':busList[i].curLat,
+                    'lng':busList[i].curLng,
+                    'carNo':busList[i].carNo,
+                    'dn':busList[i].driverName==null?'':busList[i].driverName,
+                    'dp':busList[i].driverPhone==null?'':busList[i].driverPhone
                 };
                 locArr.push(loc);
             }

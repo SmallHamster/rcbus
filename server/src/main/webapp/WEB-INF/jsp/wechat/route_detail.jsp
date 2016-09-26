@@ -84,19 +84,44 @@
 
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat-html/js/app.js"></script>
+<script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
     $(function() {
 
         initOther();
+        init();
 
     })
 
+
+
     var sidArr = [];//所有车辆当前站点id数组
     var carNoArr = [];//所有车辆车牌号数组
+    var userLat;
+    var userLng;
+
+    function init(){
+        var geolocation = new BMap.Geolocation();
+        geolocation.getCurrentPosition(function(r){
+            if(this.getStatus() == BMAP_STATUS_SUCCESS){
+                userLat = r.point.lat;
+                userLng = r.point.lng;
+            }
+            else {
+                console.info('failed'+this.getStatus());
+            }
+            initOther();
+        },{enableHighAccuracy: true});
+    }
 
     //初始化班车，路线，时间
     function initOther(){
-        $.post("${contextPath}/wechat/route/other",{'routeId':"${routeId}"},function(res){
+        var data = {
+            'routeId':"${routeId}",
+            'userLat':userLat,
+            'userLng':userLng,
+        };
+        $.post("${contextPath}/wechat/route/other",data,function(res){
 
             //班车
             var busList = res.data.object.map.busList;
@@ -188,7 +213,7 @@
     }
 
     function toPosition(){
-        location.href = "http://221.234.42.20:89/Interface/findPosition.action?carNum=鄂ALB229";
+//        location.href = "http://221.234.42.20:89/Interface/findPosition.action?carNum=鄂ALB229";
         location.href = "${contextPath}/wechat/route/toPosition?routeId=${routeId}";
     }
 

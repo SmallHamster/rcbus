@@ -9,7 +9,7 @@
 
     <!-- 扫描 com.binf.admin 包及子包下的 @Service @Controller @Repository @Component
         注解 -->
-    <context:component-scan base-package="com.leoman">
+    <context:component-scan base-package="com.leoman" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
         <context:include-filter type="annotation" expression="org.springframework.web.bind.annotation.ControllerAdvice"/>
     </context:component-scan>

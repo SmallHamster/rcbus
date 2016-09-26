@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * Created by Daisy on 2016/9/18.
  */
 @Controller
-@RequestMapping(value = "/wechat/enterprise/apply")
+@RequestMapping(value = "/wechat/enterprise")
 public class EnterpriseApplyWeChatController extends GenericEntityController<EnterpriseApply, EnterpriseApply, EnterpriseApplyServiceImpl> {
 
     @Autowired
@@ -26,7 +26,7 @@ public class EnterpriseApplyWeChatController extends GenericEntityController<Ent
     /**
      * 报名页面
      */
-    @RequestMapping(value = "/")
+    @RequestMapping(value = "/apply")
     public String index(Model model) {
         return "wechat/enterprise_apply";
     }

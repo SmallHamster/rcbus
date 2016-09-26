@@ -14,4 +14,6 @@ public interface RouteOrderService extends GenericManager<RouteOrder> {
 
     public List<RouteOrder> findList(Long id);
 
+    public Integer findOrderNum(Long routeId, String departTime);
+
 }
