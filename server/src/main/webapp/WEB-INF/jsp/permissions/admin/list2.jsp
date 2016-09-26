@@ -21,11 +21,15 @@
         <div class="wrapper">
             <div class="row">
                 <div class="col-sm-12">
+                    <input type="hidden" id="userType" value="${userInfo.type}">
                     <section class="panel">
                         <div class="panel-body">
                             <div class="form-group col-sm-2">
                                 <input type="text" id="username" name="username" class="form-control"
                                        id="exampleInputEmail2" placeholder="姓名">
+                                <c:if test="${userInfo.type eq 0}">
+                                    <input type="hidden" id="enterpriseId" name="enterpriseId" value="${userInfo.enterprise.id}">
+                                </c:if>
                             </div>
                             <button id="c_search" class="btn btn-info">搜索</button>
                         </div>
@@ -176,24 +180,36 @@
                                     return "";
                                 }
                                 else {
+
+                                    var type = $("#userType").val();
+
                                     var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$admin.fn.detail(\'" + data + "\')\">" +
                                             "<i class='fa fa-eye'></i> 查看</button>";
 
                                     var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.add(\'" + data + "\')\">" +
                                             "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
 
+                                    var reset = "<button title='重置' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.reset(\'" + data + "\')\">" +
+                                            "<i class='fa fa-pencil-square-o'></i> 重置密码</button>";
+
                                     var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.del(\'" + data + "\')\">" +
                                             "<i class='fa fa-pencil-square-o'></i> 删除</button>";
 
                                     var selectRole = "<button title='赋予角色' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.openModal(\'" + data + "\')\">" +
                                             "<i class='fa fa-exchange'></i> 赋予角色</button>";
-                                    return edit  + "&nbsp;" + del;
+
+                                    if(type != "" && type != null && type ==0){
+                                        return edit  + "&nbsp;" + reset + "&nbsp;" + del;
+                                    }else {
+                                        return edit  + "&nbsp;" + del;
+                                    }
                                 }
                             }
                         }
                     ],
                     "fnServerParams": function (aoData) {
                         aoData.username = $("#username").val();
+                        aoData.enterpriseId = $("#enterpriseId").val();
                     }
                 });
             },
@@ -203,6 +219,30 @@
                     params = "?id=" + id;
                 }
                 window.location.href = "${contextPath}/admin/admin/add" + params;
+            },
+            reset: function (id) {
+                $("#confirm").modal("show");
+                $('#showText').html('您确定要重置该管理员的密码吗？');
+                $("#determine").off("click");
+                $("#determine").on("click",function(){
+                    $.ajax({
+                        "url": "${contextPath}/admin/admin/reset",
+                        "data": {
+                            id:id
+                        },
+                        "dataType": "json",
+                        "type": "POST",
+                        success: function (result) {
+                            if (result.status==0) {
+                                alert("重置成功");
+                                $admin.v.dTable.ajax.reload(null,false);
+                            }else {
+                                alert("重置失败");
+                            }
+                            $("#confirm").modal("hide");
+                        }
+                    });
+                })
             },
             del: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');

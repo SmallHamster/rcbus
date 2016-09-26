@@ -4,27 +4,25 @@ import com.leoman.bus.entity.RouteOrder;
 import com.leoman.bus.service.RouteOrderService;
 import com.leoman.carrental.entity.CarRental;
 import com.leoman.carrental.service.CarRentalService;
+import com.leoman.common.controller.common.CommonController;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
 import com.leoman.coupon.service.CouponService;
-import com.leoman.order.entity.Order;
-import com.leoman.order.service.OrderService;
-import com.leoman.pay.util.MD5Util;
-import com.leoman.system.enterprise.entity.Enterprise;
+import com.leoman.entity.Constant;
+import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.system.enterprise.service.EnterpriseService;
 import com.leoman.user.entity.UserCoupon;
 import com.leoman.user.entity.UserInfo;
-import com.leoman.user.entity.UserLogin;
 import com.leoman.user.service.UserCouponService;
-import com.leoman.user.service.UserLoginService;
 import com.leoman.user.service.UserService;
 import com.leoman.user.service.impl.UserServiceImpl;
 import com.leoman.utils.JsonUtil;
-import org.apache.commons.lang.StringUtils;
+import org.hibernate.Session;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +30,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -58,8 +57,10 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
     private UserCouponService userCouponService;
 
     @RequestMapping(value = "/index")
-    public String index(Model model){
-        model.addAttribute("enterprise",enterpriseService.queryAll());
+    public String index(Model model,HttpServletRequest request){
+        UserInfo userInfo = this.getUser(request);
+        model.addAttribute("userInfo",userInfo);
+        model.addAttribute("enterprise",enterpriseService.queryByProperty("type",0));
         model.addAttribute("coupon",couponService.queryAll());
         return "user/list";
     }
@@ -92,10 +93,12 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
      * @return
      */
     @RequestMapping(value = "/add")
-    public String add(Long id, Model model){
+    public String add(Long id, Model model,HttpServletRequest request){
 //        if(id != null){
 //            model.addAttribute("user",userService.queryByPK(id));
 //        }
+        UserInfo userInfo = this.getUser(request);
+        model.addAttribute("userInfo",userInfo);
         model.addAttribute("enterprise",enterpriseService.queryByProperty("type",0));
         return "user/add";
     }
@@ -105,19 +108,18 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
      * 保存
      * @param userInfo
      * @param id
-     * @param enterpriseId
+     * @param ep
      * @return
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Result save(UserInfo userInfo, Long id, @RequestParam(value = "enterpriseId",required = false) Long enterpriseId, @RequestParam(value = "password",required = false) String password) {
+    public Integer save(UserInfo userInfo, Long id,Long ep, @RequestParam(value = "password",required = false) String password) {
         try{
-            userService.save(userInfo,id,enterpriseId,password);
+            return userService.save(userInfo,id,ep,password);
         }catch (Exception e){
             e.printStackTrace();
-            return Result.failure();
+            return 0;
         }
-        return Result.success();
     }
 
     /**
@@ -176,7 +178,13 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
 
     }
 
-
+    /**
+     * 赠送礼券
+     * @param id
+     * @param coupon
+     * @param ids
+     * @return
+     */
     @RequestMapping(value = "/userCouponSave")
     @ResponseBody
     public Result userCouponSave(Long id,Long coupon,String ids){
@@ -203,6 +211,28 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
         return Result.success();
     }
 
+    @RequestMapping(value = "/enterpriseSave")
+    @ResponseBody
+    public Result enterpriseSave(Long id,Long enterpriseId){
+        try{
+            UserInfo userInfo = userService.queryByPK(id);
+            if(userInfo.getType()==2){
+                userInfo.setEnterprise(enterpriseService.queryByPK(enterpriseId));
+                userInfo.setType(1);
+                userService.save(userInfo);
+            }else {
+                return Result.failure();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.failure();
+        }
+        return Result.success();
+    }
 
+    public UserInfo getUser(HttpServletRequest request){
+        Admin admin = (Admin) request.getSession().getAttribute(Constant.SESSION_MEMBER_GLOBLE);
+        return userService.findByMobile(admin.getMobile());
+    }
 
 }

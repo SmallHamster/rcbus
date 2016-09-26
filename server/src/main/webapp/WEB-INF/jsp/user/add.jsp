@@ -31,6 +31,8 @@
                         </header>
                         <div class="panel-body">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
+                                <input type="hidden" id="ep" value="${userInfo.enterprise.id}"/>
+                                <input type="hidden" id="userType" value="${userInfo.type}"/>
                                 <input id="id" name="id" type="hidden" value="">
                                 <div class="form-group">
                                     <label for="mobile" class="col-sm-1 control-label">手机</label>
@@ -50,6 +52,7 @@
                                         <input type="password" id="password2" name="password2" class="form-control" required equalTo="#password" minlength="6"/>
                                     </div>
                                 </div>
+
                                 <div class="form-group">
                                     <label for="enterpriseId" class="col-sm-1 control-label">企业</label>
                                     <div class="col-sm-6">
@@ -92,17 +95,35 @@
         fn: {
             init: function () {
                 $("#formId").validate();
+
+                //管理员页面
+                var userType = $("#userType").val();
+                var ep = $("#ep").val();
+                if(userType != "" && userType !=null && userType == 0){
+                    $("#enterpriseId option").each(function () {
+                        if($(this).val()==ep){
+                            $(this).attr("selected",true);
+                            $("#enterpriseId").attr('disabled', true);
+                        }
+                    })
+                }
+
             },
             save : function() {
+                var enterpriseId = $("#enterpriseId").val();
                 if(!$("#formId").valid()) return;
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/user/save",
+                    data : {
+                        ep : enterpriseId
+                    },
                     type : "POST",
                     success : function(result) {
-                        if(result.status == 0) {
+                        if(result == 1) {
                             window.location.href = "${contextPath}/admin/user/index";
-                        }
-                        else {
+                        }else if(result == 2){
+                            alert("手机号已经存在");
+                        }else {
                             alert("操作失败");
                         }
                     }

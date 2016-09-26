@@ -26,22 +26,27 @@
                             <div class="form-group col-sm-2">
                                 <input type="text" id="mobile" name="mobile" class="form-control" placeholder="手机号">
                             </div>
-                            <div class="form-group col-sm-2">
-                                <select id="type" name="type" class="form-control input-sm">
-                                    <option value="">权限</option>
-                                    <option value="0">企业管理</option>
-                                    <option value="1">员工</option>
-                                    <option value="2">普通会员</option>
-                                </select>
-                            </div>
-                            <div class="form-group col-sm-2">
-                                <select class="form-control input-sm" id="enterpriseId" name="enterpriseId" >
-                                    <option value="">企业</option>
-                                    <c:forEach var="v" items="${enterprise}">
-                                        <option value="${v.id}">${v.name}</option>
-                                    </c:forEach>
-                                </select>
-                            </div>
+                            <c:if test="${userInfo.type eq 0}">
+                                <input type="hidden" id="enterpriseId" name="enterpriseId" value="${userInfo.enterprise.id}">
+                            </c:if>
+                            <c:if test="${userInfo.type ne 0}">
+                                <div class="form-group col-sm-2">
+                                    <select id="type" name="type" class="form-control input-sm">
+                                        <option value="">权限</option>
+                                        <option value="0">企业管理</option>
+                                        <option value="1">员工</option>
+                                        <option value="2">普通会员</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-sm-2">
+                                    <select class="form-control input-sm" id="enterpriseId" name="enterpriseId" >
+                                        <option value="">企业</option>
+                                        <c:forEach var="v" items="${enterprise}">
+                                            <option value="${v.id}">${v.name}</option>
+                                        </c:forEach>
+                                    </select>
+                                </div>
+                            </c:if>
                             <div class="form-group col-sm-2">
                                 <button id="c_search" class="btn btn-info">搜索</button>
                             </div>
@@ -98,6 +103,7 @@
 <%@ include file="../inc/new2/foot.jsp" %>
 <%@ include file="../inc/new2/confirm.jsp" %>
 <%@ include file="giving.jsp" %>
+<%@ include file="enterprise.jsp" %>
 <script>
     $user = {
         v: {
@@ -177,8 +183,12 @@
 
                                 var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$user.fn.del(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 删除</button>";
+
                                 var departure = "<button title='离职' class='btn btn-primary btn-circle edit' onclick=\"$user.fn.departure(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 离职</button>";
+
+                                var enterprise = "<button title='选择企业' class='btn btn-primary btn-circle edit' onclick=\"$user.fn.enterprise(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 选择企业</button>";
 
                                 var giving = "<button title='赠送' class='btn btn-primary btn-circle edit' onclick=\"$user.fn.giving(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 赠送</button>";
@@ -186,7 +196,7 @@
                                 if(row.type==1){
                                     return giving  + "&nbsp;" + detail  + "&nbsp;" + departure + "&nbsp;" + del;
                                 }else {
-                                    return giving  + "&nbsp;" + detail  + "&nbsp;"  + del;
+                                    return giving  + "&nbsp;" + detail  + "&nbsp;" + enterprise + "&nbsp;" + del;
                                 }
                             }
                         }
@@ -222,6 +232,34 @@
                         }
                     });
                 })
+            },
+            enterprise: function (id) {
+                $("#enterprise1").modal("show");
+                console.log(id);
+                var enterprise = $("#enterprise").val();
+                $("#enterprise").change(function(){
+                    enterprise = $("#enterprise").val();
+                });
+                $("#enterpriseSave").off("click");
+                $("#enterpriseSave").on("click",function(){
+                    $.ajax({
+                        "url": "${contextPath}/admin/user/enterpriseSave",
+                        "data": {
+                            enterpriseId:enterprise,
+                            id:id
+                        },
+                        "dataType": "json",
+                        "type": "POST",
+                        success: function (result) {
+                            if (result==1) {
+                                alert("删除错误");
+                            }else {
+                                $user.v.dTable.ajax.reload(null,false);
+                            }
+                            $("#enterprise1").modal("hide");
+                        }
+                    });
+                });
             },
             giving: function (id) {
                 var checkBox = $("#dataTables tbody tr").find('input[type=checkbox]:checked');

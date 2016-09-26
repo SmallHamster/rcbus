@@ -20,9 +20,6 @@ public class NotUserCoupon extends BaseEntity{
     @Column(name = "coupon_id")
     private Long couponId;
 
-    @Column(name = "rental_id")
-    private Long rentalId;
-
     public String getMobile() {
         return mobile;
     }
@@ -39,11 +36,4 @@ public class NotUserCoupon extends BaseEntity{
         this.couponId = couponId;
     }
 
-    public Long getRentalId() {
-        return rentalId;
-    }
-
-    public void setRentalId(Long rentalId) {
-        this.rentalId = rentalId;
-    }
 }

@@ -69,9 +69,15 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
 
     @Override
     @Transactional
-    public void save(UserInfo userInfo, Long id, Long enterpriseId , String password) {
+    public Integer save(UserInfo userInfo, Long id, Long enterpriseId , String password) {
         Enterprise enterprise = enterpriseService.queryByPK(enterpriseId);
         UserLogin userLogin  = new UserLogin();
+
+        UserInfo user = findByMobile(userInfo.getMobile());
+        if(user!=null){
+            return 2;
+        }
+
         //新增一条用户登录
         userLogin.setUsername(userInfo.getMobile());
         userLogin.setPassword(MD5Util.MD5Encode(password,"UTF-8"));
@@ -80,11 +86,9 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
         //新增一条企业会员
         userInfo.setEnterprise(enterprise);
         userInfo.setUserId(userLogin.getId());
-//            userInfo.setPassword(MD5Util.MD5Encode(userInfo.getPassword(),"UTF-8"));
         userInfo.setType(1);
         save(userInfo);
-
-
+        return 1;
     }
 
     @Override
@@ -225,6 +229,8 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
                 userCoupon.setCoupon(couponService.queryByPK(notUserCoupon.getCouponId()));
                 userCoupon.setIsUse(1);
                 userCouponService.save(userCoupon);
+                //删除非用户优惠券表信息
+                notUserCouponService.delete(notUserCoupon);
             }
 
         }

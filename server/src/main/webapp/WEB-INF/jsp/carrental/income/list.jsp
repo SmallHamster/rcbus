@@ -213,19 +213,22 @@
                         $( api.column( 5 ).footer() ).html(
                                 api.column( 5 ).data().reduce( function ( a, b ) {
                                     var sum = a + b;
-                                    return "总和: " + sum;
+                                    console.log("sum1:"+sum);
+                                    return sum;
                                 } )
                         );
                         $( api.column( 6 ).footer() ).html(
                                 api.column( 6 ).data().reduce( function ( a, b ) {
                                     var sum = a + b;
-                                    return "总和: " + sum;
+                                    console.log("sum2:"+sum);
+                                    return sum;
                                 } )
                         );
                         $( api.column( 7 ).footer() ).html(
                                 api.column( 7 ).data().reduce( function ( a, b ) {
                                     var sum = a + b;
-                                    return "总和: " + sum;
+                                    console.log("sum3:"+sum);
+                                    return sum;
                                 } )
                         )
                     },

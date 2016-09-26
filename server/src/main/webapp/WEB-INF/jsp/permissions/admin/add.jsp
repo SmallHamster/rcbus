@@ -32,6 +32,8 @@
                         <div class="panel-body">
                             <input type="hidden" id="role" name="role" value="${roleId}">
                             <input type="hidden" id="enterprise" name="enterprise" value="${admin.enterprise.id}">
+                            <input type="hidden" id="userEp" name="userEp" value="${userInfo.enterprise.id}">
+                            <input type="hidden" id="userType" name="userType" value="${userInfo.type}">
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post" >
                                 <input id="id" name="id" type="hidden" value="${admin.id}">
                                 <input id="createDate" name="createDate" type="hidden" value="${admin.createDate}">
@@ -122,8 +124,17 @@
         },
         fn: {
             init: function () {
+                var userType = $("#userType").val();
+                var role,
+                    enterprise;
+                if(userType == 0){
+                    role = 12;
+                    enterprise = $("#userEp").val();
+                }else {
+                    role = $("#role").val();
+                    enterprise = $("#enterprise").val();
+                }
 
-                var role = $("#role").val();
                 if(role!=null && role!=""){
                     $("#roleId").attr("disabled",true);
                     $("#roleId option").each(function(){
@@ -132,7 +143,7 @@
                         }
                     })
                 }
-                var enterprise = $("#enterprise").val();
+
                 if(enterprise!=null && enterprise!=""){
                     $("#enterpriseId").attr("disabled",true);
                     $("#enterpriseId option").each(function(){
@@ -180,9 +191,17 @@
                 }
             },
             save : function() {
+                var enterprise_id = $("#enterpriseId").val();
+                var role_id = $("#roleId").val();
+                console.log(enterprise_id);
+                console.log(role_id);
                 if(!$("#formId").valid()) return;
                 $("#formId").ajaxSubmit({
                     url : "${contextPath}/admin/admin/save",
+                    data : {
+                        enterprise_id : enterprise_id,
+                        role_id : role_id
+                    },
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {

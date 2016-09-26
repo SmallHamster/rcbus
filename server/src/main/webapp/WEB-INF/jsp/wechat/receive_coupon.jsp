@@ -37,7 +37,7 @@
         </div>
         <input type="hidden" id="rentalId" value="${rentalId}">
         <div class="button">
-            <button type='button' class="ubtn ubtn-blue" id="submit" onclick="save()">确认领取</button>
+            <button type='button' class="ubtn ubtn-blue" id="submit" >确认领取</button>
         </div>
     </form>
 
@@ -68,8 +68,12 @@
                     "dataType": "json",
                     "type": "POST",
                     success: function (result) {
-                        if (result.status==0) {
+                        if (result==1) {
                             alertMsg('领取完成', 3e3);
+                        }else if(result==2){
+                            alertMsg('超出领取上限', 3e3);
+                        }else if(result==3){
+                            alertMsg('您已经领取过了', 3e3);
                         }else {
                             alertMsg('领取失败', 3e3);
                         }

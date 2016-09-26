@@ -23,7 +23,13 @@ public class ExcelUtil {
     public static void createExcel(String templatePath, String titles, List<Map<String, Object>> list, String exportFilePath)
             throws Exception {
         // 读取导出模板
-        FileInputStream fis = new FileInputStream(new File(templatePath));
+//        File f = new File(templatePath);
+//        if(f.getParent()!=null && !new File(f.getParent()).exists()){
+//            new File(f.getParent()).mkdirs();
+//        }
+//        f.createNewFile();
+
+        FileInputStream  fis = new FileInputStream(new File(templatePath));
         HSSFWorkbook workbook = new HSSFWorkbook(fis);
         HSSFCellStyle style = workbook.createCellStyle();
         style.setAlignment(HSSFCellStyle.VERTICAL_CENTER);
@@ -31,7 +37,7 @@ public class ExcelUtil {
         // 输出流
         OutputStream out = new FileOutputStream(exportFilePath);
         // 模板数据要放在Sheet1
-        HSSFSheet sheet = workbook.getSheet("Y2016项目");
+        HSSFSheet sheet = workbook.getSheet("Sheet1");
         // 标题字段数据
         String[] titlesArr = titles.split(",");
 

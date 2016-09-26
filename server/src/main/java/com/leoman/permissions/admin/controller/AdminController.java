@@ -1,5 +1,6 @@
 package com.leoman.permissions.admin.controller;
 
+import com.leoman.entity.Constant;
 import com.leoman.pay.util.MD5Util;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.permissions.admin.service.impl.AdminServiceImpl;
@@ -15,6 +16,8 @@ import com.leoman.permissions.role.entity.vo.RoleSelectVo;
 import com.leoman.permissions.role.service.RoleService;
 import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
+import com.leoman.user.entity.UserInfo;
+import com.leoman.user.service.UserService;
 import com.leoman.utils.JsonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.hibernate.annotations.Parameter;
@@ -52,27 +55,33 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
     @Autowired
     private EnterpriseService enterpriseService;
 
+    @Autowired
+    private UserService userService;
+
 
 
     /**
      * 列表页面
      */
     @RequestMapping(value = "/index")
-    public String index(Model model) {
+    public String index(Model model,HttpServletRequest request) {
         Admin admin = adminService.findByUsername("admin");
         model.addAttribute("admin", admin);
+        UserInfo userInfo = this.getUser(request);
+        model.addAttribute("userInfo",userInfo);
         return "permissions/admin/list2";
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(String username, Integer draw, Integer start, Integer length) {
+    public Map<String, Object> list(String username, Integer draw, Integer start, Integer length ,Long enterpriseId) {
         int pagenum = getPageNum(start, length);
 
         Query query = Query.forClass(Admin.class, adminService);
         query.setPagenum(pagenum);
         query.setPagesize(length);
         query.like("username", username);
+        query.eq("enterprise.id",enterpriseId);
         Page<Admin> page = adminService.queryPage(query);
 
         List<Admin> list = page.getContent();
@@ -94,7 +103,7 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
     }
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String add(Long id, Model model) {
+    public String add(Long id, Model model,HttpServletRequest request) {
         if (id != null) {
             model.addAttribute("admin", adminService.queryByPK(id));
             List<AdminRole> adminRoles = adminRoleService.queryByProperty("adminId",id);
@@ -106,6 +115,10 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
         model.addAttribute("role",roleService.queryAll());
         //企业表
         model.addAttribute("enterprise",enterpriseService.queryAll());
+
+        UserInfo userInfo = this.getUser(request);
+        model.addAttribute("userInfo",userInfo);
+
         return "permissions/admin/add";
     }
 
@@ -117,8 +130,8 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Result save(Admin admin, @RequestParam(value = "enterpriseId",required = false) Long enterpriseId, @RequestParam(value = "roleId",required = false)Long roleId) {
-        return adminService.save(admin,enterpriseId,roleId);
+    public Result save(Admin admin,Long enterprise_id, Long role_id) {
+        return adminService.save(admin,enterprise_id,role_id);
     }
 
     /**
@@ -232,6 +245,32 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
             return 1;
         }
         return 0;
+    }
+
+
+    /**
+     * 重置密码
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/reset")
+    @ResponseBody
+    public Result reset(Long id){
+        try{
+            Admin admin = adminService.queryByPK(id);
+            admin.setPassword(MD5Util.MD5Encode("888888","UTF-8"));
+            adminService.save(admin);
+        }catch (Exception e){
+            e.printStackTrace();
+            return Result.failure();
+        }
+        return Result.success();
+    }
+
+
+    public UserInfo getUser(HttpServletRequest request){
+        Admin admin = (Admin) request.getSession().getAttribute(Constant.SESSION_MEMBER_GLOBLE);
+        return userService.findByMobile(admin.getMobile());
     }
 
 }
