@@ -87,10 +87,12 @@
             type : "POST",
             success : function(result) {
                 if(result.status == 0) {
-                    window.location.href = "${contextPath}/admin/user/index";
+                    alertMsg("预定成功",function(){
+                        window.location.href = "${contextPath}/wechat/wechat/index";
+                    });
                 }
                 else {
-                    alert("操作失败");
+                    alertMsg("预定失败");
                 }
             }
         })

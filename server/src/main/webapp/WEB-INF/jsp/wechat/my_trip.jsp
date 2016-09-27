@@ -134,7 +134,7 @@
 
             }
         })
-    })
+    });
 
 
     function carRental(id,status){
@@ -180,7 +180,7 @@
                     layer.open({
                         content: '<i class="ico ico-right2"></i><br /><br />删除失败'
                         ,btn: '确定'
-                    });;
+                    });
                 }
             }
         });

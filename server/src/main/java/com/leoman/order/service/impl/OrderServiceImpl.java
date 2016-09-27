@@ -16,4 +16,8 @@ public class OrderServiceImpl extends GenericManagerImpl<Order,OrderDao> impleme
     @Autowired
     private OrderDao orderDao;
 
+    @Override
+    public Order findOne(String orderNo) {
+        return orderDao.findOne(orderNo);
+    }
 }

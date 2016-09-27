@@ -247,11 +247,33 @@
             "type": "POST",
             success: function (result) {
                 if (result.status==0) {
-                    layer.open({
-                        content: '<i class="ico ico-right2"></i><br /><br />确认付款'
-                        ,btn: '确定'
-                        ,yes: function(index, layero){
-                            window.location.href = "${contextPath}/wechat/order/myOrder/index";
+                    // 调用微信浏览器内置功能实现微信支付
+                    $.ajax({
+                        method: "POST",
+                        url: "weixin/pay/goPay",
+                        dataType: "html",
+                        data: {
+                            rentalId:id,
+                            couponId : couponId
+                        },
+                        success: function (result) {
+                            var obj = eval('(' + result + ')');
+                            WeixinJSBridge.invoke('getBrandWCPayRequest', {
+                                "appId": obj.appId,                  //公众号名称，由商户传入
+                                "timeStamp": obj.timeStamp,          //时间戳，自 1970 年以来的秒数
+                                "nonceStr": obj.nonceStr,         //随机串
+                                "package": obj.package,           //商品包信息
+                                "signType": obj.signType,        //微信签名方式:
+                                "paySign": obj.paySign           //微信签名
+                            }, function (res) {
+                                layer.open({
+                                    content: '<i class="ico ico-right2"></i><br /><br />付款完成'
+                                    ,btn: '确定'
+                                    ,yes: function(index, layero){
+                                        window.location.href = "${contextPath}/wechat/order/myOrder/index";
+                                    }
+                                });
+                            });
                         }
                     });
                 }else {

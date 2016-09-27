@@ -259,10 +259,10 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
         UserInfo userInfo = new CommonController().getSessionUser(request);
         try{
             CarRental carRental = carRentalService.queryByPK(id);
-            Order order = carRental.getOrder();
-            //改变状态进行中
-            order.setStatus(2);
-            orderService.save(order);
+//            Order order = carRental.getOrder();
+//            //改变状态进行中
+//            order.setStatus(2);
+//            orderService.save(order);
             carRental.setIncome(Double.parseDouble(StringUtils.isNotBlank(price) ? price : "0.0"));
             carRentalService.save(carRental);
             //改变优惠券状态为已使用
@@ -324,8 +324,8 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
             order.setStatus(4);
             orderService.save(order);
             carRental.setUnsubscribe(StringUtils.isNotBlank(unsubscribe) ? unsubscribe : "");
-            //剩余收到金额
-            carRental.setIncome(carRental.getIncome() - (val!=null ? val : 0.0));
+            //应收金额
+//            carRental.setIncome(carRental.getIncome() - (val!=null ? val : 0.0));
             //退款金额
             carRental.setRefund(val!=null ? val : 0.0);
             carRentalService.save(carRental);
