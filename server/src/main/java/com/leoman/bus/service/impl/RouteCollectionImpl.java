@@ -47,6 +47,12 @@ public class RouteCollectionImpl extends GenericManagerImpl<RouteCollection, Rou
         return routeCollectionDao.findByUser(userId);
     }
 
+    /**
+     * 收藏
+     * @param routeId
+     * @param userId
+     * @param isCollect
+     */
     @Override
     @Transactional
     public void doCollect(Long routeId, Long userId, Boolean isCollect){
@@ -66,6 +72,11 @@ public class RouteCollectionImpl extends GenericManagerImpl<RouteCollection, Rou
         }
     }
 
+    /**
+     * 取消多个收藏
+     * @param routeIds
+     * @param userId
+     */
     @Override
     @Transactional
     public void multiDel(String routeIds, Long userId){

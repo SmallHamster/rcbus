@@ -194,11 +194,11 @@
                 if (response.status == '0') {
                     $bus.fn.viewImage(response.data);
                 } else {
-                    $common.fn.notify('error');
+                    $leoman.alertMsg('error');
                 }
             },
             onFileError: function (e, file, error) {
-                $common.fn.notify('error');
+                $leoman.alertMsg('error');
             },
             back : function(){
                 window.location.href = "${contextPath}/admin/bus/index";
@@ -210,7 +210,7 @@
 
                 if($("#imageId").val() == ''){
                     flag = false;
-                    $common.fn.notify('图片不能为空');
+                    $leoman.alertMsg('图片不能为空');
                 }
 
                 if(flag){
@@ -222,7 +222,7 @@
                                 window.location.href = "${contextPath}/admin/bus/index";
                             }
                             else {
-                                $common.fn.notify('操作失败');
+                                $leoman.alertMsg('操作失败');
                             }
                         }
                     });

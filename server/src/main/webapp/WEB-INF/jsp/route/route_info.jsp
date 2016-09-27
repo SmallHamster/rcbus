@@ -364,7 +364,6 @@
                     var busIds = $("#busIds").val();
                     busIds += "," + ids;
                     $("#busIds").val(busIds);
-                    $("#confirm").modal("hide");
                     $("#myModal").modal("hide");
                     $route.v.dTable.ajax.reload();
                 });

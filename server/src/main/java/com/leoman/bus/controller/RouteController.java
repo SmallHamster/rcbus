@@ -151,44 +151,12 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String add(HttpServletRequest request,Long id, Model model) {
-        if (id != null) {
-            Route route = routeService.queryByPK(id);
-            List<RouteTime> times = routeTimeService.findByRouteId(route.getId());
-
-            //路线时间
-            model.addAttribute("route", route);//路线
-            model.addAttribute("timeJson", JsonUtil.obj2Json(times));
-
-            //已派遣的班车ids
-            String busIdsStr = "";
-            StringBuffer busIds = new StringBuffer();
-            List<BusSend> bsList = busSendService.findBus(route.getId(),1);
-            for (BusSend bs:bsList) {
-                Long busId = bs.getBus().getId();
-                busIds.append(busId+",");
-                busIdsStr = busIds.toString().substring(0,busIds.toString().length()-1);
-            }
-            model.addAttribute("busIds",busIdsStr);
-
-            //显示已有的路线
-            StringBuffer stationSb = new StringBuffer();
-            List<RouteStation> stationList = routeStationService.findByRouteId(id);
-            for (RouteStation rs:stationList) {
-                stationSb.append(rs.getStationName()+"-->");
-            }
-            String stationStr = "";
-            if(stationSb.length()>0){
-                stationStr = stationSb.toString().substring(0,stationSb.toString().length()-3);
-            }
-            model.addAttribute("stationStr",stationStr);
-
-        }
-        //获取所有企业
-        List<Enterprise> enterpriseList = this.getEnterpriseList(request);
-        model.addAttribute("enterpriseList", enterpriseList);
+    public String add(HttpServletRequest request, Model model,Long id) {
+        this.getRouteInfo(request,model,id);
         return "route/route_add";
     }
+
+
 
     /**
      * 保存
@@ -198,17 +166,18 @@ public class RouteController extends GenericEntityController<Route, Route, Route
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     public Result save(Route route, String departTimes, String backTimes, String busIds, Integer isRoundTrip, MultipartFile file) {
+        Result result = Result.success();
         try {
             List<Map> list = null;
             if(file != null){
                 list = this.doXMLParse(file);//解析xml
             }
-            routeService.saveRoute(route,departTimes,backTimes,busIds,isRoundTrip, list);
+            result = routeService.saveRoute(route,departTimes,backTimes,busIds,isRoundTrip, list);
         } catch (Exception e) {
             e.printStackTrace();
-            Result.failure();
+            return Result.failure();
         }
-        return Result.success();
+        return result;
     }
 
     /**
@@ -218,37 +187,8 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      * @return
      */
     @RequestMapping(value = "/detail", method = RequestMethod.GET)
-    public String info(Long id, Model model) {
-        if (id != null) {
-            Route route = routeService.queryByPK(id);
-            List<RouteTime> times = routeTimeService.findByRouteId(route.getId());
-
-            model.addAttribute("route", route);//路线
-            model.addAttribute("timeJson", JsonUtil.obj2Json(times));//路线时间
-
-            //已派遣的班车ids
-            String busIdsStr = "";
-            StringBuffer busIds = new StringBuffer();
-            List<BusSend> bsList = busSendService.findBus(route.getId(),1);
-            for (BusSend bs:bsList) {
-                Long busId = bs.getBus().getId();
-                busIds.append(busId+",");
-                busIdsStr = busIds.toString().substring(0,busIds.toString().length()-1);
-            }
-            model.addAttribute("busIds",busIdsStr);
-
-            //显示已有的路线
-            StringBuffer stationSb = new StringBuffer();
-            List<RouteStation> stationList = routeStationService.findByRouteId(id);
-            for (RouteStation rs:stationList) {
-                stationSb.append(rs.getStationName()+"-->");
-            }
-            String stationStr = "";
-            if(stationSb.length()>0){
-                stationStr = stationSb.toString().substring(0,stationSb.toString().length()-3);
-            }
-            model.addAttribute("stationStr",stationStr);
-        }
+    public String info(HttpServletRequest request, Model model, Long id) {
+        this.getRouteInfo(request,model,id);
         return "route/route_info";
     }
 
@@ -343,40 +283,9 @@ public class RouteController extends GenericEntityController<Route, Route, Route
         if(admin != null && admin.getEnterprise() != null){
             enterpriseId = admin.getEnterprise().getId();
         }
-
         int pagenum = getPageNum(start, length);
-        StringBuffer sql = new StringBuffer("SELECT \n" +
-                "  CONCAT(FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d'),' ',ro.`depart_time`) AS rideTime,\n" +//0
-                "  ro.`start_station` AS startStation,\n" +//1
-                "  ro.`end_station` AS endStation,\n" +//2
-                "  ro.`depart_time` AS departTime,\n" +//3
-                "  e.`name` AS enterpriseName,\n" +//4
-                "  COUNT(o.`user_id`) AS peopleNum, \n" +//5
-                "  ro.`route_id` AS routeId\n" +//6
-                "FROM\n" +
-                "  t_route_order ro \n" +
-                "  LEFT JOIN t_order o \n" +
-                "    ON o.`id` = ro.`order_id` \n" +
-                "  LEFT JOIN t_route r \n" +
-                "    ON r.`id` = ro.`route_id` \n" +
-                "  LEFT JOIN t_enterprise e \n" +
-                "    ON e.`id` = r.`enterprise_id` \n" +
-                "  where 1=1 ");
-        if(!StringUtils.isEmpty(routeName)){
-            sql.append(" AND (ro.`start_station` LIKE '%"+routeName+"%' OR ro.`end_station` LIKE '%"+routeName+"%') ");
-        }
-        if(enterpriseId != null){
-            sql.append(" and e.`id` = '"+enterpriseId+"'");
-        }
-        if(!StringUtils.isEmpty(startDate)){
-            sql.append(" AND FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d') >= DATE_FORMAT('"+startDate+"','%Y-%m-%d') ");
-        }
-        if(!StringUtils.isEmpty(endDate)){
-            sql.append(" AND FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d') <= DATE_FORMAT('"+endDate+"','%Y-%m-%d') ");
-        }
-        sql.append(" GROUP BY CONCAT(FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d'),' ',ro.`depart_time`) ");
-        Page page = orderService.queryPageBySql(sql.toString(), pagenum, length);
-        return DataTableFactory.fitting(draw, page);
+        Map<String, Object> page = orderService.findPage(request,routeName,enterpriseId,startDate,endDate,draw,pagenum,length);
+        return page;
     }
 
     /**
@@ -466,6 +375,49 @@ public class RouteController extends GenericEntityController<Route, Route, Route
         }
         in.close();
         return list;
+    }
+
+    /**
+     * 获取路线的信息
+     * @param request
+     * @param model
+     * @param routeId
+     */
+    private void getRouteInfo(HttpServletRequest request, Model model, Long routeId){
+        if(routeId != null){
+            Route route = routeService.queryByPK(routeId);
+            List<RouteTime> times = routeTimeService.findByRouteId(routeId);
+
+            //路线时间
+            model.addAttribute("route", route);//路线
+            model.addAttribute("timeJson", JsonUtil.obj2Json(times));
+
+            //已派遣的班车ids
+            String busIdsStr = "";
+            StringBuffer busIds = new StringBuffer();
+            List<BusSend> bsList = busSendService.findBus(routeId,1);
+            for (BusSend bs:bsList) {
+                Long busId = bs.getBus().getId();
+                busIds.append(busId+",");
+                busIdsStr = busIds.toString().substring(0,busIds.toString().length()-1);
+            }
+            model.addAttribute("busIds",busIdsStr);
+
+            //显示已有的路线
+            StringBuffer stationSb = new StringBuffer();
+            List<RouteStation> stationList = routeStationService.findByRouteId(routeId);
+            for (RouteStation rs:stationList) {
+                stationSb.append(rs.getStationName()+"-->");
+            }
+            String stationStr = "";
+            if(stationSb.length()>0){
+                stationStr = stationSb.toString().substring(0,stationSb.toString().length()-3);
+            }
+            model.addAttribute("stationStr",stationStr);
+        }
+        //获取所有企业
+        List<Enterprise> enterpriseList = this.getEnterpriseList(request);
+        model.addAttribute("enterpriseList", enterpriseList);
     }
 
 }

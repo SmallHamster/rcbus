@@ -236,9 +236,9 @@
                     } else {
                         $bus.v.dTable.ajax.reload();
                     }
-                    $leoman.notify(result.msg, "success");
+                    $leoman.alertMsg(result.msg, "success");
                 } else {
-                    $leoman.notify(result.msg, "error");
+                    $leoman.alertMsg(result.msg, "error");
                 }
             }
         }
