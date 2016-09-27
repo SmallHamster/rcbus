@@ -104,22 +104,22 @@
 
 	<!-- AOP -->
 	<aop:aspectj-autoproxy />
-	<!--<bean name="wxMpConfigStorage" class="me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage">-->
-		<!--<property name="appId" value="${weixin.appId}" />-->
-		<!--<property name="secret" value="${weixin.secret}" />-->
-		<!--<property name="token" value="${weixin.token}" />-->
-		<!--<property name="aesKey" value="${weixin.aesKey}" />-->
-		<!--<property name="partnerId" value="${weixin.partnerId}" />-->
-		<!--<property name="partnerKey" value="${weixin.partnerKey}" />-->
-	<!--</bean>-->
+	<bean name="wxMpConfigStorage" class="me.chanjar.weixin.mp.api.WxMpInMemoryConfigStorage">
+		<property name="appId" value="${weixin.appId}" />
+		<property name="secret" value="${weixin.secret}" />
+		<property name="token" value="${weixin.token}" />
+		<property name="aesKey" value="${weixin.aesKey}" />
+		<property name="partnerId" value="${weixin.partnerId}" />
+		<property name="partnerKey" value="${weixin.partnerKey}" />
+	</bean>
 
-	<!--<bean name="wxMpService" class="me.chanjar.weixin.mp.api.WxMpServiceImpl">-->
-		<!--<property name="wxMpConfigStorage" ref="wxMpConfigStorage"></property>-->
-	<!--</bean>-->
+	<bean name="wxMpService" class="me.chanjar.weixin.mp.api.WxMpServiceImpl">
+		<property name="wxMpConfigStorage" ref="wxMpConfigStorage"></property>
+	</bean>
 
-	<!--<bean name="wxMpMessageRouter" class="me.chanjar.weixin.mp.api.WxMpMessageRouter">-->
-		<!--<constructor-arg name="wxMpService" ref="wxMpService" />-->
-	<!--</bean>-->
+	<bean name="wxMpMessageRouter" class="me.chanjar.weixin.mp.api.WxMpMessageRouter">
+		<constructor-arg name="wxMpService" ref="wxMpService" />
+	</bean>
 
 
 	<context:component-scan base-package="com.leoman">

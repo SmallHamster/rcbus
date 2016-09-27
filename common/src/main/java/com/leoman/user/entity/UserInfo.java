@@ -16,6 +16,10 @@ public class UserInfo extends BaseEntity {
     @Column(name = "user_id")
     private Long userId;
 
+    @ManyToOne
+    @JoinColumn(name = "wechat_id")
+    private WeChatUser weChatUser;
+
     @Column(name = "mobile")
     private String mobile;
 
@@ -60,5 +64,13 @@ public class UserInfo extends BaseEntity {
 
     public void setType(Integer type) {
         this.type = type;
+    }
+
+    public WeChatUser getWeChatUser() {
+        return weChatUser;
+    }
+
+    public void setWeChatUser(WeChatUser weChatUser) {
+        this.weChatUser = weChatUser;
     }
 }
