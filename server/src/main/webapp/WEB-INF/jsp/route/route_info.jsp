@@ -352,25 +352,15 @@
             },
             //一键派遣
             multiDispatch : function (){
-                /*$leoman.optNotify(function () {
-                    var checkBox = $("#dataTablesModal tbody tr").find('input[type=checkbox]:checked');
-                    var ids = checkBox.getInputId();
-                    var busIds = $("#busIds").val();
-                    busIds += + "," + ids;
-                    $("#busIds").val(busIds);
-                },"你确定要派遣已勾选的车辆吗？","确定");*/
+
                 var checkBox = $("#dataTablesModal tbody tr").find('input[type=checkbox]:checked');
                 var ids = checkBox.getInputId();
                 if(ids == false){
-                    alert('请至少勾选一条数据');
+                    $leoman.alertMsg('请至少勾选一条数据');
                     return ;
                 }
 
-                $("#confirm").modal("show");
-                $('#showText').html('你确定要派遣已勾选的车辆吗？');
-                $("#determine").off("click");
-                $("#determine").on("click",function(){
-
+                $leoman.alertConfirm("你确定要派遣已勾选的车辆吗？",function(){
                     var busIds = $("#busIds").val();
                     busIds += "," + ids;
                     $("#busIds").val(busIds);
@@ -378,7 +368,6 @@
                     $("#myModal").modal("hide");
                     $route.v.dTable.ajax.reload();
                 });
-
             },
             //保存
             save : function() {
@@ -386,7 +375,7 @@
 
                 if($("#busIds").val() == ''){
                     flag = false;
-                    $common.fn.notify('请至少派遣一辆车');
+                    $leoman.alertMsg('请至少派遣一辆车');
                 }
 
                 if(flag){

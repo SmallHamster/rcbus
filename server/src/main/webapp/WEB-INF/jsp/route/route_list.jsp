@@ -36,14 +36,7 @@
                                 <select class="form-control input-sm" id="enterpriseId">
                                     <option value="">---请选择---</option>
                                     <c:forEach items="${enterpriseList}" var="enterprise">
-                                        <c:if test="${sessionScope.loginAdmin.enterprise != null}">
-                                            <c:if test="${sessionScope.loginAdmin.enterprise.id == enterprise.id}">
-                                                <option value="${enterprise.id}">${enterprise.name}</option>
-                                            </c:if>
-                                        </c:if>
-                                        <c:if test="${sessionScope.loginAdmin.enterprise == null}">
-                                            <option value="${enterprise.id}">${enterprise.name}</option>
-                                        </c:if>
+                                        <option value="${enterprise.id}">${enterprise.name}</option>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -91,7 +84,6 @@
     </div>
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
-<%@ include file="../confirm.jsp" %>
 <script>
     $route = {
         v: {
@@ -107,20 +99,6 @@
                 $("#c_clear").click(function () {
                     $(this).parents(".panel-body").find("input,select").val("");
                 });
-                /*$.ajax({
-                    "url": "${contextPath}/admin/route/saveOrder",
-                    "data": {
-                        'order.type':'1',
-                        'userId':2,
-                        'routeId':9,
-                        'departTime':'14:55'
-                    },
-                    "dataType": "json",
-                    "type": "POST",
-                    success: function (result) {
-                        console.info("success");
-                    }
-                });*/
             },
             dataTableInit: function () {
                 $route.v.dTable = $leoman.dataTable($('#dataTables'), {
@@ -218,29 +196,15 @@
                 }else{
                     ids = checkBox.getInputId();
                 }
-                $("#confirm").modal("show");
-                $('#showText').html('您确定要删除吗？');
-                $("#determine").off("click");
-                $("#determine").on("click",function(){
-                    $.ajax({
-                        "url": "${contextPath}/admin/route/delete",
-                        "data": {
-                            ids:JSON.stringify(ids)
-                        },
-                        "dataType": "json",
-                        "type": "POST",
-                        success: function (result) {
-                            if (result==1) {
-                                alert("删除错误");
-                            }else if(result==2){
-                                alert("超级管理员无法删除");
-                            }else {
-                                $route.v.dTable.ajax.reload(null,false);
-                            }
-                            $("#confirm").modal("hide");
+                $leoman.alertConfirm("确定要删除吗？",function(){
+                    $.post("${contextPath}/admin/route/delete",{'ids':JSON.stringify(ids)},function(result){
+                        if(result.status == 0){
+                            $bus.v.dTable.ajax.reload(null,false);
+                        }else{
+                            $leoman.alertMsg("删除错误");
                         }
                     });
-                })
+                });
             },
             showHide : function(id,isShow){
                 $("#confirm").modal("show");
@@ -250,29 +214,15 @@
                 }else if(isShow == 0){
                     oper = 1;
                 }
-                $('#showText').html('您确定要执行此操作吗？');
-                $("#determine").off("click");
-                $("#determine").on("click",function(){
-                    $.ajax({
-                        "url": "${contextPath}/admin/route/updateIsShow",
-                        "data": {
-                            id:id,
-                            isShow:oper
-                        },
-                        "dataType": "json",
-                        "type": "POST",
-                        success: function (result) {
-                            if (result==1) {
-                                alert("删除错误");
-                            }else if(result==2){
-                                alert("超级管理员无法删除");
-                            }else {
-                                $route.v.dTable.ajax.reload(null,false);
-                            }
-                            $("#confirm").modal("hide");
+                $leoman.alertConfirm("您确定要执行此操作吗？",function(){
+                    $.post("${contextPath}/admin/route/updateIsShow",{'id':id,'isShow':oper},function(result){
+                        if(result.status == 0){
+                            $bus.v.dTable.ajax.reload(null,false);
+                        }else{
+                            $leoman.alertMsg("操作失败");
                         }
                     });
-                })
+                });
             },
             responseComplete: function (result, action) {
                 if (result.status == "0") {

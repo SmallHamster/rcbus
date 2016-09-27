@@ -69,7 +69,6 @@
     </div>
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
-<%@ include file="../confirm.jsp" %>
 <script>
     $route = {
         v: {

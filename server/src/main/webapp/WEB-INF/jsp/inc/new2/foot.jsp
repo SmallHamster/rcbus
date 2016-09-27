@@ -76,6 +76,8 @@
 <script src="${contextPath}/html/alert/js/notificationFx.js"></script>
 <script src="${contextPath}/html/alert/js/notify.js"></script>
 
+<script type="text/javascript" src="${contextPath}/html/js/confirm.js"></script>
+
 <script src="${contextPath }/html/datepicker/js/bootstrap-datetimepicker.js"></script>
 <script src="${contextPath }/html/datepicker/js/bootstrap-datetimepicker.zh-CN.js"></script>
 

@@ -22,7 +22,16 @@ $(function () {
 
     $.fn.dataTableExt.sErrMode = 'throw';
 
+    Confirm.init('sm');
+
 })
+
+var $test11 = {
+    v: {},
+    alertMsg: function(msg){
+        Confirm.show('Modal Title', 'Modal Content');
+    }
+};
 
 var $leoman = {
     v: {
@@ -227,9 +236,32 @@ var $leoman = {
         }
         return "";
     },
-
-
-
+    alertMsg: function(msg,func){
+        if( func == null || func == undefined ){
+            Confirm.show('消息', msg);
+        }else{
+            Confirm.show('消息', msg, {
+                '确认': {
+                    'primary': true,
+                    'callback': function() {
+                        func();
+                        Confirm.hide();
+                    }
+                }
+            });
+        }
+    },
+    alertConfirm: function(msg,func){
+        Confirm.show('确认', msg, {
+            '确认': {
+                'primary': true,
+                'callback': function() {
+                    func();
+                    Confirm.hide();
+                }
+            }
+        });
+    },
     /**
      * 描述：点击click事件提交表单，跳转页面，兼容所有的浏览器
      *

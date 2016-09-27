@@ -141,7 +141,7 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
             String[] idArr = JsonUtil.json2Obj(ids, String[].class);
             for (String id:idArr) {
                 if(!StringUtils.isEmpty(id)){
-                    busService.deleteByPK(id);
+                    busService.deleteByPK(Long.valueOf(id));
                 }
             }
         } catch (Exception e) {

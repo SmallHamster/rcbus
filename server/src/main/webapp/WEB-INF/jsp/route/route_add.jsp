@@ -378,7 +378,6 @@
                 //时间控件初始化
                 $route.fn.datetimepickerInit();
 
-
             },
             //添加时间行
             addRow : function(obj){
@@ -425,46 +424,33 @@
             //删除派遣
             delDispatch : function(busId){
                 $("#operTableId").val("dataTables");
-                var newBusIds = "";
+                var newBusIds = [];
                 var busIds = $("#busIds").val();
                 var arr = busIds.split(",");
                 for(var i = 0; i < arr.length; i++){
                     if(busId != arr[i]){
-                        newBusIds += arr[i]+",";
+                        newBusIds.push(arr[i]);
                     }
                 }
-                newBusIds = newBusIds.substr(0,newBusIds.length-1);
-                $("#busIds").val(newBusIds);
+                $("#busIds").val(newBusIds.join(","));
                 $route.v.dTable.ajax.reload();
             },
             //一键派遣
             multiDispatch : function (){
-                /*$leoman.optNotify(function () {
-                    var checkBox = $("#dataTablesModal tbody tr").find('input[type=checkbox]:checked');
-                    var ids = checkBox.getInputId();
-                    var busIds = $("#busIds").val();
-                    busIds += + "," + ids;
-                    $("#busIds").val(busIds);
-                },"你确定要派遣已勾选的车辆吗？","确定");*/
                 var checkBox = $("#dataTablesModal tbody tr").find('input[type=checkbox]:checked');
                 var ids = checkBox.getInputId();
                 if(ids == false){
-                    alert('请至少勾选一条数据');
+                    $leoman.alertMsg('请至少勾选一条数据');
                     return ;
                 }
 
-                $("#confirm").modal("show");
-                $('#showText').html('你确定要派遣已勾选的车辆吗？');
-                $("#determine").off("click");
-                $("#determine").on("click",function(){
-
+                $leoman.alertConfirm("你确定要派遣已勾选的车辆吗？",function(){
                     var busIds = $("#busIds").val();
                     busIds += "," + ids;
                     $("#busIds").val(busIds);
                     $("#confirm").modal("hide");
                     $("#myModal").modal("hide");
                     $route.v.dTable.ajax.reload();
-                    $("#operTableId").val("dataTables");
                 });
 
             },
@@ -474,7 +460,7 @@
 
                 if($("#busIds").val() == ''){
                     flag = false;
-                    $common.fn.notify('请至少派遣一辆车');
+                    $leoman.alertMsg('请至少派遣一辆车');
                 }
 
                 if(flag){
@@ -486,7 +472,7 @@
                                 window.location.href = "${contextPath}/admin/route/index";
                             }
                             else {
-                                $common.fn.notify('操作失败');
+                                $leoman.alertMsg('操作失败');
                             }
                         }
                     });

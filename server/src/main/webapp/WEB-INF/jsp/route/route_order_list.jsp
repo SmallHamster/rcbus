@@ -33,7 +33,14 @@
                                 <select class="form-control input-sm" id="enterpriseId">
                                     <option value="">---请选择---</option>
                                     <c:forEach items="${enterpriseList}" var="enterprise">
-                                        <option value="${enterprise.id}">${enterprise.name}</option>
+                                        <c:if test="${sessionScope.loginAdmin.enterprise != null}">
+                                            <c:if test="${sessionScope.loginAdmin.enterprise.id == enterprise.id}">
+                                                <option value="${enterprise.id}">${enterprise.name}</option>
+                                            </c:if>
+                                        </c:if>
+                                        <c:if test="${sessionScope.loginAdmin.enterprise == null}">
+                                            <option value="${enterprise.id}">${enterprise.name}</option>
+                                        </c:if>
                                     </c:forEach>
                                 </select>
                             </div>
@@ -92,7 +99,6 @@
     </div>
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
-<%@ include file="../confirm.jsp" %>
 <script>
     $route = {
         v: {

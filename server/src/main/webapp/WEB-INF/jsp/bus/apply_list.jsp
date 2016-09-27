@@ -74,7 +74,6 @@
     </div>
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
-<%@ include file="../confirm.jsp" %>
 <script>
     $bus = {
         v: {
@@ -147,29 +146,15 @@
                 }else{
                     ids = checkBox.getInputId();
                 }
-                $("#confirm").modal("show");
-                $('#showText').html('您确定要删除吗？');
-                $("#determine").off("click");
-                $("#determine").on("click",function(){
-                    $.ajax({
-                        "url": "${contextPath}/admin/enterprise/apply/delete",
-                        "data": {
-                            ids:JSON.stringify(ids)
-                        },
-                        "dataType": "json",
-                        "type": "POST",
-                        success: function (result) {
-                            if (result==1) {
-                                alert("删除错误");
-                            }else if(result==2){
-                                alert("超级管理员无法删除");
-                            }else {
-                                $bus.v.dTable.ajax.reload(null,false);
-                            }
-                            $("#confirm").modal("hide");
+                $leoman.alertConfirm("确定要删除吗？",function(){
+                    $.post("${contextPath}/admin/enterprise/apply/delete",{'ids':JSON.stringify(ids)},function(result){
+                        if(result.status == 0){
+                            $bus.v.dTable.ajax.reload(null,false);
+                        }else{
+                            $leoman.alertMsg("删除失败");
                         }
                     });
-                })
+                });
             },
             responseComplete: function (result, action) {
                 if (result.status == "0") {

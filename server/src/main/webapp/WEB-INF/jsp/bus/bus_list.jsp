@@ -84,6 +84,7 @@
                                         <th>司机身份证号</th>
                                         <th>司机性别</th>
                                         <th>用车类型</th>
+                                        <th>是否监控</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
@@ -97,7 +98,6 @@
     </div>
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
-<%@ include file="../confirm.jsp" %>
 <script>
     $bus = {
         v: {
@@ -153,6 +153,18 @@
                         },
                         {"data": "carType.name"},
                         {
+                            "data": "curLat",
+                            "render": function (data) {
+                                var str = "";
+                                if(data == null || data == ''){
+                                    str = '否';
+                                }else{
+                                    str = '是';
+                                }
+                                return str;
+                            }
+                        },
+                        {
                             "data": "id",
                             "render": function (data, type, row, meta) {
 
@@ -199,10 +211,7 @@
                 }else{
                     ids = checkBox.getInputId();
                 }
-                $("#confirm").modal("show");
-                $('#showText').html('您确定要删除吗？');
-                $("#determine").off("click");
-                $("#determine").on("click",function(){
+                $leoman.alertConfirm("确定要删除吗？",function(){
                     $.ajax({
                         "url": "${contextPath}/admin/bus/delete",
                         "data": {
@@ -211,17 +220,14 @@
                         "dataType": "json",
                         "type": "POST",
                         success: function (result) {
-                            if (result==1) {
-                                alert("删除错误");
-                            }else if(result==2){
-                                alert("超级管理员无法删除");
-                            }else {
+                            if(result.status == 0){
                                 $bus.v.dTable.ajax.reload(null,false);
+                            }else{
+                                $leoman.alertMsg("删除失败");
                             }
-                            $("#confirm").modal("hide");
                         }
                     });
-                })
+                });
             },
             responseComplete: function (result, action) {
                 if (result.status == "0") {

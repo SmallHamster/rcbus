@@ -1,6 +1,5 @@
 package com.leoman.bus.controller;
 
-import com.leoman.bus.dao.RouteStationDao;
 import com.leoman.bus.entity.Route;
 import com.leoman.bus.entity.RouteOrder;
 import com.leoman.bus.entity.RouteStation;
@@ -16,7 +15,6 @@ import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
-import com.leoman.order.entity.Order;
 import com.leoman.order.service.OrderService;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.system.enterprise.entity.Enterprise;
@@ -26,7 +24,6 @@ import com.leoman.user.service.UserService;
 import com.leoman.utils.ClassUtil;
 import com.leoman.utils.JsonUtil;
 import org.jdom.JDOMException;
-import org.omg.CosNaming.NamingContextExtPackage.StringNameHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -89,12 +86,31 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      * 列表页面
      */
     @RequestMapping(value = "/index")
-    public String index(Model model) {
-        //获取所有企业
-        List<Enterprise> enterpriseList = enterpriseService.queryAll();
+    public String index(HttpServletRequest request,
+                        Model model) {
+
+        List<Enterprise> enterpriseList = this.getEnterpriseList(request);
 
         model.addAttribute("enterpriseList", enterpriseList);
         return "route/route_list";
+    }
+
+    /**
+     * 获取企业列表
+     * @param request
+     * @return
+     */
+    private List<Enterprise> getEnterpriseList(HttpServletRequest request){
+        List<Enterprise> enterpriseList = new ArrayList<>();
+
+        Admin admin = getSessionAdmin(request);
+        if(admin != null && admin.getEnterprise() != null){
+            Enterprise enterprise = enterpriseService.queryByPK(admin.getEnterprise().getId());
+            enterpriseList.add(enterprise);
+        }else{
+            enterpriseList = enterpriseService.queryAll();//获取所有企业
+        }
+        return enterpriseList;
     }
 
     /**
@@ -135,7 +151,7 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      * @return
      */
     @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String add(Long id, Model model) {
+    public String add(HttpServletRequest request,Long id, Model model) {
         if (id != null) {
             Route route = routeService.queryByPK(id);
             List<RouteTime> times = routeTimeService.findByRouteId(route.getId());
@@ -169,7 +185,7 @@ public class RouteController extends GenericEntityController<Route, Route, Route
 
         }
         //获取所有企业
-        List<Enterprise> enterpriseList = enterpriseService.queryAll();
+        List<Enterprise> enterpriseList = this.getEnterpriseList(request);
         model.addAttribute("enterpriseList", enterpriseList);
         return "route/route_add";
     }
@@ -205,8 +221,10 @@ public class RouteController extends GenericEntityController<Route, Route, Route
     public String info(Long id, Model model) {
         if (id != null) {
             Route route = routeService.queryByPK(id);
+            List<RouteTime> times = routeTimeService.findByRouteId(route.getId());
+
             model.addAttribute("route", route);//路线
-            model.addAttribute("timeJson", JsonUtil.obj2Json(route.getTimes()));//路线时间
+            model.addAttribute("timeJson", JsonUtil.obj2Json(times));//路线时间
 
             //已派遣的班车ids
             String busIdsStr = "";
@@ -302,9 +320,10 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      * @return
      */
     @RequestMapping(value = "/order/index")
-    public String orderIndex(Model model) {
+    public String orderIndex(HttpServletRequest request,
+                             Model model) {
         //获取所有企业
-        List<Enterprise> enterpriseList = enterpriseService.queryAll();
+        List<Enterprise> enterpriseList = this.getEnterpriseList(request);
 
         model.addAttribute("enterpriseList", enterpriseList);
         return "route/route_order_list";
@@ -319,7 +338,12 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      */
     @RequestMapping(value = "/order/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(String routeName,Long enterpriseId, String startDate, String endDate, Integer draw, Integer start, Integer length) {
+    public Map<String, Object> list(HttpServletRequest request,String routeName,Long enterpriseId, String startDate, String endDate, Integer draw, Integer start, Integer length) {
+        Admin admin = getSessionAdmin(request);
+        if(admin != null && admin.getEnterprise() != null){
+            enterpriseId = admin.getEnterprise().getId();
+        }
+
         int pagenum = getPageNum(start, length);
         StringBuffer sql = new StringBuffer("SELECT \n" +
                 "  CONCAT(FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d'),' ',ro.`depart_time`) AS rideTime,\n" +//0
