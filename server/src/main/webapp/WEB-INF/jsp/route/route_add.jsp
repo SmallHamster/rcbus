@@ -113,6 +113,7 @@
                                                     <th>车牌号</th>
                                                     <th>车型</th>
                                                     <th>司机姓名</th>
+                                                    <th>是否监控</th>
                                                     <th>操作</th>
                                                 </tr>
                                                 </thead>
@@ -171,6 +172,7 @@
                                 <th>车牌号</th>
                                 <th>车型</th>
                                 <th>司机姓名</th>
+                                <th>是否监控</th>
                                 <th>操作</th>
                             </tr>
                             </thead>
@@ -265,6 +267,18 @@
                         {"data": "carNo"},
                         {"data": "modelNo"},
                         {"data": "driverName"},
+                        {
+                            "data": "curLat",
+                            "render": function (data) {
+                                var str = "";
+                                if(data == null || data == ''){
+                                    str = '否';
+                                }else{
+                                    str = '是';
+                                }
+                                return str;
+                            }
+                        },
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {

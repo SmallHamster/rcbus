@@ -172,23 +172,48 @@
             },
             //保存
             save : function() {
-                var flag = true;
                 if(!$("#formId").valid()) return;
 
-                if(flag){
-                    $("#formId").ajaxSubmit({
-                        url : "${contextPath}/admin/coupon/save",
-                        type : "POST",
-                        success : function(result) {
-                            if(result.status == 0) {
-                                window.location.href = "${contextPath}/admin/coupon/index";
-                            }
-                            else {
-                                $common.fn.notify('操作失败');
-                            }
-                        }
-                    });
+                //优惠方式
+                var couponWay = $("[name=couponWay]:checked").val();
+                if(couponWay == 1){
+                    if($("[name=discountPercent]").val() == '' || $("[name=discountPercent]").val() == 0){
+                        $leoman.alertMsg("折扣金额不能为空");
+                        return ;
+                    }
+                }else if(couponWay == 2){
+                    if($("[name=reduceMoney]").val() == ''){
+                        $leoman.alertMsg("减免金额不能为空");
+                        return ;
+                    }
                 }
+
+                //消费要求
+                var isLimit = $("[name=isLimit]:checked").val();
+                if(isLimit == 1 && $("[name=limitMoney]").val() == ''){
+                    $leoman.alertMsg("请输入使用要求消费金额");
+                    return ;
+                }
+
+                if($("[name=validDateFrom1]").val() != '' && $("[name=validDateTo1]").val() != ''){
+                    if($("[name=validDateFrom1]").val() > $("[name=validDateTo1]").val()){
+                        $leoman.alertMsg("起始时间不能大于结束时间");
+                        return ;
+                    }
+                }
+
+                $("#formId").ajaxSubmit({
+                    url : "${contextPath}/admin/coupon/save",
+                    type : "POST",
+                    success : function(result) {
+                        if(result.status == 0) {
+                            window.location.href = "${contextPath}/admin/coupon/index";
+                        }
+                        else {
+                            $leoman.alertMsg('操作失败');
+                        }
+                    }
+                })
             }
         }
     }

@@ -90,7 +90,7 @@
                     }
 
                     $("#formId").ajaxSubmit({
-                        url : "${contextPath}/wechat/enterprise/apply/save",
+                        url : "${contextPath}/wechat/enterprise/save",
                         type : "POST",
                         success : function(result) {
                             if(result.status == 0) {

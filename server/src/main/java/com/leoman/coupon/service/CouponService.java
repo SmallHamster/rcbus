@@ -11,4 +11,6 @@ import java.util.List;
  */
 public interface CouponService extends GenericManager<Coupon>{
 
+//    public void saveCoupon(Coupon coupon);
+
 }

@@ -59,7 +59,7 @@ public class OrderServiceImpl extends GenericManagerImpl<Order,OrderDao> impleme
         if(!StringUtils.isEmpty(endDate)){
             sql.append(" AND FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d') <= DATE_FORMAT('"+endDate+"','%Y-%m-%d') ");
         }
-        sql.append(" GROUP BY CONCAT(FROM_UNIXTIME(ro.`create_date` / 1000,'%Y-%m-%d'),' ',ro.`depart_time`) ");
+        sql.append(" GROUP BY rideTime order by rideTime desc ");
         Page page = queryPageBySql(sql.toString(), pagenum, length);
         return DataTableFactory.fitting(draw, page);
     }

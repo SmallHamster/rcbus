@@ -4,6 +4,8 @@ import com.leoman.bus.dao.BusDao;
 import com.leoman.bus.entity.Bus;
 import com.leoman.bus.service.BusService;
 import com.leoman.bussend.entity.BusSend;
+import com.leoman.common.core.ErrorType;
+import com.leoman.common.core.Result;
 import com.leoman.common.service.GenericManager;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import org.apache.commons.lang.StringUtils;
@@ -59,5 +61,16 @@ public class BusServiceImpl extends GenericManagerImpl<Bus, BusDao> implements B
 
         List<Bus> busList = queryBySql(sql.toString(),Bus.class);
         return busList;
+    }
+
+    @Override
+    public Result saveBus(Bus bus) {
+        if(bus.getId() == null){
+            Bus b = busDao.findByCarNo(bus.getCarNo());
+            if(b != null){
+                return new Result().failure(ErrorType.ERROR_CODE_00032);//车牌已存在
+            }
+        }
+        return new Result().success();
     }
 }

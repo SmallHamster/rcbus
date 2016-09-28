@@ -57,6 +57,8 @@ public class EnterpriseApplyController extends GenericEntityController<Enterpris
         query.like("username",enterpriseApply.getUsername());
         query.like("mobile",enterpriseApply.getMobile());
         query.like("enterpriseName",enterpriseApply.getEnterpriseName());
+        query.addOrder("id","desc");
+
         Page<EnterpriseApply> page = enterpriseApplyService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
     }

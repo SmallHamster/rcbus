@@ -1,11 +1,14 @@
 package com.leoman.coupon.service.impl;
 
+import com.leoman.common.core.ErrorType;
+import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.coupon.dao.CouponDao;
 import com.leoman.coupon.entity.Coupon;
 import com.leoman.coupon.service.CouponService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -18,4 +21,5 @@ public class CouponServiceImpl extends GenericManagerImpl<Coupon,CouponDao> impl
 
     @Autowired
     private CouponDao couponDao;
+
 }

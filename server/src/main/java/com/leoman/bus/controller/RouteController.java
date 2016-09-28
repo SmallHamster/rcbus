@@ -139,6 +139,7 @@ public class RouteController extends GenericEntityController<Route, Route, Route
         if(admin != null && admin.getEnterprise() != null){
             query.eq("enterprise.id",admin.getEnterprise().getId());
         }
+        query.addOrder("id","desc");
 
         Page<Route> page = routeService.queryPage(query);
         return DataTableFactory.fitting(draw, page);

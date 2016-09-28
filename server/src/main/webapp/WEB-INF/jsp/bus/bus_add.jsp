@@ -54,7 +54,7 @@
                                 <div class="form-group">
                                     <label for="uuid" class="col-sm-1 control-label"><span style="color: red;">* </span>车辆唯一标识：</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="uuid" name="uuid" value="${bus.uuid}" class="form-control" required/>
+                                        <input type="text" id="uuid" name="uuid" value="${bus.uuid}" class="form-control"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -222,7 +222,7 @@
                                 window.location.href = "${contextPath}/admin/bus/index";
                             }
                             else {
-                                $leoman.alertMsg('操作失败');
+                                $leoman.alertMsg(result.msg);
                             }
                         }
                     });

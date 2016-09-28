@@ -130,6 +130,10 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         //如果有往返
         if(isRoundTrip != null && isRoundTrip == 1){
 
+            if(StringUtils.isEmpty(backTimes)){
+                return new Result().failure(ErrorType.ERROR_CODE_00033);//返程时间不能为空
+            }
+
             Route backRoute = new Route();
             ClassUtil.copyProperties(backRoute,route);
             backRoute.setId(null);

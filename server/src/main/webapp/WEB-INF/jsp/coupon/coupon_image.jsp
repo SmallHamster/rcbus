@@ -37,7 +37,7 @@
                                     <label for="imageId" class="col-sm-1 control-label">图片:</label>
 
                                     <div class="col-sm-2">
-                                        <input type="hidden" id="imageId" name="image.id" value="${bus.image.id}">
+                                        <input type="hidden" id="imageId" name="image.id" value="${config.image.id}">
 
                                         <div class="image_show"  <c:if test="${config.image==null}"> style="display: none"  </c:if>>
                                             <img src="${config.image.path}" class='img-responsive' >
@@ -126,7 +126,7 @@
 
                 if($("#imageId").val() == ''){
                     flag = false;
-                    $common.fn.notify('图片不能为空');
+                    $leoman.alertMsg('图片不能为空');
                 }
 
                 if(flag){
@@ -135,10 +135,10 @@
                         type : "POST",
                         success : function(result) {
                             if(result.status == 0) {
-                                $common.fn.notify('保存成功');
+                                $leoman.alertMsg('保存成功');
                             }
                             else {
-                                $common.fn.notify('操作失败');
+                                $leoman.alertMsg('操作失败');
                             }
                         }
                     });

@@ -132,6 +132,9 @@ public class CouponController extends GenericEntityController<Coupon, Coupon, Co
     @RequestMapping(value = "/imageIndex")
     public String imageIndex(Model model) {
         SystemConfig config = systemConfigService.queryByPK(1l);
+        if(config.getImage() != null){
+            config.getImage().setPath(Configue.getUploadUrl()+config.getImage().getPath());
+        }
         model.addAttribute("config",config);
         return "coupon/coupon_image";
     }

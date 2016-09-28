@@ -36,6 +36,8 @@ public enum ErrorType {
     ERROR_CODE_00029("发车时间不能为空", 29),
     ERROR_CODE_00030("派遣班车不能为空", 30),
     ERROR_CODE_00031("路线不能为空", 31),
+    ERROR_CODE_00032("该车牌号已存在", 32),
+    ERROR_CODE_00033("返程时间不能为空", 33),
 
     ErrorType;
 

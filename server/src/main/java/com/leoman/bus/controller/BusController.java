@@ -69,6 +69,7 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
         query.like("modelNo",bus.getModelNo());
         query.like("driverName",bus.getDriverName());
         query.eq("carType.id",carType);
+        query.addOrder("id","desc");
         Page<Bus> page = busService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
     }
@@ -102,13 +103,14 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
     public Result save(Bus bus) {
+        Result result = Result.success();
         try {
-            busService.save(bus);
+            result = busService.saveBus(bus);
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();
         }
-        return Result.success();
+        return result;
     }
 
     /**

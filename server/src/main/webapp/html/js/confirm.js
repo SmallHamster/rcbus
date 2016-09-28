@@ -18,7 +18,7 @@ var Confirm = {
 
         $(self.modalMainId).remove();
 
-        ElemHtml = '<div id="confirm-modal" class="modal fade role="dialog" tabindex="-1">' + '<div class="modal-dialog modal-' + size + '">' + '<div class="modal-content">' + '<div class="modal-header">' + '<button id="modal-upper-close" class="close modal-close" aria-label="Close" type="button">' + '<span aria-hidden="true">×</span>' + '</button>' + '<h4 id="modal-title" class="modal-title">Modal Title</h4>' + '</div>' + '<div id="modal-body" class="modal-body"> Modal Message </div>' + '<div id="modal-footer" class="modal-footer">' + '</div>' + '</div>' + '</div>' + '</div>' + '<div id="modal-background" class=""></div>';
+        ElemHtml = '<div id="confirm-modal" style="display: none;" class="modal fade role="dialog" tabindex="-1">' + '<div class="modal-dialog modal-' + size + '">' + '<div class="modal-content">' + '<div class="modal-header">' + '<button id="modal-upper-close" class="close modal-close" aria-label="Close" type="button">' + '<span aria-hidden="true">×</span>' + '</button>' + '<h4 id="modal-title" class="modal-title">Modal Title</h4>' + '</div>' + '<div id="modal-body" class="modal-body"> Modal Message </div>' + '<div id="modal-footer" class="modal-footer">' + '</div>' + '</div>' + '</div>' + '</div>' + '<div id="modal-background" class=""></div>';
 
         $('body').append(ElemHtml);
     },

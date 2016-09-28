@@ -177,7 +177,9 @@
                 nav.push( i === 0 ? '<i cursid="'+sidArr[i]+'" cno="'+carNoArr[i]+'" class="current"></i>' : '<i cursid="'+sidArr[i]+'" cno="'+carNoArr[i]+'"></i>');
             }
             nav.push('</div>');
-            $self.append(nav.join(''));
+            if($self.find(".nav").length == 0){
+                $self.append(nav.join(''));
+            }
             $nav = $self.find('i');
 
             $(this).swipeSlide({

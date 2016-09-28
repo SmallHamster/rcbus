@@ -68,13 +68,8 @@
                     <section class="panel">
                         <header class="panel-heading">
                             路线列表
-                            <span class="tools pull-right" style="margin-right: 10px;margin-left: 10px">
-                               <button class="btn btn-info" type="button" onclick="$route.fn.delete();" id="deleteBatch" style="display: none">
-                                   <i class='fa fa-trash-o'></i> 删除</button>
-                            </span>
                             <span class="tools pull-right">
                                <button class="btn btn-default " type="button"><i class="fa fa-refresh"></i> 刷新</button>
-                                <button class="btn btn-info" type="button" onclick="$route.fn.add();"><i class="fa fa-plus"></i> 新增路线</button>
                             </span>
                         </header>
                         <div class="panel-body">

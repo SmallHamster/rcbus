@@ -2,6 +2,7 @@ package com.leoman.bus.service;
 
 
 import com.leoman.bus.entity.Bus;
+import com.leoman.common.core.Result;
 import com.leoman.common.service.GenericManager;
 import org.springframework.data.domain.Page;
 
@@ -16,5 +17,7 @@ public interface BusService extends GenericManager<Bus> {
     public Bus findByUuid(String uuid);
 
     public List<Bus> findBusOrderByDistance(Long routeId, Double userLat, Double userLng);
+
+    public Result saveBus(Bus bus);
 
 }

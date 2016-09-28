@@ -22,16 +22,9 @@ $(function () {
 
     $.fn.dataTableExt.sErrMode = 'throw';
 
-    Confirm.init('sm');
+    //Confirm.init('sm');
 
 })
-
-var $test11 = {
-    v: {},
-    alertMsg: function(msg){
-        Confirm.show('Modal Title', 'Modal Content');
-    }
-};
 
 var $leoman = {
     v: {
