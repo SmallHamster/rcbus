@@ -18,7 +18,7 @@
     <form class="form-signin" action="${contextPath}/admin/login/check">
         <div class="form-signin-heading text-center">
             <h1 class="sign-title">Sign In</h1>
-            <img src="${contextPath}/static/html/images/login-logo.png" alt=""/>
+            <img src="${contextPath}/static/html/images/login-logo.png" alt="" style="width: 140px;height: 55px;"/>
         </div>
         <div class="login-wrap">
             <input type="text" id="username" name="username" class="form-control" placeholder="登录名" autofocus>

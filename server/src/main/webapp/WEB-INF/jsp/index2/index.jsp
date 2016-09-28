@@ -9,7 +9,7 @@
   <meta name="description" content="">
   <meta name="author" content="ThemeBucket">
   <link rel="shortcut icon" href="#" type="image/png">
-  <title>AdminX</title>
+  <title>江城巴士管理平台</title>
   <%@ include file="../inc/new2/css.jsp"%>
 </head>
 <body class="sticky-header">
@@ -23,9 +23,9 @@
             <a class="toggle-btn"><i class="fa fa-bars"></i></a>
             <!--toggle button end-->
             <!--search start-->
-            <form class="searchform" action="index.html" method="post">
+            <%--<form class="searchform" action="index.html" method="post">
                 <input type="text" class="form-control" name="keyword" placeholder="Search here..." />
-            </form>
+            </form>--%>
             <!--search end-->
             <!--notification menu start -->
             <div class="menu-right">
@@ -220,9 +220,9 @@
         <!-- page heading start-->
         <div class="page-heading">
             <h3>
-                Dashboard
+                欢迎使用江城巴士管理平台
             </h3>
-            <ul class="breadcrumb">
+            <%--<ul class="breadcrumb">
                 <li>
                     <a href="#">Dashboard</a>
                 </li>
@@ -247,12 +247,12 @@
                         <div id="expense" class="chart-bar"></div>
                     </div>
                 </section>
-            </div>
+            </div>--%>
         </div>
         <!-- page heading end-->
 
         <!--body wrapper start-->
-        <div class="wrapper">
+        <%--<div class="wrapper">
             <div class="row">
                 <div class="col-md-6">
                     <!--statistics start-->
@@ -715,7 +715,7 @@
         <!--footer section start-->
         <footer>
             2014 &copy; AdminEx by ThemeBucket
-        </footer>
+        </footer>--%>
         <!--footer section end-->
     </div>
     <!-- main content end-->

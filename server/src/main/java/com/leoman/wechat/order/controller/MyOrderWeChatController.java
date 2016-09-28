@@ -148,22 +148,22 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
 
         if(status==0){
             //审核中
-            return "wechat/orderdetail/order_detail_status0";
+            return "wechat/orderDetail/order_detail_status0";
         }else if(status==1){
             //待付款
-            return "wechat/orderdetail/order_detail_status1";
+            return "wechat/orderDetail/order_detail_status1";
         }else if(status==2){
             if(!busSendService.findBus(id,2).isEmpty() && busSendService.findBus(id,2).size()>0){
                 model.addAttribute("modelNo",busSendService.findBus(id,2).get(0).getBus().getModelNo());
             }
             //进行中
-            return "wechat/orderdetail/order_detail_status2";
+            return "wechat/orderDetail/order_detail_status2";
         }else if(status==3){
             //已结束
-            return "wechat/orderdetail/order_detail_status3";
+            return "wechat/orderDetail/order_detail_status3";
         }else {
             //已取消
-            return "wechat/orderdetail/order_detail_status4";
+            return "wechat/orderDetail/order_detail_status4";
         }
 
     }

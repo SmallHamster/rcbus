@@ -2,14 +2,14 @@
 <!-- left side start-->
 <div class="left-side sticky-left-side">
     <!--logo and iconic logo start-->
-    <div class="logo">
-        <a href="index.html"><img src="${contextPath}/static/html/images/logo.png" alt=""></a>
+    <div class="logo" style="height: 70px;">
+        <a href="index.html"><img src="${contextPath}/static/html/images/rcbus_logo.png" alt="" style="width: 140px;height: 68px;"></a>
     </div>
     <div class="logo-icon text-center">
         <a href="index.html"><img src="${contextPath}/static/html/images/logo_icon.png" alt=""></a>
     </div>
     <!--logo and iconic logo end-->
-    <div class="left-side-inner">
+    <div class="left-side-inner" style="margin-top: 70px;">
         <!-- visible to small devices only -->
         <div class="visible-xs hidden-sm hidden-md hidden-lg">
             <div class="media logged-user">
@@ -27,7 +27,6 @@
             </ul>
         </div>
         <ul id="side-menu" class="nav nav-pills nav-stacked custom-nav">
-            <li><a href="javascript:void(0);"><i class="fa fa-home"></i><span>Dashboard</span></a></li>
             <c:forEach items="${sessionScope.moduleList}" var="topModule">
             <li class="menu-list"><a href="javascript:void(0);"><i class="${topModule.moduleIcon}"></i><span>${topModule.name}</span></a>
             <%--<li class="menu-list"><a href="javascript:void(0);"><i class="fa fa fa-users"></i><span>权限管理</span></a>--%>
