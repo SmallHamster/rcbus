@@ -91,6 +91,10 @@ public class CarRental extends BaseEntity{
     @Column(name = "is_rewrite")
     private Integer isRewrite;
 
+    //是否用户删除 0:否 1:是
+    @Column(name = "is_del")
+    private Integer isDel;
+
     @OneToMany(fetch = FetchType.EAGER)
     @JoinColumn(name = "rental_id")
     private Set<CarRentalOffer> carRentalOffers;
@@ -255,5 +259,13 @@ public class CarRental extends BaseEntity{
 
     public void setIsRewrite(Integer isRewrite) {
         this.isRewrite = isRewrite;
+    }
+
+    public Integer getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(Integer isDel) {
+        this.isDel = isDel;
     }
 }

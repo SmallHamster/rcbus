@@ -11,7 +11,8 @@ import java.util.List;
  */
 public interface CarRentalDao extends IBaseJpaRepository<CarRental>{
 
-    @Query("SELECT b FROM CarRental b WHERE b.order.id IN (SELECT a.id FROM Order a WHERE a.userInfo.id =?1)")
+    //未被用户删除的租车订单
+    @Query("SELECT b FROM CarRental b WHERE b.order.id IN (SELECT a.id FROM Order a WHERE a.userInfo.id =?1) AND b.isDel = '0'")
     public List<CarRental> findList(Long id);
 
 

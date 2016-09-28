@@ -133,7 +133,7 @@
                                         "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
 
                                 var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$banner.fn.del(\'" + data + "\')\">" +
-                                        "<i class='fa fa-pencil-square-o'></i> 删除</button>";
+                                        "<i class='fa fa-trash-o'></i> 删除</button>";
 
                                 return  edit + "&nbsp;" + del;
                             }

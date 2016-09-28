@@ -330,9 +330,39 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
         save(carRental);
     }
 
+    //逻辑删除订单
     @Override
     @Transactional
     public void del(String ro_ids,String cr_ids) {
+        if(StringUtils.isBlank(ro_ids) && StringUtils.isBlank(cr_ids)){
+            return;
+        }
+        //删除班车订单
+        if(StringUtils.isNotBlank(ro_ids)){
+            Long[] ro_ss = JsonUtil.json2Obj(ro_ids,Long[].class);
+            for (Long _id : ro_ss) {
+                RouteOrder routeOrder = routeOrderService.queryByPK(_id);
+                routeOrder.setIsDel(1);
+                routeOrderService.save(routeOrder);
+            }
+        }
+
+        //删除租车订单
+        if(StringUtils.isNotBlank(cr_ids)) {
+            Long[] cr_ss = JsonUtil.json2Obj(cr_ids, Long[].class);
+            for (Long _id : cr_ss) {
+                CarRental carRental = queryByPK(_id);
+                carRental.setIsDel(1);
+                save(carRental);
+            }
+        }
+
+    }
+
+
+    //(废,改为逻辑删除)
+    @Transactional
+    public void del1(String ro_ids,String cr_ids) {
         if(StringUtils.isBlank(ro_ids) && StringUtils.isBlank(cr_ids)){
             return;
         }

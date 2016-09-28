@@ -279,6 +279,9 @@
                 });
             },
             dispatch: function (driverName,carNo,seatNum,id) {
+                driverName = driverName == "null" ? '暂无' : driverName;
+                carNo = carNo == "null" ? '暂无' : carNo;
+                seatNum = seatNum == "null" ? '暂无' : seatNum + "座";
 
                 var dispatchs = $admin.v.dispatch;
                 for(var i=0;i<dispatchs.length;i++){
@@ -293,7 +296,7 @@
                 html += " <input type='hidden' value='"+id+"' name='dispatch'>																																							";
                 html += " 	<label class='col-sm-2 control-label'></label>                                                                                                                     ";
                 html += " 	<div class='col-sm-3'>                                                                                                                                                          ";
-                html += " 		<input type='text' id='d' name='d' value='&nbsp;"+driverName+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+carNo+"&nbsp;&nbsp;&nbsp;&nbsp;"+seatNum+"座' class='form-control' disabled />  ";
+                html += " 		<input type='text' id='d' name='d' value='&nbsp;"+driverName+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+carNo+"&nbsp;&nbsp;&nbsp;&nbsp;"+seatNum+"' class='form-control' disabled />  ";
                 html += " 	</div>                                                                                                                                                                          ";
                 html += " 	<button type='button' onclick='$admin.fn.delDispatch(this)' class='btn btn-primary'><i class='fa fa-minus-circle'></i></button>                                                   ";
                 html += " </div>                                                                                                                                                                            ";

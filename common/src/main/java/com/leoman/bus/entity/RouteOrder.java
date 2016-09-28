@@ -31,6 +31,10 @@ public class RouteOrder extends BaseEntity{
     @JoinColumn(name = "route_id")
     private Route route;//路线
 
+    //是否用户删除 0:否 1:是
+    @Column(name = "is_del")
+    private Integer isDel;
+
     public String getStartStation() {
         return startStation;
     }
@@ -69,5 +73,13 @@ public class RouteOrder extends BaseEntity{
 
     public void setRoute(Route route) {
         this.route = route;
+    }
+
+    public Integer getIsDel() {
+        return isDel;
+    }
+
+    public void setIsDel(Integer isDel) {
+        this.isDel = isDel;
     }
 }

@@ -56,7 +56,8 @@ public class WechatIndexController extends CommonController {
      * @return
      */
     @RequestMapping(value = "/index")
-    public String index() {
+    public String index(String signature, String timestamp, String nonce) {
+//        SignUtil.checkSignature(signature,timestamp,nonce);
         return "wechat/index";
     }
 

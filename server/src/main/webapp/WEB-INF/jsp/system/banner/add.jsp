@@ -71,7 +71,7 @@
                                         </div>
                                         <div class="square-yellow  single-row">
                                             <div class="radio ">
-                                                <input tabindex="3" type="radio"  name="isOc" value="0">
+                                                <input tabindex="3" type="radio"  name="isOc" value="0" checked="checked">
                                                 <label>否 </label>
                                             </div>
                                         </div>

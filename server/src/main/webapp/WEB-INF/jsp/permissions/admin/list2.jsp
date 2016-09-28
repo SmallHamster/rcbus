@@ -193,7 +193,7 @@
                                             "<i class='fa fa-pencil-square-o'></i> 重置密码</button>";
 
                                     var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.del(\'" + data + "\')\">" +
-                                            "<i class='fa fa-pencil-square-o'></i> 删除</button>";
+                                            "<i class='fa fa-trash-o'></i> 删除</button>";
 
                                     var selectRole = "<button title='赋予角色' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.openModal(\'" + data + "\')\">" +
                                             "<i class='fa fa-exchange'></i> 赋予角色</button>";

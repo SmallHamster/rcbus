@@ -32,6 +32,12 @@
         </mvc:interceptor>
 
         <mvc:interceptor>
+            <mvc:mapping path="/wechat/**"/>
+            <!-- 定义在mvc:interceptor下面的表示是对特定的请求才进行拦截的 -->
+            <bean class="com.leoman.common.filter.CustomWeixinInterceptor"/>
+        </mvc:interceptor>
+
+        <mvc:interceptor>
             <mvc:mapping path="/admin/**"/>
             <!-- 定义在mvc:interceptor下面的表示是对特定的请求才进行拦截的 -->
             <bean class="com.leoman.common.interceptor.LogInterceptor"/>

@@ -112,6 +112,12 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
 
     }
 
+    /**
+     * 详情
+     * @param id
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/detail")
     public String detail(Long id, Model model){
         //租车
@@ -130,6 +136,13 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
         return "carrental/detail";
     }
 
+    /**
+     * 跳转编辑
+     * @param id
+     * @param model
+     * @param status
+     * @return
+     */
     @RequestMapping(value = "/edit")
     private String edit(Long id, Model model,Integer status){
         //租车
@@ -229,7 +242,6 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
     }
 
 
-    //历史记录
     /**
      * 跳转历史记录
      * @return
@@ -256,14 +268,22 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
     }
 
 
-
-    //收入明细
+    /**
+     * 收入明细
+     * @return
+     */
     @RequestMapping(value = "/income/index")
     public String incomeIndex(){
         return "carrental/income/list";
     }
 
 
+    /**
+     * 明细详情
+     * @param id
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/income/detail")
     public String incomeDetail(Long id, Model model){
 
