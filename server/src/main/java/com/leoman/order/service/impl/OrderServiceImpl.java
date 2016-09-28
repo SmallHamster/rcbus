@@ -23,6 +23,11 @@ public class OrderServiceImpl extends GenericManagerImpl<Order,OrderDao> impleme
     private OrderDao orderDao;
 
     @Override
+    public Order findOne(String orderNo) {
+        return orderDao.findOne(orderNo);
+    }
+
+    @Override
     public Map<String, Object> findPage(HttpServletRequest request, String routeName, Long enterpriseId, String startDate, String endDate, Integer draw, Integer pagenum, Integer length){
 //        int pagenum = getPageNum(start, length);
         StringBuffer sql = new StringBuffer("SELECT \n" +

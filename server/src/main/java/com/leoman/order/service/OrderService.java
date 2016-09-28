@@ -11,5 +11,7 @@ import java.util.Map;
  */
 public interface OrderService extends GenericManager<Order>{
 
+    public Order findOne(String orderNo);
+
     public Map<String, Object> findPage(HttpServletRequest request, String routeName, Long enterpriseId, String startDate, String endDate, Integer draw, Integer pagenum, Integer length);
 }
