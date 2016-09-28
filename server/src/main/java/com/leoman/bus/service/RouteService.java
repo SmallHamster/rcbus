@@ -2,6 +2,7 @@ package com.leoman.bus.service;
 
 
 import com.leoman.bus.entity.Route;
+import com.leoman.common.core.Result;
 import com.leoman.common.service.GenericManager;
 import com.leoman.user.entity.UserInfo;
 import org.springframework.data.domain.Page;
@@ -15,14 +16,10 @@ import java.util.Map;
  */
 public interface RouteService extends GenericManager<Route> {
 
-    public Page<Route> page(Integer pageNum, Integer pageSize);
-
-    public void saveRoute(Route route, String departTimes, String backTimes, String busIds, Integer isRoundTrip,List<Map> list);
+    public Result saveRoute(Route route, String departTimes, String backTimes, String busIds, Integer isRoundTrip, List<Map> list);
 
     public void saveOrder(Long routeId, String departTime, UserInfo user);
 
     public void deleteRoute(Long routeId);
-
-    public List<Route> findByEnterpriseType(Integer type, String startStation, String endStation);
 
 }

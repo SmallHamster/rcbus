@@ -33,10 +33,8 @@
                             <form class="cmxform form-horizontal adminex-form" id="formId" method="post" enctype="multipart/form-data">
                                 <input type="hidden" id="routeId" name="id" value="${route.id}">
                                 <input type="hidden" name="isShow" value="${route.isShow}">
-                                <input type="hidden" name="departTimes" value="">
-                                <input type="hidden" name="backTimes" value="">
                                 <input type="hidden" id="busIds" name="busIds" value="${busIds}">
-                                <input type="hidden" id="isRoundTrip" name="isRoundTrip" value="0">
+                                <%--<input type="hidden" id="isRoundTrip" name="isRoundTrip" value="0">--%>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >所属企业：</label>
@@ -58,7 +56,7 @@
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >是否有返程：</label>
                                     <div class="col-sm-1">
-                                        <select class="form-control input-sm" onchange="$route.fn.tripChange(this)">
+                                        <select class="form-control input-sm" onchange="$route.fn.tripChange(this)"name="isRoundTrip">
                                             <option value="0">否</option>
                                             <option value="1">是</option>
                                         </select>
@@ -301,30 +299,15 @@
                     $route.v.dTable = table;
                 }
             },
-            /*uploadRoute : function(){
-                $("#uploadForm").ajaxSubmit({
-                    url : "${contextPath}/admin/route/uploadRoute",
-                    type : "POST",
-                    success : function(result) {
-                        if(result.status == 0) {
-                            console.info("-----导入成功-----");
-                        }
-                        else {
-                            $common.fn.notify('操作失败');
-                        }
-                    }
-                });
-            },*/
+            //是否有返程
             tripChange :function(obj){
                 //有往返
                 if( $(obj).val() == 1 && $("#routeId").val() ==''){
                     $("#backTimeDiv").show();
-                    $("#isRoundTrip").val(1);
                 }
                 //单程
                 else{
                     $("#backTimeDiv").hide();
-                    $("#isRoundTrip").val(0);
                 }
             },
             //返回
@@ -446,9 +429,12 @@
 
                 $leoman.alertConfirm("你确定要派遣已勾选的车辆吗？",function(){
                     var busIds = $("#busIds").val();
-                    busIds += "," + ids;
+                    if(busIds != ''){
+                        busIds = busIds + "," + ids;
+                    }else{
+                        busIds = ids;
+                    }
                     $("#busIds").val(busIds);
-                    $("#confirm").modal("hide");
                     $("#myModal").modal("hide");
                     $route.v.dTable.ajax.reload();
                 });
@@ -472,7 +458,7 @@
                                 window.location.href = "${contextPath}/admin/route/index";
                             }
                             else {
-                                $leoman.alertMsg('操作失败');
+                                $leoman.alertMsg(result.msg);
                             }
                         }
                     });

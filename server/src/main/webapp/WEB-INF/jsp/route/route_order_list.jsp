@@ -47,7 +47,7 @@
                             <div class="form-group col-sm-1" style="width: 50px;margin-top: 5px;">
                                 从：
                             </div>
-                            <div class="form-group col-sm-2">
+                            <div class="form-group col-sm-2" style="width: 200px;">
                                 <input type="text" id="startDate" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="" placeholder="请选择起始时间">
                             </div>
                             <div class="form-group col-sm-1" style="width: 50px;margin-top: 5px;">
@@ -177,9 +177,9 @@
                     } else {
                         $route.v.dTable.ajax.reload();
                     }
-                    $leoman.notify(result.msg, "success");
+                    $leoman.alertMsg(result.msg, "success");
                 } else {
-                    $leoman.notify(result.msg, "error");
+                    $leoman.alertMsg(result.msg, "error");
                 }
             }
         }

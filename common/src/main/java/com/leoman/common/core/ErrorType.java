@@ -32,7 +32,13 @@ public enum ErrorType {
     ERROR_CODE_00025("已经点赞过", 25),
     ERROR_CODE_00026("暂未点赞", 26),
     ERROR_CODE_00027("资源不存在", 27),
-    ERROR_CODE_00028("验证码超时", 28);
+    ERROR_CODE_00028("验证码超时", 28),
+    ERROR_CODE_00029("发车时间不能为空", 29),
+    ERROR_CODE_00030("派遣班车不能为空", 30),
+    ERROR_CODE_00031("路线不能为空", 31),
+
+    ErrorType;
+
 
     private String name;
 

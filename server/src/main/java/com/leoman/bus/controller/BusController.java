@@ -196,7 +196,7 @@ public class BusController extends GenericEntityController<Bus, Bus, BusServiceI
     }
 
     /**
-     * 批量导入gpx系统的所有车辆信息，存到本地数据库
+     * 批量导入gpx系统的所有车辆信息，存到本地数据库，暂时没有页面，可借助postman调用
      * @return
      */
     @RequestMapping(value = "/multiImport", method = RequestMethod.POST)

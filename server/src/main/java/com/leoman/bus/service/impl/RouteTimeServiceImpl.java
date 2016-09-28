@@ -25,6 +25,11 @@ public class RouteTimeServiceImpl extends GenericManagerImpl<RouteTime,RouteTime
         return routeTimeDao.findByRouteId(routeId);
     }
 
+    /**
+     * 获取大于当前时间的时间点列表
+     * @param routeId
+     * @return
+     */
     @Override
     public List<RouteTime> findByCurrentTime(Long routeId){
         String sql = "SELECT \n" +

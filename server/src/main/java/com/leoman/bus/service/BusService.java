@@ -13,8 +13,6 @@ import java.util.List;
  */
 public interface BusService extends GenericManager<Bus> {
 
-    public Page<Bus> page(Integer pageNum, Integer pageSize);
-
     public Bus findByUuid(String uuid);
 
     public List<Bus> findBusOrderByDistance(Long routeId, Double userLat, Double userLng);

@@ -34,30 +34,6 @@ public class BusServiceImpl extends GenericManagerImpl<Bus, BusDao> implements B
     private BusDao busDao;
 
     @Override
-    public Page<Bus> page(Integer pageNum, Integer pageSize) {
-        PageRequest pageRequest = new PageRequest(pageNum - 1, pageSize, Sort.Direction.DESC, "id");
-        Page<Bus> page = busDao.findAll(new Specification<Bus>() {
-            @Override
-            public Predicate toPredicate(Root<Bus> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Predicate result = null;
-                List<Predicate> predicateList = new ArrayList<Predicate>();
-
-                if (predicateList.size() > 0) {
-                    result = cb.and(predicateList.toArray(new Predicate[]{}));
-                }
-
-                if (result != null) {
-                    query.where(result);
-                }
-                return query.getGroupRestriction();
-            }
-
-        }, pageRequest);
-
-        return page;
-    }
-
-    @Override
     public Bus findByUuid(String uuid) {
         return busDao.findByUuid(uuid);
     }

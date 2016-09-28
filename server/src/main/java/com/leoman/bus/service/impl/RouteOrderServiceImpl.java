@@ -27,6 +27,12 @@ public class RouteOrderServiceImpl extends GenericManagerImpl<RouteOrder,RouteOr
         return routeOrderDao.findList(id);
     }
 
+    /**
+     * 获取某路线的某个时间点的订单数
+     * @param routeId
+     * @param departTime
+     * @return
+     */
     @Override
     public Integer findOrderNum(Long routeId, String departTime) {
         return routeOrderDao.findOrderNum(routeId,departTime);

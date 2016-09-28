@@ -9,6 +9,8 @@ import com.leoman.bus.service.RouteService;
 import com.leoman.bus.util.MathUtil;
 import com.leoman.bussend.dao.BusSendDao;
 import com.leoman.bussend.entity.BusSend;
+import com.leoman.common.core.ErrorType;
+import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.exception.GeneralExceptionHandler;
 import com.leoman.order.dao.OrderDao;
@@ -30,6 +32,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -59,30 +62,6 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
     @Autowired
     private RouteOrderDao routeOrderDao;
 
-    @Override
-    public Page<Route> page(Integer pageNum, Integer pageSize) {
-        PageRequest pageRequest = new PageRequest(pageNum - 1, pageSize, Sort.Direction.DESC, "id");
-        Page<Route> page = routeDao.findAll(new Specification<Route>() {
-            @Override
-            public Predicate toPredicate(Root<Route> root, CriteriaQuery<?> query, CriteriaBuilder cb) {
-                Predicate result = null;
-                List<Predicate> predicateList = new ArrayList<Predicate>();
-
-                if (predicateList.size() > 0) {
-                    result = cb.and(predicateList.toArray(new Predicate[]{}));
-                }
-
-                if (result != null) {
-                    query.where(result);
-                }
-                return query.getGroupRestriction();
-            }
-
-        }, pageRequest);
-
-        return page;
-    }
-
     /**
      * 保存路线
      * @param route
@@ -92,77 +71,27 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
      */
     @Override
     @Transactional
-    public void saveRoute(Route route, String departTimes, String backTimes, String busIds, Integer isRoundTrip,List<Map> list) {
+    public Result saveRoute(Route route, String departTimes, String backTimes, String busIds, Integer isRoundTrip, List<Map> list) {
+        Result result = Result.success();
 
         if(StringUtils.isEmpty(departTimes)){
-            GeneralExceptionHandler.handle("发车时间不能为空");
+            return new Result().failure(ErrorType.ERROR_CODE_00029);//发车时间不能为空
         }
 
         if(StringUtils.isEmpty(busIds)){
-            GeneralExceptionHandler.handle("派遣班车不能为空");
+            return new Result().failure(ErrorType.ERROR_CODE_00030);//派遣班车不能为空
         }
 
         Long routeId = route.getId();
         //新增
         if(routeId == null){
+            if(list == null){
+                return new Result().failure(ErrorType.ERROR_CODE_00031);//路线不能为空
+            }
             //新增路线
             route.setIsShow(1);
-
-            //如果有往返
-            if(isRoundTrip == 1){
-
-                Route backRoute = new Route();
-                ClassUtil.copyProperties(backRoute,route);
-                routeDao.save(backRoute);
-
-                //返程时间点
-                String [] backTimeArr = backTimes.split("\\,");
-                for (String backTime:backTimeArr) {
-                    if(!StringUtils.isEmpty(backTime)){
-                        RouteTime routeTime = new RouteTime();
-                        routeTime.setDepartTime(backTime);//返程时间
-                        routeTime.setRouteId(backRoute.getId());//对应路线
-                        routeTimeDao.save(routeTime);
-                    }
-                }
-
-                //路线站点
-                for (int i = list.size()-1; i >= 0; i--) {
-                    Map map = list.get(i);
-                    RouteStation routeStation = new RouteStation();
-
-                    double[] position = MathUtil.wgs2bd(Double.valueOf(map.get("lat").toString()) ,Double.valueOf(map.get("lon").toString()));
-                    routeStation.setLat(position[0]);
-                    routeStation.setLng(position[1]);
-                    routeStation.setStationName((String) map.get("name"));
-                    routeStation.setStationOrder(i);
-                    routeStation.setRouteId(backRoute.getId());
-
-                    Route r = routeDao.findOne(backRoute.getId());
-                    if(i == (list.size()-1)){
-                        r.setStartStation(routeStation.getStationName());
-                    } else if(i == 0){
-                        r.setEndStation(routeStation.getStationName());
-                    }
-                    routeDao.save(r);
-
-                    routeStationDao.save(routeStation);
-                }
-
-                //路线发车
-                String [] busIdArr = busIds.split("\\,");
-                for (String busId:busIdArr) {
-                    if(!StringUtils.isEmpty(busId)){
-                        BusSend bs = new BusSend();
-                        bs.setBus(new Bus(Long.valueOf(busId)));
-                        bs.setContactId(backRoute.getId());
-                        bs.setType(1);//班车
-                        busSendDao.save(bs);
-                    }
-                }
-            }
-
             routeDao.save(route);
+            routeId = route.getId();
         }
         //编辑
         else {
@@ -184,7 +113,6 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
                 for (RouteStation rs:stationList) {
                     routeStationDao.delete(rs.getId());
                 }
-
             }
 
             //删除已有的路线班车
@@ -192,15 +120,44 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
             for (BusSend bs:sendList) {
                 busSendDao.delete(bs.getId());
             }
+
+            routeId = route.getId();
         }
 
+        //保存路线相关
+        saveRouteOther(routeId, departTimes, list, busIds);
+
+        //如果有往返
+        if(isRoundTrip != null && isRoundTrip == 1){
+
+            Route backRoute = new Route();
+            ClassUtil.copyProperties(backRoute,route);
+            backRoute.setId(null);
+            routeDao.save(backRoute);
+
+            //使list倒序，新增一条往返的路线
+            Collections.reverse(list);
+            saveRouteOther(backRoute.getId(), backTimes, list, busIds);
+        }
+
+        return result;
+    }
+
+    /**
+     * 保存路线相关
+     * @param routeId
+     * @param departTimes
+     * @param list
+     * @param busIds
+     */
+    private void saveRouteOther(Long routeId, String departTimes, List<Map> list, String busIds){
         //路线时间点
         String [] departTimeArr = departTimes.split("\\,");
         for (String departTime:departTimeArr) {
             if(!StringUtils.isEmpty(departTime)){
                 RouteTime routeTime = new RouteTime();
                 routeTime.setDepartTime(departTime);//发车时间
-                routeTime.setRouteId(route.getId());//对应路线
+                routeTime.setRouteId(routeId);//对应路线
                 routeTimeDao.save(routeTime);
             }
         }
@@ -215,9 +172,9 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
                 routeStation.setLng(position[1]);
                 routeStation.setStationName((String) map.get("name"));
                 routeStation.setStationOrder(i);
-                routeStation.setRouteId(route.getId());
+                routeStation.setRouteId(routeId);
 
-                Route r = routeDao.findOne(route.getId());
+                Route r = routeDao.findOne(routeId);
                 if(i == 0){
                     r.setStartStation(routeStation.getStationName());
                 } else if(i == (list.size() -1)){
@@ -235,13 +192,17 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
             if(!StringUtils.isEmpty(busId)){
                 BusSend bs = new BusSend();
                 bs.setBus(new Bus(Long.valueOf(busId)));
-                bs.setContactId(route.getId());
+                bs.setContactId(routeId);
                 bs.setType(1);//班车
                 busSendDao.save(bs);
             }
         }
     }
 
+    /**
+     * 删除路线
+     * @param routeId
+     */
     @Override
     @Transactional
     public void deleteRoute(Long routeId){
@@ -267,12 +228,12 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         }
     }
 
-    @Override
-    public List<Route> findByEnterpriseType(Integer type, String startStation, String endStation){
-        return routeDao.findByEnterpriseType(type,startStation, endStation);
-    }
-
-
+    /**
+     * 下订单
+     * @param routeId
+     * @param departTime
+     * @param user
+     */
     @Override
     @Transactional
     public void saveOrder(Long routeId, String departTime, UserInfo user){
