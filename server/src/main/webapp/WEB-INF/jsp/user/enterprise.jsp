@@ -5,7 +5,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
-                <h4 class="modal-title">优惠券</h4>
+                <h4 class="modal-title">选择</h4>
             </div>
             <div class="modal-body">
                 <div align=center>

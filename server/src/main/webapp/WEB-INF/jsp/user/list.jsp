@@ -48,7 +48,8 @@
                                 </div>
                             </c:if>
                             <div class="form-group col-sm-2">
-                                <button id="c_search" class="btn btn-info">搜索</button>
+                                <button id="c_search" class="btn btn-info"><i class="fa fa-search"></i> 搜索</button>
+                                <button id="c_clear" class="btn btn-info"><i class="fa fa-recycle"></i> 清空</button>
                             </div>
                             <div class="form-group col-sm-2" style="float: right">
                                 <button  id="c_export" onclick="$user.fn.clickFire()" class="btn btn-info"><i class="fa fa-recycle"></i> 导入EXCEL</button>
@@ -116,6 +117,9 @@
 
                 $("#c_search").click(function () {
                     $user.v.dTable.ajax.reload();
+                });
+                $("#c_clear").click(function () {
+                    $(this).parents(".panel-body").find("input,select").val("");
                 });
             },
             dataTableInit: function () {

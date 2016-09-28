@@ -61,7 +61,7 @@
                     <ul class="sub-menu-list">
                         <li><a href="${contextPath}/wechat/order/myOrder/index">我的订单</a></li>
                         <li><a href="${contextPath}/wechat/user/index">个人信息</a></li>
-                        <li><a href="${contextPath}/admin/admin/index">反馈建议</a></li>
+                        <li><a href="${contextPath}/wechat/report/index">反馈建议</a></li>
                     </ul>
                 </li>
 

@@ -24,7 +24,7 @@
     <div class="info">
         <div class="inner">
             <img src="${contextPath}/wechat-html/images/f/avatar.png" alt="">
-            <em><a href="#">点击修改</a></em>
+            <%--<em><a href="#">点击修改</a></em>--%>
             <em>${user.mobile}</em>
         </div>
     </div>
