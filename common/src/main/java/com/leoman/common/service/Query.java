@@ -362,7 +362,16 @@ public class Query implements Serializable {
             return;
         }
         Iterator iterator = value.iterator();
-        In in = criteriaBuilder.in(from.get(propertyName));
+        String[] names = null;
+        if(propertyName.contains(".")) {
+            names = propertyName.split("\\.");
+        }
+        In in = null;
+        if(names == null){
+             in = criteriaBuilder.in(from.get(propertyName));
+        }else {
+            in = criteriaBuilder.in(from.get(names[0]).get(names[1]));
+        }
         while (iterator.hasNext()) {
             in.value(iterator.next());
         }

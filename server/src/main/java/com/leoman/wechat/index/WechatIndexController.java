@@ -502,6 +502,7 @@ public class WechatIndexController extends CommonController {
             WebUtil.print(response, echostr);
             return;
         }
+        System.out.println(response);
         WebUtil.print(response, "非法请求");
     }
 

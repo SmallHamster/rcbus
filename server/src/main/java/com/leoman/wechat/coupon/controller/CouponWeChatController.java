@@ -108,7 +108,7 @@ public class CouponWeChatController extends GenericEntityController<Coupon,Coupo
 
     @RequestMapping(value = "/receive")
     public String receive(Long rentalId, Model model){
-        model.addAttribute("rentalId",1);
+        model.addAttribute("rentalId",rentalId);
         return "wechat/receive_coupon";
     }
 
@@ -124,6 +124,7 @@ public class CouponWeChatController extends GenericEntityController<Coupon,Coupo
                 //1-好友分享
                 if(coupon.getGainWay()==1){
                     _c = coupon;
+                    break;
                 }
             }
 

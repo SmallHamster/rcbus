@@ -250,7 +250,7 @@
                     // 调用微信浏览器内置功能实现微信支付
                     $.ajax({
                         method: "POST",
-                        url: "weixin/pay/goPay",
+                        url: "${contextPath}/wechat/pay/goPay",
                         dataType: "html",
                         data: {
                             rentalId:id,

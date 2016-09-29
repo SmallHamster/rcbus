@@ -72,8 +72,8 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
         query.setPagenum(pagenum);
         query.setPagesize(length);
 
-        if(flag == 1){
-            List<Integer> status = new ArrayList();
+        if(flag != null){
+            List<Integer> status = new ArrayList<>();
             status.add(2);
             status.add(3);
             status.add(4);
@@ -95,6 +95,7 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
         if(StringUtils.isNotBlank(Dstart)){
             query.ge("startDate",DateUtils.stringToLong(Dstart,"yyyy-MM-dd"));
         }
+
         if( StringUtils.isNotBlank(Dend)){
             query.le("startDate",DateUtils.stringToLong(Dend,"yyyy-MM-dd"));
         }

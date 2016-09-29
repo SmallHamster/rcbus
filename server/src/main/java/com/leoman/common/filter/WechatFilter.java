@@ -4,6 +4,7 @@ import com.leoman.common.logger.Logger;
 import com.leoman.entity.Constant;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.user.entity.UserInfo;
+import com.leoman.user.entity.WeChatUser;
 import com.leoman.utils.WebUtil;
 import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import org.apache.commons.collections.map.HashedMap;
@@ -79,6 +80,12 @@ public class WechatFilter implements Filter {
         }
 
         UserInfo user = (UserInfo) httpRequest.getSession().getAttribute(Constant.SESSION_MEMBER_USER);
+        WeChatUser weChatUser = (WeChatUser) httpRequest.getSession().getAttribute(Constant.SESSION_WEIXIN_WXUSER);
+
+        if (null != weChatUser) {
+            System.out.println("weChatUser:" + weChatUser.getOpenId());
+        }
+
         if (null != user) {
             //如果该用户为普通会员，则只能访问部分菜单
             if(user.getType().equals(2) || user.getType().equals(0)){

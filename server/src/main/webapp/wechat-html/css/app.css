@@ -24,19 +24,19 @@ fieldset{padding:0;margin:2px;}
 .hide{display:none;}
 
 /* checkbox */
-.cbx, .rdo, .rdo2{margin:0 4px 0 0 !important;border:none;vertical-align:-4px;}
+.cbx, .rdo, .rdo2{width:18px;height:18px;margin:0 4px 0 0 !important;border:none;vertical-align:-4px;}
 .cbx:before,
 .rdo:before,
-.rdo2:before{content:"";display:inline-block;width:100%;height:100%;background-repeat:no-repeat;background-size:100%;}
-.cbx{width:18px;height:18px;}
+.rdo2:before{content:"";display:inline-block;width:100%;height:100%;background-repeat:no-repeat;background-size:100%;-webkit-appearance:none;}
 .cbx:before{background-image:url(../images/check.png);}
 .cbx:checked:before{background-image:url(../images/checked.png);}
-.rdo{width:18px;height:18px;margin:0 4px 0 0 !important;text-align:center;vertical-align:-4px;}
+.rdo{text-align:center;}
 .rdo:before{background-image:url(../images/check_c.png);}
 .rdo:checked:before{background-image:url(../images/checked_c.png);}
 .rdo2{width:28px;height:28px;}
 .rdo2:before{background-image:url(../images/check_c_2.png);}
 .rdo2:checked:before{background-image:url(../images/checked_c_2.png);}
+.cbx:checked,.rdo:checked,.rdo2:checked{-webkit-appearance:none;}
 
 /* color */
 .blue{color:#35aaff;}
@@ -48,8 +48,8 @@ fieldset{padding:0;margin:2px;}
 .button .ubtn:nth-child(n+2){margin-top:20px;}
 .ubtn{display:inline-block;width:100%;line-height:46px;-webkit-border-radius:23px;border-radius:23px;border:none;font-size:1.6rem;text-align:center;text-decoration:none !important;}
 .ubtn:active{outline:0;text-decoration:none;
-  -webkit-box-shadow:inset 0 0 100px rgba(0,0,0,0.4);
-          box-shadow:inset 0 0 100px rgba(0,0,0,0.4);}
+	-webkit-box-shadow:inset 0 0 100px rgba(0,0,0,0.4);
+	box-shadow:inset 0 0 100px rgba(0,0,0,0.4);}
 .ubtn-blue{background:#0093ff;color:#fff !important;}
 .ubtn-red{background:#fa6d75;color:#fff !important;}
 .ubtn-gray{background:#c4c4c4;color:#fff !important;}
@@ -116,7 +116,7 @@ fieldset{padding:0;margin:2px;}
 .layui-m-layerbtn span[yes]{color:#fff;-webkit-border-radius:0 0 10px 0;border-radius:0 0 10px 0}
 .layui-m-layerbtn span[no]{color:#fff;border-right:1px solid #fff;-webkit-border-radius:0 0 0 10px;border-radius:0 0 0 10px}
 .layui-m-layerbtn span:active{-webkit-box-shadow:inset 0 0 100px rgba(0,0,0,0.4);
-          box-shadow:inset 0 0 100px rgba(0,0,0,0.4);}
+	box-shadow:inset 0 0 100px rgba(0,0,0,0.4);}
 .layui-m-layerend{position:absolute;right:7px;top:10px;width:30px;height:30px;border:0;font-weight:400;background:0 0;cursor:pointer;-webkit-appearance:none;font-size:30px}
 .layui-m-layerend::after,.layui-m-layerend::before{position:absolute;left:5px;top:15px;content:'';width:18px;height:1px;background-color:#999;transform:rotate(45deg);-webkit-transform:rotate(45deg);-webkit-border-radius:3px;border-radius:3px}
 .layui-m-layerend::after{transform:rotate(-45deg);-webkit-transform:rotate(-45deg)}
@@ -474,8 +474,8 @@ header .title{line-height:50px;text-align:center;font-size:1.6rem;}
 .user-box .list .item{position:relative;padding-left:40px;line-height:54px;font-size:1.6rem;}
 .user-box .list .item a{display:block;border-top:1px solid #e5e5e5;}
 .user-box .list .item a:active{outline:0;text-decoration:none;
-  -webkit-box-shadow:inset 0 0 100px rgba(0,0,0,0.4);
-          box-shadow:inset 0 0 100px rgba(0,0,0,0.4);}
+	-webkit-box-shadow:inset 0 0 100px rgba(0,0,0,0.4);
+	box-shadow:inset 0 0 100px rgba(0,0,0,0.4);}
 .user-box .list .item:first-child a{border-top:0;color:#333;}
 .user-box .list .item img{position:absolute;top:50%;left:10px;width:20px;height:auto;-webkit-transform:translate(0, -50%);transform:translate(0, -50%);}
 .user-box .list .item i{position:absolute;top:23px;right:10px;width:7px;height:13px;background:url(../images/f/arrow.png) no-repeat;background-size:100% auto;}
@@ -554,6 +554,11 @@ header .title{line-height:50px;text-align:center;font-size:1.6rem;}
 .popup .bd dl{position:relative;padding-left:5em;}
 .popup .bd dt{position:absolute;top:0;left:0;line-height:28px;color:#666;font-weight:400;}
 .popup .bd dd{margin-bottom:10px;}
+.popup .rule{text-align:left;}
+.popup .rule dl{line-height:24px;font-size:1.3rem;overflow:hidden;}
+.popup .rule dt{float:left;width:60px;color:#999;}
+.popup .rule dd{margin-left:66px;min-height:24px;}
+.popup .rule p{margin:0;}
 .popup .input{margin:15px 0 5px;text-align:center;}
 .popup .input .ipt{width:75%;height:18px;padding:12px 5px;line-height:18px;border:1px solid #999;-webkit-border-radius:3px;border-radius:3px;}
 

@@ -43,9 +43,9 @@
 
 </section>
 
-
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat-html/js/app.js"></script>
+<script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
 <script>
     $(function(){
         var $mobile = $('#mobile');
@@ -69,13 +69,18 @@
                     "type": "POST",
                     success: function (result) {
                         if (result==1) {
-                            alertMsg('领取完成', 3e3);
+                            alert("领取完成");
+                            alertMsg('领取完成');
+                            window.opener.close() ;
                         }else if(result==2){
-                            alertMsg('超出领取上限', 3e3);
+                            alert("超出领取上限");
+                            alertMsg('超出领取上限');
                         }else if(result==3){
-                            alertMsg('您已经领取过了', 3e3);
+                            alert("您已经领取过了");
+                            alertMsg('您已经领取过了');
                         }else {
-                            alertMsg('领取失败', 3e3);
+                            alert("领取失败");
+                            alertMsg('领取失败');
                         }
                     }
                 });

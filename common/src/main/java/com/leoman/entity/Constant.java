@@ -18,6 +18,8 @@ public interface Constant {
 
     String MEMBER_TYPE_GLOBLE = "GLOBLE";
 
+    String jsApi_ticket = "";
+
     // 用户积分/馒头变动类型
     Integer USER_INTEGRAL_CHANGE_TYPE_001 = 1;  // 积分
     Integer USER_INTEGRAL_CHANGE_TYPE_002 = 2;  // 馒头

@@ -51,10 +51,9 @@
                 </c:forEach>
             </div>
             <div class="button">
-                <c:if test="${CarRental.isRewrite ne 1 && CarRental.startDate >= toDayDate}">
+                <c:if test="${CarRental.isRewrite ne 1 && (CarRental.startDate - (60*60*24*1000)) >= toDayDate}">
                     <a onclick="rewrite(${CarRental.id},1)" class="ubtn ubtn-ghost" >我要改期</a>
                 </c:if>
-
                 <a onclick="rewrite(${CarRental.id},2)" class="ubtn ubtn-blue">我要退订</a>
                 <p><a href="javascript:;" id="rule" class="blue">退改规则</a></p>
                 <span>（出行前如有车辆变更会有系统提示）</span>
@@ -174,15 +173,15 @@
             <dd><fmt:formatNumber value="${CarRental.income}" type="currency" pattern=".0"/>元(最终价)</dd>
             <dt>取消订单</dt>
             <dd>
-                <p>出发前≥48小时，全额退(<fmt:formatNumber value="${CarRental.income}" type="currency" pattern=".0"/>元)</p>
-                <p>出发前≥24小时，全额退90%(<fmt:formatNumber value="${CarRental.income * 0.9}" type="currency" pattern=".0"/>元)</p>
-                <p>出发前≥5小时，全额退50%(<fmt:formatNumber value="${CarRental.income * 0.5}" type="currency" pattern=".0"/>元)</p>
-                <p>出发前<5小时，不予退款</p>
+                <p>起点发车时间前≥48小时，全额退(<fmt:formatNumber value="${CarRental.income}" type="currency" pattern=".0"/>元)</p>
+                <p>起点发车时间前≥24小时，全额退90%(<fmt:formatNumber value="${CarRental.income * 0.9}" type="currency" pattern=".0"/>元)</p>
+                <p>起点发车时间前≥5小时，全额退50%(<fmt:formatNumber value="${CarRental.income * 0.5}" type="currency" pattern=".0"/>元)</p>
+                <p>起点发车时间前<5小时，不予退款</p>
             </dd>
             <dt>备注详情</dt>
             <dd>
-                <p>出发前≥24小时，免费改签</p>
-                <p>出发当前，不得改签</p>
+                <p>1.江城巴士平台将提供一次改期服务</p>
+                <p>2.车辆发车前24小时,可免费改期一次</p>
             </dd>
         </dl>
     </div>

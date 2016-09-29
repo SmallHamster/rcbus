@@ -24,7 +24,7 @@ import java.util.Map;
  * Created by wangbin on 2015/10/8.
  */
 @Controller
-@RequestMapping(value = "weixin/pay")
+@RequestMapping(value = "wechat/pay")
 public class WeChatPayController {
 
     @Autowired
@@ -85,7 +85,7 @@ public class WeChatPayController {
         //应付金额
         Double totalPrice = carRental.getIncome();
         WeChatUser weChatUser = weChatUserService.getWXUserByRequest(request);
-        Map<String, String> result = wxMpService.getJSSDKPayInfo(weChatUser.getOpenId(), orderNo, totalPrice, "租车出行", "JSAPI",
+        Map<String, String> result = wxMpService.getJSSDKPayInfo(weChatUser.getOpenId(), orderNo, 0.01, "租车出行", "JSAPI",
                 request.getRemoteAddr(), Configue.getBaseUrl() + "weixin/pay/callback");
 
         WebUtil.printJson(response, result);
