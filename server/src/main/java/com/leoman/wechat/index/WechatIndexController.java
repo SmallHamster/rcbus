@@ -4,6 +4,7 @@ package com.leoman.wechat.index;
 import com.leoman.common.controller.common.CommonController;
 import com.leoman.common.core.ErrorType;
 import com.leoman.common.core.Result;
+import com.leoman.common.core.UrlManage;
 import com.leoman.common.log.entity.Log;
 import com.leoman.entity.Configue;
 import com.leoman.entity.Constant;
@@ -18,7 +19,14 @@ import com.leoman.user.entity.UserLogin;
 import com.leoman.user.service.UserLoginService;
 import com.leoman.user.service.UserService;
 import com.leoman.utils.*;
+import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.common.bean.WxMenu;
+import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
+import me.chanjar.weixin.mp.bean.WxMpCustomMessage;
+import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
+import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
+import me.chanjar.weixin.mp.bean.custombuilder.NewsBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +36,7 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
+import javax.annotation.PostConstruct;
 import javax.naming.spi.DirStateFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -56,6 +65,9 @@ public class WechatIndexController extends CommonController {
 
     @Autowired
     private WxMpService wxMpService;
+
+    @Autowired
+    private WxMpMessageRouter wxMpMessageRouter;
 
     /**
      * 首页 自定义，方便显示所有页面
@@ -392,6 +404,80 @@ public class WechatIndexController extends CommonController {
         HttpRequestUtil.sendPost(url,map);
     }
 
+    @PostConstruct
+    protected void menuInit() {
+
+        WxMenu menu = new WxMenu();
+
+        //企业用户
+        WxMenu.WxMenuButton button1 = new WxMenu.WxMenuButton();
+        button1.setName("企业用户");
+
+        WxMenu.WxMenuButton button1_1 = new WxMenu.WxMenuButton();
+        button1_1.setType(WxConsts.BUTTON_VIEW);
+        button1_1.setName("企业申请");
+        button1_1.setUrl(UrlManage.getProUrl("wechat/enterprise/apply"));
+
+        WxMenu.WxMenuButton button1_2 = new WxMenu.WxMenuButton();
+        button1_2.setType(WxConsts.BUTTON_VIEW);
+        button1_2.setName("通勤班车");
+        button1_2.setUrl(UrlManage.getProUrl("wechat/route/index/0"));
+
+        button1.getSubButtons().add(button1_1);
+        button1.getSubButtons().add(button1_2);
+
+        //个人用户
+        WxMenu.WxMenuButton button2 = new WxMenu.WxMenuButton();
+        button2.setName("个人用户");
+
+        WxMenu.WxMenuButton button2_1 = new WxMenu.WxMenuButton();
+        button2_1.setType(WxConsts.BUTTON_VIEW);
+        button2_1.setName("永旺专线");
+        button2_1.setUrl(UrlManage.getProUrl("wechat/route/index/1"));
+
+        WxMenu.WxMenuButton button2_2 = new WxMenu.WxMenuButton();
+        button2_2.setType(WxConsts.BUTTON_VIEW);
+        button2_2.setName("租车预定");
+        button2_2.setUrl(UrlManage.getProUrl("wechat/carrental/index"));
+
+        button2.getSubButtons().add(button2_1);
+        button2.getSubButtons().add(button2_2);
+
+        //个人中心
+        WxMenu.WxMenuButton button3 = new WxMenu.WxMenuButton();
+        button3.setName("个人中心");
+
+        WxMenu.WxMenuButton button3_1 = new WxMenu.WxMenuButton();
+        button3_1.setType(WxConsts.BUTTON_VIEW);
+        button3_1.setName("我的订单");
+        button3_1.setUrl(UrlManage.getProUrl("wechat/order/myOrder/index"));
+
+        WxMenu.WxMenuButton button3_2 = new WxMenu.WxMenuButton();
+        button3_2.setType(WxConsts.BUTTON_VIEW);
+        button3_2.setName("个人信息");
+        button3_2.setUrl(UrlManage.getProUrl("wechat/user/index"));
+
+        WxMenu.WxMenuButton button3_3 = new WxMenu.WxMenuButton();
+        button3_2.setType(WxConsts.BUTTON_VIEW);
+        button3_2.setName("反馈建议");
+        button3_2.setUrl(UrlManage.getProUrl("wechat/report/index"));
+
+        button3.getSubButtons().add(button3_1);
+        button3.getSubButtons().add(button3_2);
+        button3.getSubButtons().add(button3_3);
+
+        menu.getButtons().add(button1);
+        menu.getButtons().add(button2);
+        menu.getButtons().add(button3);
+
+        try {
+            System.out.println("==============menuCreate()==================");
+            wxMpService.menuCreate(menu);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     /**
      * 微信接口验证
@@ -417,6 +503,50 @@ public class WechatIndexController extends CommonController {
             return;
         }
         WebUtil.print(response, "非法请求");
+    }
+
+    /**
+     * 微信获取用户请求
+     *
+     * @param request
+     * @param response
+     * @throws Exception
+     */
+    @RequestMapping(method = {RequestMethod.POST, RequestMethod.HEAD})
+    public void handlePost(HttpServletRequest request,
+                           HttpServletResponse response) throws Exception {
+        String encryptType = me.chanjar.weixin.common.util.StringUtils.isBlank(request.getParameter("encrypt_type")) ? "raw" : request.getParameter("encrypt_type");
+        if ("raw".equals(encryptType)) {
+            // 明文传输的消息
+            WxMpXmlMessage inMessage = WxMpXmlMessage.fromXml(request.getInputStream());
+            System.out.println("-------------------");
+            System.out.println("in:" + inMessage);
+            System.out.println("-------------------");
+            if ((inMessage.getEvent().equals("SCAN") || inMessage.getEvent().equals("subscribe")) && org.apache.commons.lang.StringUtils.isNotBlank(inMessage.getEventKey()) && org.apache.commons.lang.StringUtils.isNotBlank(inMessage.getTicket())) {
+                System.out.println("==========================================:" + inMessage.getEventKey());
+                String eventKey = inMessage.getEventKey().toString();
+                eventKey = eventKey.replace("qrscene_", "");
+                String[] eventKeys = eventKey.split(",");
+                String productId = eventKeys[0];
+                String salemanId = eventKeys[1];
+
+                NewsBuilder news = WxMpCustomMessage.NEWS();
+                news = news.toUser(inMessage.getFromUserName());
+                WxMpCustomMessage.WxArticle article = new WxMpCustomMessage.WxArticle();
+                article.setUrl("www.sina.com");
+                article.setPicUrl("123.png");
+                article.setDescription("测试desc");
+                article.setTitle("测试title");
+                news.addArticle(article);
+
+                WxMpService wxMpService = (WxMpService) BeanUtils.getBean("wxMpService");
+                wxMpService.customMessageSend(news.build());
+            } else {
+                WxMpXmlOutMessage outMessage = wxMpMessageRouter.route(inMessage);
+                WebUtil.print(response, outMessage.toXml());
+            }
+            return;
+        }
     }
 
 
