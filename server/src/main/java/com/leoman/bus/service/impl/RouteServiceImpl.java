@@ -259,6 +259,7 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         routeOrder.setRoute(new Route(routeId));
         routeOrder.setOrder(new Order(order.getId()));
         routeOrder.setDepartTime(departTime);
+        routeOrder.setIsDel(0);
         routeOrderDao.save(routeOrder);
     }
 
