@@ -82,7 +82,9 @@ public class CarRentalWeChatController extends GenericEntityController<CarRental
             carRentalVo.setTo(carRental.getEndPoint());
             carRentalVo.setStype(carRental.getRentalWay());
             carRentalVo.setTime1(DateUtils.longToString(carRental.getStartDate(),"yyyy-MM-dd hh:mm"));
-            carRentalVo.setTime2(DateUtils.longToString(carRental.getEndDate(),"yyyy-MM-dd hh:mm"));
+            if(carRental.getEndDate()!=null){
+                carRentalVo.setTime2(DateUtils.longToString(carRental.getEndDate(),"yyyy-MM-dd hh:mm"));
+            }
             carRentalVo.setNumber(carRental.getBusNum());
             carRentalVo.setAmount(carRental.getTotalNumber());
             carRentalVo.setTicket(carRental.getIsInvoice());

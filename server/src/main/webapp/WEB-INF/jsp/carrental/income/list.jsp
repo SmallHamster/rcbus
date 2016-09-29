@@ -81,14 +81,12 @@
                                         <th>订单金额</th>
                                         <th>已收金额</th>
                                         <th>退款金额</th>
-                                        <th>巴士数量</th>
                                         <th>详情</th>
                                     </tr>
                                     </thead>
                                     <tbody></tbody>
                                     <tfoot>
                                     <tr>
-                                        <th></th>
                                         <th></th>
                                         <th></th>
                                         <th></th>
@@ -194,11 +192,6 @@
                             "sDefaultContent" : ""
                         },
                         {
-                            "data": "busNum",
-                            "sDefaultContent" : ""
-
-                        },
-                        {
                             "data": "id",
                             "render": function (data, type, row, meta) {
                                 var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$income.fn.detail(\'" + data + "\')\">" +
@@ -239,6 +232,7 @@
                         aoData.carNo = $("#carNo").val();
                         aoData.Dstart = $("#start").val();
                         aoData.Dend = $("#end").val();
+                        aoData.flag = 1;
                     }
 
                 });

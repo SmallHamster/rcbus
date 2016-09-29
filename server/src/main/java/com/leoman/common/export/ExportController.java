@@ -39,7 +39,7 @@ public class ExportController {
 
     // 导出字段排序，按模板的顺序列出数据库对应字段，中间用逗号隔开
     // 收入明细
-    public static String USER_FIELD = "orderNo,startDate,userName,mobile,totalAmount,income,refund,busNum";
+    public static String USER_FIELD = "orderNo,startDate,userName,mobile,totalAmount,income,refund";
 
     // 导出文件名
     // 收入明细

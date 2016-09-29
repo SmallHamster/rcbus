@@ -288,50 +288,50 @@
         var id = $("#id").val();
 
         if(null==city || city==""){
-            alert("请选择城市");
+            alertMsg("请选择城市");
             event.preventDefault();
             return;
         }
         if(null==from || from==""){
-            alert("请填写起点");
+            alertMsg("请填写起点");
             event.preventDefault();
             return;
         }
 
         if(null==to || to==""){
-            alert("请填写终点");
+            alertMsg("请填写终点");
             event.preventDefault();
             return;
         }
         if(null==stype || stype==""){
-            alert("请选择包车方式");
+            alertMsg("请选择包车方式");
             event.preventDefault();
             return;
         }
         if(null==time1 || time1==""){
-            alert("请选择出发时间");
+            alertMsg("请选择出发时间");
             event.preventDefault();
             return;
         }
 
         if(stype!=0 && (null==time2 || time2=="")){
-            alert("请选择回城时间");
+            alertMsg("请选择回城时间");
             event.preventDefault();
             return;
         }
 
         if(null==number || number==""){
-            alert("请填写需要车辆");
+            alertMsg("请填写需要车辆");
             event.preventDefault();
             return;
         }
         if(null==amount || amount==""){
-            alert("请填写总人数");
+            alertMsg("请填写总人数");
             event.preventDefault();
             return;
         }
         if(ticket==1 && (null==title || title=="")){
-            alert("请填写发票抬头");
+            alertMsg("请填写发票抬头");
             event.preventDefault();
             return;
         }

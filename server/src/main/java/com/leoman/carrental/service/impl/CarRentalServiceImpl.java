@@ -69,7 +69,7 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
         Map.Entry tempMap = null;
         Double sumTotalAmount = 0.0;
         Double sumIncome = 0.0;
-        Double sumBusNum = 0.0;
+        Double sumRefund = 0.0;
 
         if(carRentals != null){
             for (CarRental carRental : carRentals) {
@@ -81,11 +81,10 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
                 params.put("totalAmount", carRental.getTotalAmount());
                 params.put("income", carRental.getIncome());
                 params.put("refund", carRental.getRefund());
-                params.put("busNum", carRental.getBusNum());
 
                 sumTotalAmount += carRental.getTotalAmount();
                 sumIncome += carRental.getIncome();
-                sumBusNum += carRental.getRefund();
+                sumRefund += carRental.getRefund();
 
                 // 去掉null值
                 set = params.entrySet();
@@ -108,7 +107,7 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
 
             params.put("totalAmount", "总和 : " + sumTotalAmount);
             params.put("income", "总和 : " + sumIncome);
-            params.put("refund", "总和 : " + sumBusNum);
+            params.put("refund", "总和 : " + sumRefund);
 
             list.add(params);
         }
@@ -318,6 +317,7 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
         carRental.setIncome(0.0);
         carRental.setRefund(0.0);
         carRental.setUnsubscribe("");
+        carRental.setIsDel(0);
 
         order.setUserName(linkman);
         order.setMobile(mobile);

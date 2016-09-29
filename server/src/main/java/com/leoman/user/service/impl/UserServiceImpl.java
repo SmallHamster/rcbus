@@ -140,18 +140,20 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
                 return 0;
             }
 
+            for (UserExportVo userExportVo : list) {
+                //判断账号是否存在
+                List<UserLogin> userLogins = userLoginService.queryByProperty("username", userExportVo.getMobile());
+                if (!userLogins.isEmpty() && userLogins.size() > 0) {
+                    return 2;
+                }
+            }
+
             for (UserExportVo userExportVo : list)  {
                 //新建一条用户信息 存号码 固定密码 员工身份
                 userInfo = new UserInfo();
                 userInfo.setMobile(userExportVo.getMobile());
 //                userInfo.setPassword(MD5Util.MD5Encode("888888","UTF-8"));
                 userInfo.setType(1);
-
-                //判断账号是否存在
-                List<UserLogin> userLogins = userLoginService.queryByProperty("username",userExportVo.getMobile());
-                if(!userLogins.isEmpty() && userLogins.size()>0){
-                    return 2;
-                }
 
                 //新增一条用户登录信息 存号码 固定密码
                 UserLogin userLogin = new UserLogin();

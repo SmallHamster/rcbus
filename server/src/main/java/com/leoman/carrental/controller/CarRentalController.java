@@ -66,11 +66,19 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
      */
     @RequestMapping(value = "/list")
     @ResponseBody
-    public Map<String, Object> list(HttpServletRequest request,Model model,Integer draw, Integer start, Integer length, String orderNo,Integer orderStatus,String carNo,String driverName,String userName,String Dstart,String Dend) throws ParseException {
+    public Map<String, Object> list(HttpServletRequest request,Model model,Integer draw, Integer start, Integer length, String orderNo,Integer orderStatus,String carNo,String driverName,String userName,String Dstart,String Dend,Integer flag) throws ParseException {
         int pagenum = getPageNum(start, length);
         Query query = Query.forClass(CarRental.class, carRentalService);
         query.setPagenum(pagenum);
         query.setPagesize(length);
+
+        if(flag == 1){
+            List<Integer> status = new ArrayList();
+            status.add(2);
+            status.add(3);
+            status.add(4);
+            query.in("order.status",status);
+        }
 
         if(StringUtils.isNotBlank(orderNo)){
             query.like("order.orderNo",orderNo);

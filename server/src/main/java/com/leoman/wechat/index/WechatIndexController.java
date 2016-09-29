@@ -18,6 +18,7 @@ import com.leoman.user.entity.UserLogin;
 import com.leoman.user.service.UserLoginService;
 import com.leoman.user.service.UserService;
 import com.leoman.utils.*;
+import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,8 +29,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
 import javax.naming.spi.DirStateFactory;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +53,9 @@ public class WechatIndexController extends CommonController {
 
     @Autowired
     private UserLoginService loginService;
+
+    @Autowired
+    private WxMpService wxMpService;
 
     /**
      * 首页 自定义，方便显示所有页面
@@ -384,6 +390,33 @@ public class WechatIndexController extends CommonController {
         map.put("mobile",phone);
         map.put("text","【江城巴士】亲爱的您好，您的验证码是"+code+"。有效期为10分钟，请尽快验证");
         HttpRequestUtil.sendPost(url,map);
+    }
+
+
+    /**
+     * 微信接口验证
+     *
+     * @param request
+     * @param response
+     * @param signature
+     * @param timestamp
+     * @param nonce
+     * @param echostr
+     * @throws javax.servlet.ServletException
+     * @throws java.io.IOException
+     */
+    @RequestMapping(method = {RequestMethod.GET, RequestMethod.HEAD})
+    public void handleGet(HttpServletRequest request,
+                          HttpServletResponse response,
+                          @RequestParam(value = "signature") String signature,
+                          @RequestParam(value = "timestamp") String timestamp,
+                          @RequestParam(value = "nonce") String nonce,
+                          @RequestParam(value = "echostr") String echostr) throws ServletException, IOException {
+        if (wxMpService.checkSignature(timestamp, nonce, signature)) {
+            WebUtil.print(response, echostr);
+            return;
+        }
+        WebUtil.print(response, "非法请求");
     }
 
 
