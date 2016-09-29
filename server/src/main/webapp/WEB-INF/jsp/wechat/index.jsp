@@ -70,7 +70,7 @@
     </div>
 
     <!-- main content start-->
-    <%--<div class="main-content" >
+    <div class="main-content" >
         <!-- header section start-->
         <div class="header-section">
             <!--toggle button start-->
@@ -90,8 +90,8 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-usermenu pull-right">
-                            &lt;%&ndash;<li><a href="#"><i class="fa fa-user"></i>  Profile</a></li>&ndash;%&gt;
-                            &lt;%&ndash;<li><a href="#"><i class="fa fa-cog"></i>  Settings</a></li>&ndash;%&gt;
+                            <%--<li><a href="#"><i class="fa fa-user"></i>  Profile</a></li>--%>
+                            <%--<li><a href="#"><i class="fa fa-cog"></i>  Settings</a></li>--%>
                             <li><a href="${contextPath}/admin/logout"><i class="fa fa-sign-out"></i> 退出</a></li>
                         </ul>
                     </li>
@@ -102,7 +102,7 @@
         </div>
         <!-- header section end-->
         <!-- page heading start-->
-        <div class="page-heading">
+        <%--<div class="page-heading">
             <h3>
                 Dashboard
             </h3>
@@ -601,9 +601,9 @@
         <!--footer section start-->
         <footer>
             2014 &copy; AdminEx by ThemeBucket
-        </footer>
+        </footer>--%>
         <!--footer section end-->
-    </div>--%>
+    </div>
     <!-- main content end-->
 </section>
 <%@ include file="../inc/new2/foot.jsp"%>
