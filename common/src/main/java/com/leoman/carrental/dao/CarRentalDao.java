@@ -16,4 +16,9 @@ public interface CarRentalDao extends IBaseJpaRepository<CarRental>{
     public List<CarRental> findList(Long id);
 
 
+    //根据订单id查询租单
+    @Query("SELECT a FROM CarRental a WHERE a.order.id = ?1")
+    public CarRental findOne(Long orderId);
+
+
 }

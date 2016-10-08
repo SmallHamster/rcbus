@@ -171,7 +171,7 @@
     </div>
 
     <div class="button">
-        <a href="${contextPath}/wechat-html/oldFile/disclaimer.html">免责申明</a>
+        <a onclick="toAgree()">免责申明</a>
         <a onclick="pay()" class="ubtn ubtn-blue">微信支付（<em id="priceTotal2">${CarRental.totalAmount}</em>元）</a>
     </div>
 </section>
@@ -179,6 +179,12 @@
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
 <script>
+
+    //服务协议
+    function toAgree(){
+        location.href = "${contextPath}/wechat/agreement";
+    }
+
     $(function() {
         var price = parseFloat($('#price').val()); // 价格
 

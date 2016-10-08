@@ -45,7 +45,7 @@
         <p>单位名称：${routeOrder.order.userInfo.enterprise.name}</p>
         <div class="state state6">已结束</div>
         <div class="button">
-            <c:if test="${routeOrder.order.isComment eq 0}">
+            <c:if test="${routeOrder.order.isComment ne 1}">
                 <button type="button" class="ubtn ubtn-red" id="comments">评价</button>
             </c:if>
             <c:if test="${routeOrder.order.isComment eq 1}">

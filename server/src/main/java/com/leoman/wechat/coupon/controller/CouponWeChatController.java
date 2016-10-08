@@ -6,14 +6,8 @@ import com.leoman.common.core.Result;
 import com.leoman.coupon.entity.Coupon;
 import com.leoman.coupon.service.CouponService;
 import com.leoman.coupon.service.impl.CouponServiceImpl;
-import com.leoman.user.entity.NotUserCoupon;
-import com.leoman.user.entity.ReceiveCoupon;
-import com.leoman.user.entity.UserCoupon;
-import com.leoman.user.entity.UserInfo;
-import com.leoman.user.service.NotUserCouponService;
-import com.leoman.user.service.ReceiveCouponService;
-import com.leoman.user.service.UserCouponService;
-import com.leoman.user.service.UserService;
+import com.leoman.user.entity.*;
+import com.leoman.user.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -25,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 礼券设置
+ * 微信礼券设置
  * Created by 史龙 on 2016/9/23.
  */
 @Controller
@@ -42,6 +36,8 @@ public class CouponWeChatController extends GenericEntityController<Coupon,Coupo
     private NotUserCouponService notUserCouponService;
     @Autowired
     private ReceiveCouponService receiveCouponService;
+    @Autowired
+    private CouponOrderService couponOrderService;
 
     @RequestMapping(value = "/index")
     public String index(HttpServletRequest request, Model model){
@@ -147,8 +143,23 @@ public class CouponWeChatController extends GenericEntityController<Coupon,Coupo
                 //用户存在
                 //新增一条用户优惠券
                 UserCoupon userCoupon = new UserCoupon();
+                CouponOrder couponOrder = new CouponOrder();
+
+                //快照
+                couponOrder.setName(_c.getName());
+                couponOrder.setGainWay(_c.getGainWay());
+                couponOrder.setCouponWay(_c.getCouponWay());
+                couponOrder.setValidDateFrom(_c.getValidDateFrom());
+                couponOrder.setValidDateTo(_c.getValidDateTo());
+                couponOrder.setDiscountPercent(_c.getDiscountPercent());
+                couponOrder.setDiscountTopMoney(_c.getDiscountTopMoney());
+                couponOrder.setReduceMoney(_c.getReduceMoney());
+                couponOrder.setIsLimit(_c.getIsLimit());
+                couponOrder.setLimitMoney(_c.getLimitMoney());
+                couponOrderService.save(couponOrder);
+
                 userCoupon.setUserId(userInfo.getId());
-                userCoupon.setCoupon(_c);
+                userCoupon.setCoupon(couponOrder);
                 userCoupon.setIsUse(1);
                 userCouponService.save(userCoupon);
                 //新增一条领取信息
@@ -159,8 +170,23 @@ public class CouponWeChatController extends GenericEntityController<Coupon,Coupo
                 //用户不存在
                 //新增一条非用户优惠券
                 NotUserCoupon notUserCoupon = new NotUserCoupon();
+                CouponOrder couponOrder = new CouponOrder();
+
+                //快照
+                couponOrder.setName(_c.getName());
+                couponOrder.setGainWay(_c.getGainWay());
+                couponOrder.setCouponWay(_c.getCouponWay());
+                couponOrder.setValidDateFrom(_c.getValidDateFrom());
+                couponOrder.setValidDateTo(_c.getValidDateTo());
+                couponOrder.setDiscountPercent(_c.getDiscountPercent());
+                couponOrder.setDiscountTopMoney(_c.getDiscountTopMoney());
+                couponOrder.setReduceMoney(_c.getReduceMoney());
+                couponOrder.setIsLimit(_c.getIsLimit());
+                couponOrder.setLimitMoney(_c.getLimitMoney());
+                couponOrderService.save(couponOrder);
+
                 notUserCoupon.setMobile(mobile);
-                notUserCoupon.setCouponId(_c.getId());
+                notUserCoupon.setCouponId(couponOrder.getId());
                 notUserCouponService.save(notUserCoupon);
                 //新增一条领取信息
                 receiveCoupon.setMobile(mobile);

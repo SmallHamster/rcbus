@@ -2,11 +2,14 @@ package com.leoman.wechat.pay.controller;
 
 import com.leoman.carrental.entity.CarRental;
 import com.leoman.carrental.service.CarRentalService;
+import com.leoman.common.controller.common.CommonController;
 import com.leoman.entity.Configue;
 import com.leoman.order.entity.Order;
 import com.leoman.order.service.OrderService;
 import com.leoman.user.entity.UserCoupon;
+import com.leoman.user.entity.UserInfo;
 import com.leoman.user.entity.WeChatUser;
+import com.leoman.user.service.UserCouponService;
 import com.leoman.user.service.WeChatUserService;
 import com.leoman.utils.WebUtil;
 import me.chanjar.weixin.mp.api.WxMpService;
@@ -38,6 +41,10 @@ public class WeChatPayController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private UserCouponService userCouponService;
+
 //
 //    @Autowired
 //    private WxUserService wxUserService;
@@ -121,15 +128,24 @@ public class WeChatPayController {
                 Order order = orderService.findOne(orderNo);
                 order.setStatus(2);
                 orderService.save(order);
+
+                //获取使用的优惠券
+                Long couponId = (Long)request.getSession().getAttribute("couponId");
+                CarRental carRental = carRentalService.findOne(order.getId());
+                UserInfo userInfo = new CommonController().getSessionUser(request);
+
                 //改变优惠券状态为已使用
-//                List<UserCoupon> userCoupons = userCouponService.findList(userInfo.getId(),couponId);
-//                if(!userCoupons.isEmpty() && userCoupons.size()>0){
-//                    UserCoupon userCoupon = userCoupons.get(0);
-//                    userCoupon.setIsUse(2);
-//                    userCoupon.setRentalId(carRental.getId());
-//                    userCouponService.save(userCoupon);
-//                }
+                if(couponId!=null){
+                    List<UserCoupon> userCoupons = userCouponService.findList(userInfo.getId(),couponId);
+                    if(!userCoupons.isEmpty() && userCoupons.size()>0){
+                        UserCoupon userCoupon = userCoupons.get(0);
+                        userCoupon.setIsUse(2);
+                        userCoupon.setRentalId(carRental.getId());
+                        userCouponService.save(userCoupon);
+                    }
+                }
             }
+
             System.out.println("----------");
             System.out.println(wxMpPayCallback);
             String xmlResult = "<xml>" +

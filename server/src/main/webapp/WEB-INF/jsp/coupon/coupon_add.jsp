@@ -161,9 +161,11 @@
                     todayBtn: 1,
                     autoclose: 1,
                     todayHighlight: 1,
-                    startView: 'hour',
+                    startView: 2,
                     forceParse: 0,
                     showMeridian: false,
+//                    minView: "month",
+
                     format: 'yyyy-mm-dd hh:ii'
                 });
             },

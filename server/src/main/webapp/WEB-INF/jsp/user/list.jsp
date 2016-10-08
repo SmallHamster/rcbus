@@ -148,7 +148,7 @@
                         {
                             "data": "createDate",
                             "render": function (data) {
-                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
+                                return new Date(data).format("yyyy-MM-dd HH:mm:ss");
                             },
                             "sDefaultContent" : ""
                         },
@@ -189,10 +189,10 @@
                                         "<i class='fa fa-trash-o'></i> 删除</button>";
 
                                 var departure = "<button title='离职' class='btn btn-primary btn-circle edit' onclick=\"$user.fn.departure(\'" + data + "\')\">" +
-                                        "<i class='fa fa-pencil-square-o'></i> 离职</button>";
+                                        "<i class='fa fa-circle-o'></i> 离职</button>";
 
                                 var enterprise = "<button title='选择企业' class='btn btn-primary btn-circle edit' onclick=\"$user.fn.enterprise(\'" + data + "\')\">" +
-                                        "<i class='fa fa-pencil-square-o'></i> 选择企业</button>";
+                                        "<i class='fa fa-circle'></i> 选择企业</button>";
 
                                 var giving = "<button title='赠送' class='btn btn-primary btn-circle edit' onclick=\"$user.fn.giving(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 赠送</button>";

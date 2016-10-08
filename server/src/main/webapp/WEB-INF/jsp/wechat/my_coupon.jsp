@@ -47,7 +47,7 @@
                 <li class="c2" onclick="giving(${cw2.id})">
                     <div class="hd">
                         <em>${fn:substring(cw2.coupon.name ,0,fn:length(cw2.coupon.name)-4)}</em>
-                        <sub>折</sub>
+                        <sub>元</sub>
                     </div>
                     <div class="bd">
                         <h4>${fn:substring(cw2.coupon.name ,fn:length(cw2.coupon.name)-3,fn:length(cw2.coupon.name))}</h4>

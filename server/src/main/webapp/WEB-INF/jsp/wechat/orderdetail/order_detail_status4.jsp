@@ -150,7 +150,7 @@
     </div>
 
     <div class="button">
-        <a href="${contextPath}/wechat-html/oldFile/disclaimer.html">免责申明</a>
+        <a onclick="toAgree()">免责申明</a>
         <span class="ubtn ubtn-gray">已取消（退款 &yen; ${CarRental.refund}）</span>
     </div>
 </section>
@@ -158,7 +158,10 @@
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
 <script>
-
+    //服务协议
+    function toAgree(){
+        location.href = "${contextPath}/wechat/agreement";
+    }
 </script>
 </body>
 </html>

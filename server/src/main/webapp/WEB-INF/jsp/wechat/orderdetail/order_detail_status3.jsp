@@ -154,7 +154,7 @@
     </div>
 
     <div class="button">
-        <a href="${contextPath}/wechat-html/oldFile/disclaimer.html">免责申明</a>
+        <a onclick="toAgree()">免责申明</a>
         <c:if test="${CarRental.order.isComment eq 0}">
             <button type="button" class="ubtn ubtn-red" id="comments">评价</button>
         </c:if>
@@ -338,6 +338,11 @@
 //    var price = $("#price").val(),
 //        discount = $("#discount").val(),
 //        val = price - discount;
+
+    //服务协议
+    function toAgree(){
+        location.href = "${contextPath}/wechat/agreement";
+    }
 
     $(function() {
 

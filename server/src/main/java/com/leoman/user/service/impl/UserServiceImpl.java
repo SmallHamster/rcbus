@@ -10,15 +10,9 @@ import com.leoman.permissions.admin.service.AdminService;
 import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
 import com.leoman.user.dao.UserInfoDao;
-import com.leoman.user.entity.NotUserCoupon;
-import com.leoman.user.entity.UserCoupon;
-import com.leoman.user.entity.UserInfo;
-import com.leoman.user.entity.UserLogin;
+import com.leoman.user.entity.*;
 import com.leoman.user.entity.vo.UserExportVo;
-import com.leoman.user.service.NotUserCouponService;
-import com.leoman.user.service.UserCouponService;
-import com.leoman.user.service.UserLoginService;
-import com.leoman.user.service.UserService;
+import com.leoman.user.service.*;
 import com.leoman.utils.JsonUtil;
 import com.leoman.utils.ReadExcelUtil;
 import org.apache.commons.lang.StringUtils;
@@ -60,6 +54,8 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
     private UserCouponService userCouponService;
     @Autowired
     private NotUserCouponService notUserCouponService;
+    @Autowired
+    private CouponOrderService couponOrderService;
 
 
     @Override
@@ -216,7 +212,22 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
         }
         //新增注册优惠券
         UserCoupon userCoupon = new UserCoupon();
-        userCoupon.setCoupon(_c);
+        CouponOrder couponOrder = new CouponOrder();
+
+        //快照
+        couponOrder.setName(_c.getName());
+        couponOrder.setGainWay(_c.getGainWay());
+        couponOrder.setCouponWay(_c.getCouponWay());
+        couponOrder.setValidDateFrom(_c.getValidDateFrom());
+        couponOrder.setValidDateTo(_c.getValidDateTo());
+        couponOrder.setDiscountPercent(_c.getDiscountPercent());
+        couponOrder.setDiscountTopMoney(_c.getDiscountTopMoney());
+        couponOrder.setReduceMoney(_c.getReduceMoney());
+        couponOrder.setIsLimit(_c.getIsLimit());
+        couponOrder.setLimitMoney(_c.getLimitMoney());
+        couponOrderService.save(couponOrder);
+
+        userCoupon.setCoupon(couponOrder);
         userCoupon.setUserId(userInfo.getId());
         userCoupon.setIsUse(1);
         userCouponService.save(userCoupon);
@@ -228,7 +239,7 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
                 //新增之前领取的优惠券
                 userCoupon = new UserCoupon();
                 userCoupon.setUserId(userInfo.getId());
-                userCoupon.setCoupon(couponService.queryByPK(notUserCoupon.getCouponId()));
+                userCoupon.setCoupon(couponOrderService.queryByPK(notUserCoupon.getCouponId()));
                 userCoupon.setIsUse(1);
                 userCouponService.save(userCoupon);
                 //删除非用户优惠券表信息

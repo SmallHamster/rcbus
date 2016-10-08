@@ -49,7 +49,7 @@
 
             <div class="item">
                 <label class="for">出行时间</label>
-                <input type="text" class="ipt" id="travelTime" name="travelTime" value="" />
+                <input type="text" class="ipt" id="time" name="time" value="" placeholder="" readonly />
             </div>
 
             <div class="item">
@@ -76,13 +76,87 @@
 <script src="${contextPath}/wechat-html/js/mobiscroll/mobiscroll.i18n.zh.js"></script>
 <script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
 <script>
+    var $time1 = $('#time');
+
+    var mydate = new Date();
+    var maxDay = 15; // 最后期限
+    var dateArr = []; // 日期范围
+    var hours = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12', '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23'];
+    var minutes = ['05', 10, 15, 20, 25, 30, 35, 40, 45, 50, 55];
+    var time1;
+
+
+    //求月份最大天数
+    function getDaysInMonth(year, month){
+        return new Date(year, month + 1, 0).getDate();
+    }
+
+    function getDate(mydate) {
+
+        var year = mydate.getFullYear();
+        var month = mydate.getMonth();
+        var date = mydate.getDate() + 1; // 从明天开始
+        var maxMonthDays = getDaysInMonth(year, month);
+        var i, arr = [];
+        if (maxMonthDays > date + maxDay) {
+            for (i = date; i < maxMonthDays - maxDay; i ++) {
+                arr.push(year + '-' + (month + 1) + '-' + i);
+            }
+        } else {
+            for (i = date; i <= maxMonthDays; i ++) {
+                arr.push(year + '-' + (month + 1) + '-' + i);
+            }
+            for (i = 1; i < maxDay + date - maxMonthDays; i ++) {
+                arr.push(year + '-' + (month + 2) + '-' + i);
+            }
+        }
+
+        return arr;
+    }
+
+    dateArr = getDate(mydate);
+    time1 = dateArr[0].replace(/-/g,'');
+
+    mobiscroll.scroller('#time', {
+        theme: 'ios',
+        display: 'bottom',
+        lang: 'zh',
+        headerText: '出发时间',
+        focusOnClose: false,
+        formatValue: function (data) {
+            return data[0] + ' ' + data[1] + ':' + data[2];
+        },
+        wheels: [
+            [
+                {
+                    circular: false,
+                    data: dateArr
+                },
+                {
+                    circular: false,
+                    data: hours
+                },
+                {
+                    circular: false,
+                    data: minutes
+                }
+            ]
+        ],
+        onSet: function(event, inst) {
+            time1 = event.valueText.split(' ')[0].replace(/-/g, '');
+        }
+    });
+
+
 
     function save(){
         var content = $("#content");
+        var time = $("#time");
         $("#car_travel").ajaxSubmit({
             url : "${contextPath}/wechat/cartravel/save",
             data : {
-                content : content
+                content : content,
+                time : time
             },
             type : "POST",
             success : function(result) {

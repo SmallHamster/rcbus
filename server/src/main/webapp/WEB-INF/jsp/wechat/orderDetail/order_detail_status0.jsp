@@ -87,7 +87,7 @@
     </div>
 
     <div class="button">
-        <a href="${contextPath}/wechat-html/oldFile/disclaimer.html">免责申明</a>
+        <a onclick="toAgree()">免责申明</a>
         <a id="edit" class="ubtn ubtn-ghost">修改信息</a>
         <button type="button" class="ubtn ubtn-red" id="cancel">取消申请</button>
     </div>
@@ -97,6 +97,11 @@
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
 <script>
+    //服务协议
+    function toAgree(){
+        location.href = "${contextPath}/wechat/agreement";
+    }
+
     $(function() {
 
         $("#edit").on("click",function(){

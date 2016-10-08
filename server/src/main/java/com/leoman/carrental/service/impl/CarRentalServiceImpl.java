@@ -75,7 +75,7 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
             for (CarRental carRental : carRentals) {
                 params = new HashMap<String, Object>();
                 params.put("orderNo", carRental.getOrder().getOrderNo());
-                params.put("startDate", DateUtils.longToString(carRental.getStartDate(),"yyyy-MM-dd hh:mm"));
+                params.put("startDate", DateUtils.longToString(carRental.getStartDate(),"yyyy-MM-dd HH:mm"));
                 params.put("userName", carRental.getOrder().getUserName());
                 params.put("mobile", carRental.getOrder().getMobile());
                 params.put("totalAmount", carRental.getTotalAmount());
@@ -177,9 +177,9 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
                 carRental.setRentalWay(rwType);
                 carRental.setStartPoint(startPoint);
                 carRental.setEndPoint(endPoint);
-                carRental.setStartDate(DateUtils.stringToLong(startDate,"yyyy-MM-dd hh:mm"));
+                carRental.setStartDate(DateUtils.stringToLong(startDate,"yyyy-MM-dd HH:mm"));
                 if(rwType==2){
-                    carRental.setEndDate(DateUtils.stringToLong(endDate,"yyyy-MM-dd hh:mm"));
+                    carRental.setEndDate(DateUtils.stringToLong(endDate,"yyyy-MM-dd HH:mm"));
                 }
                 carRental.setCarType(carTypeService.queryByPK(carTypeId));
                 carRental.setTotalNumber(totalNumber);
@@ -246,6 +246,11 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
         return carRentalDao.findList(id);
     }
 
+    @Override
+    public CarRental findOne(Long orderId) {
+        return carRentalDao.findOne(orderId);
+    }
+
     /**
      * 微信保存
      * @param userInfo
@@ -293,10 +298,10 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
         carRental.setStartPoint(from);
         carRental.setEndPoint(to);
         carRental.setRentalWay(stype);
-        carRental.setStartDate(DateUtils.stringToLong(time1,"yyyy-MM-dd hh:mm"));
+        carRental.setStartDate(DateUtils.stringToLong(time1,"yyyy-MM-dd HH:mm"));
 
         if(stype!=0 && time2!=null){
-            carRental.setEndDate(DateUtils.stringToLong(time2,"yyyy-MM-dd hh:mm"));
+            carRental.setEndDate(DateUtils.stringToLong(time2,"yyyy-MM-dd HH:mm"));
         }
 
         carRental.setBusNum(number);

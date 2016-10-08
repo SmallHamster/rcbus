@@ -17,8 +17,10 @@ import com.leoman.entity.Constant;
 import com.leoman.order.entity.Order;
 import com.leoman.order.service.OrderService;
 import com.leoman.order.service.impl.OrderServiceImpl;
+import com.leoman.user.entity.CouponOrder;
 import com.leoman.user.entity.UserCoupon;
 import com.leoman.user.entity.UserInfo;
+import com.leoman.user.service.CouponOrderService;
 import com.leoman.user.service.UserCouponService;
 import com.leoman.utils.DateUtils;
 import com.leoman.utils.HttpRequestUtil;
@@ -34,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -64,7 +67,8 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
     private BusSendService busSendService;
     @Autowired
     private WxMpConfigStorage wxMpConfigStorage;
-
+    @Autowired
+    private CouponOrderService couponOrderService;
     /**
      * 我的订单
      * @param model
@@ -277,21 +281,29 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
     public Result pay(Long id,String price,Long couponId,HttpServletRequest request){
         UserInfo userInfo = new CommonController().getSessionUser(request);
         try{
+
+            HttpSession session = request.getSession();
+            session.setAttribute("couponId",couponId);
+
+            //支付金额
             CarRental carRental = carRentalService.queryByPK(id);
+            carRental.setIncome(Double.parseDouble(StringUtils.isNotBlank(price) ? price : "0.0"));
+            carRentalService.save(carRental);
+
+// (付款完成)
 //            Order order = carRental.getOrder();
 //            //改变状态进行中
 //            order.setStatus(2);
 //            orderService.save(order);
-            carRental.setIncome(Double.parseDouble(StringUtils.isNotBlank(price) ? price : "0.0"));
-            carRentalService.save(carRental);
+
             //改变优惠券状态为已使用
-            List<UserCoupon> userCoupons = userCouponService.findList(userInfo.getId(),couponId);
-            if(!userCoupons.isEmpty() && userCoupons.size()>0){
-                UserCoupon userCoupon = userCoupons.get(0);
-                userCoupon.setIsUse(2);
-                userCoupon.setRentalId(carRental.getId());
-                userCouponService.save(userCoupon);
-            }
+//            List<UserCoupon> userCoupons = userCouponService.findList(userInfo.getId(),couponId);
+//            if(!userCoupons.isEmpty() && userCoupons.size()>0){
+//                UserCoupon userCoupon = userCoupons.get(0);
+//                userCoupon.setIsUse(2);
+//                userCoupon.setRentalId(carRental.getId());
+//                userCouponService.save(userCoupon);
+//            }
         }catch (Exception e){
             e.printStackTrace();
             return Result.failure();
@@ -312,10 +324,10 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
         try{
             CarRental carRental = carRentalService.queryByPK(id);
             if(StringUtils.isNotBlank(time1)){
-                carRental.setStartDate(DateUtils.stringToLong(time1,"yyyy-MM-dd hh:mm"));
+                carRental.setStartDate(DateUtils.stringToLong(time1,"yyyy-MM-dd HH:mm"));
             }
             if(StringUtils.isNotBlank(time2)){
-                carRental.setEndDate(DateUtils.stringToLong(time2,"yyyy-MM-dd hh:mm"));
+                carRental.setEndDate(DateUtils.stringToLong(time2,"yyyy-MM-dd HH:mm"));
             }
             //已经改签过了
             carRental.setIsRewrite(1);
@@ -335,17 +347,29 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
      */
     @RequestMapping(value = "/cancel/save")
     @ResponseBody
-    public Result cancelSave(String unsubscribe,Long id,Double val){
+    public Result cancelSave(String unsubscribe,Long id,Double val,HttpServletRequest request){
         try{
             CarRental carRental = carRentalService.queryByPK(id);
             Order order = carRental.getOrder();
+
             //取消订单
             order.setStatus(4);
             orderService.save(order);
             carRental.setUnsubscribe(StringUtils.isNotBlank(unsubscribe) ? unsubscribe : "");
+
             //退款金额
             carRental.setRefund(val!=null ? val : 0.0);
             carRentalService.save(carRental);
+
+            //退优惠券
+            UserInfo userInfo = new CommonController().getSessionUser(request);
+            UserCoupon userCoupon = userCouponService.findOne(userInfo.getId(),id);
+            if(userCoupon!=null){
+                userCoupon.setIsUse(1);
+                userCoupon.setRentalId(0L);
+                userCouponService.save(userCoupon);
+            }
+
         }catch (Exception e){
             e.printStackTrace();
             return Result.failure();
@@ -379,8 +403,24 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
 
             //新增一条用户优惠券
             UserCoupon userCoupon = new UserCoupon();
+            CouponOrder couponOrder = new CouponOrder();
+
+            //快照
+            couponOrder.setName(_c.getName());
+            couponOrder.setGainWay(_c.getGainWay());
+            couponOrder.setCouponWay(_c.getCouponWay());
+            couponOrder.setValidDateFrom(_c.getValidDateFrom());
+            couponOrder.setValidDateTo(_c.getValidDateTo());
+            couponOrder.setDiscountPercent(_c.getDiscountPercent());
+            couponOrder.setDiscountTopMoney(_c.getDiscountTopMoney());
+            couponOrder.setReduceMoney(_c.getReduceMoney());
+            couponOrder.setIsLimit(_c.getIsLimit());
+            couponOrder.setLimitMoney(_c.getLimitMoney());
+            couponOrderService.save(couponOrder);
+
             userCoupon.setUserId(order.getUserInfo().getId());
-            userCoupon.setCoupon(_c);
+
+            userCoupon.setCoupon(couponOrder);
             userCoupon.setIsUse(1);
             userCouponService.save(userCoupon);
 
@@ -411,6 +451,16 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
     }
 
 
+    /**
+     * 评价
+     * @param id
+     * @param driverService
+     * @param busEnvironment
+     * @param safeDriving
+     * @param arriveTime
+     * @param type
+     * @return
+     */
     @RequestMapping(value = "/evaluation")
     @ResponseBody
     public Result evaluation(Long id,Integer driverService,Integer busEnvironment,Integer safeDriving,Integer arriveTime,Integer type){

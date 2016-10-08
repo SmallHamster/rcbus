@@ -38,7 +38,9 @@
             </c:if>
                 <div class="hd">
                     <em>${fn:substring(userCoupon.coupon.name ,0,fn:length(userCoupon.coupon.name)-4)}</em>
-                    <sub>折</sub>
+                    <c:if test="${userCoupon.coupon.couponWay eq 1}"><sub>折</sub></c:if>
+                    <c:if test="${userCoupon.coupon.couponWay eq 2}"><sub>元</sub></c:if>
+
                 </div>
                 <div class="bd">
                     <h4>${fn:substring(userCoupon.coupon.name ,fn:length(userCoupon.coupon.name)-3,fn:length(userCoupon.coupon.name))}</h4>
@@ -87,7 +89,7 @@
             layer.open({
                 content: modal
                 ,className: 'popup'
-                ,btn: '确定转增'
+                ,btn: '确定转赠'
                 ,yes: function(index) {
                     var val = $('.popup .ipt').val();
                     if (!val) {
@@ -110,7 +112,7 @@
                                     window.location.href = "${contextPath}/wechat/coupon/index";
                                     alertMsg('转赠完成', 3e3);
                                 }else if (result==2){
-                                    alertMsg('手机号不存在', 3e3);
+                                    alertMsg('该手机号还未注册', 3e3);
                                 }else{
                                     alertMsg('转赠失败', 3e3);
                                 }

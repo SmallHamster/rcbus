@@ -9,12 +9,15 @@ import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
+import com.leoman.coupon.entity.Coupon;
 import com.leoman.coupon.service.CouponService;
 import com.leoman.entity.Constant;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.system.enterprise.service.EnterpriseService;
+import com.leoman.user.entity.CouponOrder;
 import com.leoman.user.entity.UserCoupon;
 import com.leoman.user.entity.UserInfo;
+import com.leoman.user.service.CouponOrderService;
 import com.leoman.user.service.UserCouponService;
 import com.leoman.user.service.UserService;
 import com.leoman.user.service.impl.UserServiceImpl;
@@ -55,6 +58,8 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
     private RouteOrderService routeOrderService;
     @Autowired
     private UserCouponService userCouponService;
+    @Autowired
+    private CouponOrderService couponOrderService;
 
     @RequestMapping(value = "/index")
     public String index(Model model,HttpServletRequest request){
@@ -190,16 +195,48 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
     public Result userCouponSave(Long id,Long coupon,String ids){
         try{
             if(id!=null && coupon!=null){
+                Coupon _coupon = couponService.queryByPK(coupon);
+                CouponOrder couponOrder = new CouponOrder();
                 UserCoupon userCoupon = new UserCoupon();
+
+                //快照
+                couponOrder.setName(_coupon.getName());
+                couponOrder.setGainWay(_coupon.getGainWay());
+                couponOrder.setCouponWay(_coupon.getCouponWay());
+                couponOrder.setValidDateFrom(_coupon.getValidDateFrom());
+                couponOrder.setValidDateTo(_coupon.getValidDateTo());
+                couponOrder.setDiscountPercent(_coupon.getDiscountPercent());
+                couponOrder.setDiscountTopMoney(_coupon.getDiscountTopMoney());
+                couponOrder.setReduceMoney(_coupon.getReduceMoney());
+                couponOrder.setIsLimit(_coupon.getIsLimit());
+                couponOrder.setLimitMoney(_coupon.getLimitMoney());
+                couponOrderService.save(couponOrder);
+
                 userCoupon.setUserId(id);
-                userCoupon.setCoupon(couponService.queryByPK(coupon));
+                userCoupon.setCoupon(couponOrder);
                 userCouponService.save(userCoupon);
             }else {
                 Long[] ss = JsonUtil.json2Obj(ids,Long[].class);
                 for (Long _id : ss) {
+                    Coupon _coupon = couponService.queryByPK(coupon);
+                    CouponOrder couponOrder = new CouponOrder();
                     UserCoupon userCoupon = new UserCoupon();
+
+                    //快照
+                    couponOrder.setName(_coupon.getName());
+                    couponOrder.setGainWay(_coupon.getGainWay());
+                    couponOrder.setCouponWay(_coupon.getCouponWay());
+                    couponOrder.setValidDateFrom(_coupon.getValidDateFrom());
+                    couponOrder.setValidDateTo(_coupon.getValidDateTo());
+                    couponOrder.setDiscountPercent(_coupon.getDiscountPercent());
+                    couponOrder.setDiscountTopMoney(_coupon.getDiscountTopMoney());
+                    couponOrder.setReduceMoney(_coupon.getReduceMoney());
+                    couponOrder.setIsLimit(_coupon.getIsLimit());
+                    couponOrder.setLimitMoney(_coupon.getLimitMoney());
+                    couponOrderService.save(couponOrder);
+
                     userCoupon.setUserId(_id);
-                    userCoupon.setCoupon(couponService.queryByPK(coupon));
+                    userCoupon.setCoupon(couponOrder);
                     userCouponService.save(userCoupon);
                 }
             }

@@ -104,8 +104,10 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
 
     @RequestMapping(value = "/add", method = RequestMethod.GET)
     public String add(Long id, Model model,HttpServletRequest request) {
+        Admin admin = new Admin() ;
         if (id != null) {
-            model.addAttribute("admin", adminService.queryByPK(id));
+            admin = adminService.queryByPK(id);
+            model.addAttribute("admin", admin);
             List<AdminRole> adminRoles = adminRoleService.queryByProperty("adminId",id);
             if(!adminRoles.isEmpty() && adminRoles.size()>0){
                 model.addAttribute("roleId",adminRoles.get(0).getRoleId());
@@ -117,7 +119,7 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
         model.addAttribute("enterprise",enterpriseService.queryAll());
 
         UserInfo userInfo = this.getUser(request);
-        model.addAttribute("userInfo",userInfo);
+        model.addAttribute("userInfo",userService.findByMobile(admin.getMobile()));
 
         return "permissions/admin/add";
     }

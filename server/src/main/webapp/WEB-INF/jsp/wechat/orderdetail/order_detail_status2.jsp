@@ -159,7 +159,7 @@
     </div>
 
     <div class="button">
-        <a href="${contextPath}/wechat-html/oldFile/disclaimer.html">免责申明</a>
+        <a onclick="toAgree()">免责申明</a>
         <a id="submit" class="ubtn ubtn-blue">确认完成</a>
     </div>
 </section>
@@ -192,6 +192,12 @@
 
 
 <script>
+
+    //服务协议
+    function toAgree(){
+        location.href = "${contextPath}/wechat/agreement";
+    }
+
 
     // 退改规则
     var modal = $('#rulebox').html();

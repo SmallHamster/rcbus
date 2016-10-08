@@ -20,7 +20,7 @@ public class UserCoupon extends BaseEntity{
     //优惠券
     @ManyToOne
     @JoinColumn(name= "coupon_id")
-    private Coupon coupon;
+    private CouponOrder coupon;
 
     //是否使用 1:没使用 2:已使用
     @Column(name = "is_use")
@@ -55,11 +55,11 @@ public class UserCoupon extends BaseEntity{
         this.userId = userId;
     }
 
-    public Coupon getCoupon() {
+    public CouponOrder getCoupon() {
         return coupon;
     }
 
-    public void setCoupon(Coupon coupon) {
+    public void setCoupon(CouponOrder coupon) {
         this.coupon = coupon;
     }
 }
