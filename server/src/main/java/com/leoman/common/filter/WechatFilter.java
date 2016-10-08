@@ -1,12 +1,17 @@
 package com.leoman.common.filter;
 
 import com.leoman.common.logger.Logger;
+import com.leoman.entity.Configue;
 import com.leoman.entity.Constant;
+import com.leoman.utils.BeanUtils;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.user.entity.WeChatUser;
+import com.leoman.utils.HttpUtil;
 import com.leoman.utils.WebUtil;
 import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
+import me.chanjar.weixin.common.api.WxConsts;
+import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
 
@@ -85,6 +90,23 @@ public class WechatFilter implements Filter {
         if (null != weChatUser) {
             System.out.println("weChatUser:" + weChatUser.getOpenId());
         }
+
+//        if (null == weChatUser) {
+//            WxMpService wxMpService = (WxMpService) BeanUtils.getBean("wxMpService");
+//
+//            String fullUrl = HttpUtil.getFullUrl(httpRequest, Configue.getBaseDomain());
+//            System.out.println("fullUrl:" + fullUrl);
+//
+//            String OAUTH_URL = wxMpService.oauth2buildAuthorizationUrl(fullUrl, WxConsts.OAUTH2_SCOPE_USER_INFO, Constant.WEIXIN_STATE);
+//            System.out.println("domain:" + httpRequest.getSession().getAttributeNames());
+//
+//            httpResponse.sendRedirect(OAUTH_URL);
+//            System.out.println("OAUTH_URL:" + OAUTH_URL);
+//            chain.doFilter(request, response);
+//            return;
+//        }
+
+
 
         if (null != user) {
             //如果该用户为普通会员，则只能访问部分菜单
