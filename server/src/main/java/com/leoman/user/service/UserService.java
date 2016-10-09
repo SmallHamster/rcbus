@@ -20,7 +20,7 @@ public interface UserService extends GenericManager<UserInfo> {
 
     public Integer del(Long id,String ids);
 
-    public Integer readExcelInfo(MultipartRequest multipartRequest);
+    public Result readExcelInfo(MultipartRequest multipartRequest);
 
     public void saveUser(String mobile,String password, String ip);
 

@@ -29,7 +29,7 @@
     <h1 class="title">${travelName}活动报名</h1>
     <div class="sub-title">请留下您的联系方式，我们将尽快与您取得联系</div>
 
-    <form id="car_travel">
+    <form id="formId">
         <div class="form">
             <input type="hidden" id="travelName" name="travelName" value="${travelName}">
             <div class="item">
@@ -57,11 +57,12 @@
                 <textarea name="" id="content" class="ipt ipt-mul" cols="30" rows="10"></textarea>
             </div>
         </div>
-
-        <div class="button">
-            <button type="button" class="ubtn ubtn-blue" id="submit" onclick="save()">确认</button>
-        </div>
     </form>
+
+    <div class="button">
+        <button type="button" id="submit" class="ubtn ubtn-blue" onclick="save()">确认</button>
+    </div>
+
 </section>
 
 <%@ include file="../inc/new2/foot.jsp" %>
@@ -76,6 +77,31 @@
 <script src="${contextPath}/wechat-html/js/mobiscroll/mobiscroll.i18n.zh.js"></script>
 <script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
 <script>
+
+    function save(){
+        var content = $("#content").val();
+        var time = $("#time").val();
+        $("#formId").ajaxSubmit({
+            url : "${contextPath}/wechat/cartravel/save",
+            data : {
+                content : content,
+                time : time
+            },
+            type : "POST",
+            success : function(result) {
+                if(result.status == 0) {
+                    alertMsg("预定成功,请等待工作人员与您联系",function(){
+                        window.location.href = "${contextPath}/wechat/index";
+                    });
+                }
+                else {
+                    alertMsg("预定失败");
+                }
+            }
+        });
+
+    }
+
     var $time1 = $('#time');
 
     var mydate = new Date();
@@ -147,31 +173,6 @@
         }
     });
 
-
-
-    function save(){
-        var content = $("#content");
-        var time = $("#time");
-        $("#car_travel").ajaxSubmit({
-            url : "${contextPath}/wechat/cartravel/save",
-            data : {
-                content : content,
-                time : time
-            },
-            type : "POST",
-            success : function(result) {
-                if(result.status == 0) {
-                    alertMsg("预定成功",function(){
-                        window.location.href = "${contextPath}/wechat/wechat/index";
-                    });
-                }
-                else {
-                    alertMsg("预定失败");
-                }
-            }
-        })
-
-    }
 
 
 </script>

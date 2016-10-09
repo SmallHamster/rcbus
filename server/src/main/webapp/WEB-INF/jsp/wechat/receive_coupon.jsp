@@ -53,9 +53,9 @@
         function checkMobile() {
             var val = $mobile.val();
             if (!val) {
-                alertMsg('请输入手机号', 3e3);
+                alertBubblesMsg('请输入手机号', 3e3);
             } else if (!/^1[3-9]\d{9}$/.test(val)) {
-                alertMsg('手机号码格式错误', 3e3);
+                alertBubblesMsg('手机号码格式错误', 3e3);
             } else {
                 var mobile = $("#mobile").val();
                 var rentalId = $("#rentalId").val();
@@ -69,18 +69,14 @@
                     "type": "POST",
                     success: function (result) {
                         if (result==1) {
-                            alert("领取完成");
-                            alertMsg('领取完成');
-                            window.opener.close() ;
+                            alertBubblesMsg("领取完成");
+                            window.location.href = "${contextPath}/wechat/index";
                         }else if(result==2){
-                            alert("超出领取上限");
-                            alertMsg('超出领取上限');
+                            alertBubblesMsg('超出领取上限');
                         }else if(result==3){
-                            alert("您已经领取过了");
-                            alertMsg('您已经领取过了');
+                            alertBubblesMsg('您已经领取过了');
                         }else {
-                            alert("领取失败");
-                            alertMsg('领取失败');
+                            alertBubblesMsg("领取失败");
                         }
                     }
                 });

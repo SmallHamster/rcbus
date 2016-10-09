@@ -13,4 +13,6 @@ public interface CouponService extends GenericManager<Coupon>{
 
 //    public void saveCoupon(Coupon coupon);
 
+    public Integer receiveSave(String mobile,Long rentalId);
+
 }

@@ -115,10 +115,10 @@
             if (Math.abs(disY) <= Math.abs(disX)) {
                 e.preventDefault();
             }
-            if(disX<0){
+            if(disX<-40){
                 $(this).find(".rdo2").attr("checked","checked");
             }
-            if(disX>0){
+            if(disX>40){
                 $(this).find(".rdo2").removeAttr("checked");
             }
         });

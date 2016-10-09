@@ -6,6 +6,7 @@ import com.leoman.carrental.service.impl.CarTravelServiceImpl;
 import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.utils.DateUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,8 +34,12 @@ public class CarTravelWeChatController extends GenericEntityController<CarTravel
     @ResponseBody
     public Result save(CarTravel carTravel,String content,String time){
         try{
-            carTravel.setTravelTime(DateUtils.stringToLong(time,"yyyy-MM-dd HH:mm"));
-            carTravel.setContent(content);
+            if(StringUtils.isNotBlank(time)){
+                carTravel.setTravelTime(DateUtils.stringToLong(time,"yyyy-MM-dd HH:mm"));
+            }
+            if(StringUtils.isNotBlank(content)){
+                carTravel.setContent(content);
+            }
             carTravelService.save(carTravel);
         }catch (Exception e){
             e.printStackTrace();

@@ -102,6 +102,12 @@ public class CouponWeChatController extends GenericEntityController<Coupon,Coupo
     }
 
 
+    /**
+     * 领取页面
+     * @param rentalId
+     * @param model
+     * @return
+     */
     @RequestMapping(value = "/receive")
     public String receive(Long rentalId, Model model){
         model.addAttribute("rentalId",rentalId);
@@ -109,95 +115,23 @@ public class CouponWeChatController extends GenericEntityController<Coupon,Coupo
     }
 
 
-
+    /**
+     * 领取
+     * @param mobile
+     * @param rentalId
+     * @return
+     */
     @RequestMapping(value = "/receiveSave")
     @ResponseBody
     public Integer receiveSave(String mobile,Long rentalId){
-        Coupon _c = new Coupon();
+        Integer index;
         try{
-            List<Coupon> coupons =  couponService.queryAll();
-            for(Coupon coupon : coupons){
-                //1-好友分享
-                if(coupon.getGainWay()==1){
-                    _c = coupon;
-                    break;
-                }
-            }
-
-            UserInfo userInfo = userService.findByMobile(mobile);
-            List<ReceiveCoupon> receiveCoupons = receiveCouponService.queryByProperty("rentalId",rentalId);
-            if(receiveCoupons.size()>10){
-                //超出领取上限
-                return 2;
-            }
-
-            ReceiveCoupon receiveCoupon = receiveCouponService.findOne(mobile,rentalId);
-            if(receiveCoupon!=null){
-                //领取过了
-                return 3;
-            }else {
-                receiveCoupon = new ReceiveCoupon();
-            }
-
-            if(userInfo!=null){
-                //用户存在
-                //新增一条用户优惠券
-                UserCoupon userCoupon = new UserCoupon();
-                CouponOrder couponOrder = new CouponOrder();
-
-                //快照
-                couponOrder.setName(_c.getName());
-                couponOrder.setGainWay(_c.getGainWay());
-                couponOrder.setCouponWay(_c.getCouponWay());
-                couponOrder.setValidDateFrom(_c.getValidDateFrom());
-                couponOrder.setValidDateTo(_c.getValidDateTo());
-                couponOrder.setDiscountPercent(_c.getDiscountPercent());
-                couponOrder.setDiscountTopMoney(_c.getDiscountTopMoney());
-                couponOrder.setReduceMoney(_c.getReduceMoney());
-                couponOrder.setIsLimit(_c.getIsLimit());
-                couponOrder.setLimitMoney(_c.getLimitMoney());
-                couponOrderService.save(couponOrder);
-
-                userCoupon.setUserId(userInfo.getId());
-                userCoupon.setCoupon(couponOrder);
-                userCoupon.setIsUse(1);
-                userCouponService.save(userCoupon);
-                //新增一条领取信息
-                receiveCoupon.setMobile(userInfo.getMobile());
-                receiveCoupon.setRentalId(rentalId);
-                receiveCouponService.save(receiveCoupon);
-            }else {
-                //用户不存在
-                //新增一条非用户优惠券
-                NotUserCoupon notUserCoupon = new NotUserCoupon();
-                CouponOrder couponOrder = new CouponOrder();
-
-                //快照
-                couponOrder.setName(_c.getName());
-                couponOrder.setGainWay(_c.getGainWay());
-                couponOrder.setCouponWay(_c.getCouponWay());
-                couponOrder.setValidDateFrom(_c.getValidDateFrom());
-                couponOrder.setValidDateTo(_c.getValidDateTo());
-                couponOrder.setDiscountPercent(_c.getDiscountPercent());
-                couponOrder.setDiscountTopMoney(_c.getDiscountTopMoney());
-                couponOrder.setReduceMoney(_c.getReduceMoney());
-                couponOrder.setIsLimit(_c.getIsLimit());
-                couponOrder.setLimitMoney(_c.getLimitMoney());
-                couponOrderService.save(couponOrder);
-
-                notUserCoupon.setMobile(mobile);
-                notUserCoupon.setCouponId(couponOrder.getId());
-                notUserCouponService.save(notUserCoupon);
-                //新增一条领取信息
-                receiveCoupon.setMobile(mobile);
-                receiveCoupon.setRentalId(rentalId);
-                receiveCouponService.save(receiveCoupon);
-            }
+            index = couponService.receiveSave(mobile,rentalId);
         }catch (Exception e){
             e.printStackTrace();
             return 0;
         }
-        return 1;
+        return index;
 
     }
 

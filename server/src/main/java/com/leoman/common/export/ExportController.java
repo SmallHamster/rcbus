@@ -3,6 +3,7 @@ package com.leoman.common.export;
 import com.leoman.carrental.controller.CarRentalController;
 import com.leoman.carrental.entity.CarRental;
 import com.leoman.carrental.service.CarRentalService;
+import com.leoman.common.core.Result;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.user.service.UserService;
 import com.leoman.utils.ExcelUtil;
@@ -72,7 +73,7 @@ public class ExportController {
      */
     @RequestMapping(value = {"/importFeedback"})
     @ResponseBody
-    public Integer importFeedback(MultipartRequest multipartRequest) throws Exception {
+    public Result importFeedback(MultipartRequest multipartRequest) throws Exception {
         return userService.readExcelInfo(multipartRequest);
     }
 

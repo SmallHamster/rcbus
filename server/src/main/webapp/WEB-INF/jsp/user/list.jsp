@@ -148,7 +148,7 @@
                         {
                             "data": "createDate",
                             "render": function (data) {
-                                return new Date(data).format("yyyy-MM-dd HH:mm:ss");
+                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
                             },
                             "sDefaultContent" : ""
                         },
@@ -305,15 +305,15 @@
             saveTempInfo: function () {
                 $("#tempForm").ajaxSubmit({
                     dataType: "json",
-                    success: function (data) {
-                        if (data == '1') {
+                    success: function (result) {
+                        if (result.status == 0) {
 //                            $leoman.notify("上传成功", "success");
                             alert("上传成功");
                             $('#feedback').val('');
                             $user.v.dTable.ajax.reload();
-                        } else if(data == 2){
+                        } else if(result.status == 2){
 //                            $leoman.notify("上传失败", "error");
-                            alert("用户名已存在");
+                            alert(result.msg);
                             $('#feedback').val('');
                         } else {
                             alert("上传失败");

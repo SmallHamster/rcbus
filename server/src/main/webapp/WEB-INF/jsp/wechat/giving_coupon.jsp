@@ -93,9 +93,9 @@
                 ,yes: function(index) {
                     var val = $('.popup .ipt').val();
                     if (!val) {
-                        alertMsg('请输入手机号', 3e3);
+                        alertBubblesMsg('请输入手机号', 3e3);
                     } else if (!/^1[3-9]\d{9}$/.test(val)) {
-                        alertMsg('手机号码格式错误', 3e3);
+                        alertBubblesMsg('手机号码格式错误', 3e3);
                     } else {
                         var id = $("#id").val();
                         $.ajax({
@@ -110,11 +110,11 @@
                                 if (result==1) {
                                     layer.close(index);
                                     window.location.href = "${contextPath}/wechat/coupon/index";
-                                    alertMsg('转赠完成', 3e3);
+                                    alertBubblesMsg('转赠完成', 3e3);
                                 }else if (result==2){
-                                    alertMsg('该手机号还未注册', 3e3);
+                                    alertBubblesMsg('该手机号还未注册', 3e3);
                                 }else{
-                                    alertMsg('转赠失败', 3e3);
+                                    alertBubblesMsg('转赠失败', 3e3);
                                 }
                             }
                         });

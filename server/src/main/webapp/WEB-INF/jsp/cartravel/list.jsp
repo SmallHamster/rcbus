@@ -141,14 +141,14 @@
                         {
                             "data": "createDate",
                             "render": function (data) {
-                                return new Date(data).format("yyyy-MM-dd HH:mm:ss");
+                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
                             },
                             "sDefaultContent" : ""
                         },
                         {
                             "data": "travelTime",
                             "render": function (data) {
-                                return new Date(data).format("yyyy-MM-dd HH:mm:ss");
+                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
                             },
                             "sDefaultContent" : ""
                         },

@@ -38,6 +38,7 @@ import java.util.List;
  * Created by Administrator on 2016/6/14 0014.
  */
 @Service
+@Transactional(rollbackFor = Exception.class)
 public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> implements UserService {
 
     @Autowired
@@ -64,7 +65,6 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
     }
 
     @Override
-    @Transactional
     public Integer save(UserInfo userInfo, Long id, Long enterpriseId , String password) {
         Enterprise enterprise = enterpriseService.queryByPK(enterpriseId);
         UserLogin userLogin  = new UserLogin();
@@ -88,7 +88,6 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
     }
 
     @Override
-    @Transactional
     public Integer del(Long id, String ids) {
         if (id==null && StringUtils.isBlank(ids)){
             return 1;
@@ -125,23 +124,35 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
     }
 
     @Override
-    @Transactional(rollbackFor = Exception.class)
-    public Integer readExcelInfo(MultipartRequest multipartRequest) {
-
+    public Result readExcelInfo(MultipartRequest multipartRequest) {
+        Result result = new Result();
         UserInfo userInfo = null;
         try{
             MultipartFile multipartFile = multipartRequest.getFile("feedback");
             List<UserExportVo> list = ReadExcelUtil.readExcel(multipartFile);
             if (null == list || list.size() == 0) {
-                return 0;
+                return Result.failure();
             }
 
             for (UserExportVo userExportVo : list) {
-                //判断账号是否存在
-                List<UserLogin> userLogins = userLoginService.queryByProperty("username", userExportVo.getMobile());
-                if (!userLogins.isEmpty() && userLogins.size() > 0) {
-                    return 2;
+                if(StringUtils.isBlank(userExportVo.getMobile())){
+                    result.setMsg("用户手机号不能为空");
+                    result.setStatus(2);
+                    return result;
                 }
+                if(StringUtils.isBlank(userExportVo.getEnterprise())){
+                    result.setMsg("用户所在公司不能为空");
+                    result.setStatus(2);
+                    return result;
+                }
+                //判断账号是否存在
+                UserLogin userLogins = userLoginService.findByUsername(userExportVo.getMobile());
+                if (userLogins!=null) {
+                    result.setMsg("用户［"+userLogins.getUsername()+"］已存在");
+                    result.setStatus(2);
+                    return result;
+                }
+
             }
 
             for (UserExportVo userExportVo : list)  {
@@ -179,14 +190,13 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
 
             }
 
-            return 1;
+            return Result.success();
         } catch (Exception e) {
             e.printStackTrace();
-            return 0;
+            return Result.failure();
         }
     }
 
-    @Transactional
     @Override
     public void saveUser(String mobile,String password, String ip){
         UserLogin userLogin = new UserLogin();
