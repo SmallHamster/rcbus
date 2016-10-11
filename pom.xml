@@ -353,6 +353,20 @@
         </profile>
     </profiles>
 
+    <!--<profiles>-->
+        <!--<profile>-->
+            <!--<id>dev-localhost</id>-->
+            <!--<properties>-->
+                <!--<pro.jdbc.url>jdbc:mysql://106.75.62.100:3306/rcbus?characterEncoding=UTF-8</pro.jdbc.url>-->
+                <!--<pro.jdbc.username>root</pro.jdbc.username>-->
+                <!--<pro.jdbc.password>root</pro.jdbc.password>-->
+                <!--<pro.upload.url>http://106.75.62.100/files/upload/</pro.upload.url>-->
+                <!--<pro.upload.path>/usr/local/tomcat/webapps/files/upload/</pro.upload.path>-->
+                <!--<base.url>http://106.75.62.100/leoman_rcbus/</base.url>-->
+                <!--<base.domain>http://106.75.62.100</base.domain>-->
+            <!--</properties>-->
+        <!--</profile>-->
+    <!--</profiles>-->
 
     <build>
         <finalName>leoman_rcbus</finalName>

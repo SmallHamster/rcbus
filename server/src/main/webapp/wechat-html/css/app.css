@@ -24,19 +24,15 @@ fieldset{padding:0;margin:2px;}
 .hide{display:none;}
 
 /* checkbox */
-.cbx, .rdo, .rdo2{width:18px;height:18px;margin:0 4px 0 0 !important;border:none;vertical-align:-4px;}
-.cbx:before,
-.rdo:before,
-.rdo2:before{content:"";display:inline-block;width:100%;height:100%;background-repeat:no-repeat;background-size:100%;-webkit-appearance:none;}
-.cbx:before{background-image:url(../images/check.png);}
-.cbx:checked:before{background-image:url(../images/checked.png);}
+.cbx, .rdo, .rdo2{width:18px;height:18px;margin:0 4px 0 0 !important;border:none;vertical-align:-4px;background:#fff no-repeat;background-size:100%;}
+.cbx{background-image:url(../images/check.png);}
+.cbx:checked{background-image:url(../images/checked.png);}
 .rdo{text-align:center;}
-.rdo:before{background-image:url(../images/check_c.png);}
-.rdo:checked:before{background-image:url(../images/checked_c.png);}
+.rdo{background-image:url(../images/check_c.png);}
+.rdo:checked{background-image:url(../images/checked_c.png);}
 .rdo2{width:28px;height:28px;}
-.rdo2:before{background-image:url(../images/check_c_2.png);}
-.rdo2:checked:before{background-image:url(../images/checked_c_2.png);}
-.cbx:checked,.rdo:checked,.rdo2:checked{-webkit-appearance:none;}
+.rdo2{background-image:url(../images/check_c_2.png);}
+.rdo2:checked{background-image:url(../images/checked_c_2.png);}
 
 /* color */
 .blue{color:#35aaff;}

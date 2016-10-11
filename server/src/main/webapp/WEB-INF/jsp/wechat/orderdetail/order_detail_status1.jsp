@@ -202,7 +202,7 @@
 
             if (operator === '*') {
                 total = price * val;
-                couponsInfo = '<span>' + $this.html() + '</span><em>- &yen; ' + (price - total).toFixed(1) + '</em>';
+                couponsInfo = '<span>' + $this.html() + '</span><em>- &yen; ' + (price - total).toFixed(2) + '</em>';
 
             } else if (operator === '-') {
                 total = price - val;
@@ -210,7 +210,7 @@
             }
 
             // $('#priceTotal, #priceTotal2').html(total.toFixed(1));
-            $('#priceTotal2').html(total.toFixed(1));
+            $('#priceTotal2').html(total > 0.00 ? total.toFixed(2) : 0.00);
             $('#couponsUsed').html(couponsInfo);
             $('#coupons').find('.hd').html($this.html());
 
@@ -242,54 +242,69 @@
 
         var id = $("#id").val();
         var price = $("#priceTotal2").text();
+
+        // 调用微信浏览器内置功能实现微信支付
         $.ajax({
-            "url": "${contextPath}/wechat/order/pay/save",
-            "data": {
-                id:id,
-                price:price,
-                couponId : couponId
+            method: "POST",
+            url: "${contextPath}/wechat/pay/goPay",
+            dataType: "html",
+            data: {
+                rentalId : id,
+                price :price
             },
-            "dataType": "json",
-            "type": "POST",
             success: function (result) {
-                if (result.status==0) {
-                    // 调用微信浏览器内置功能实现微信支付
-                    $.ajax({
-                        method: "POST",
-                        url: "${contextPath}/wechat/pay/goPay",
-                        dataType: "html",
-                        data: {
-                            rentalId:id,
-                            couponId : couponId
-                        },
-                        success: function (result) {
-                            var obj = eval('(' + result + ')');
-                            WeixinJSBridge.invoke('getBrandWCPayRequest', {
-                                "appId": obj.appId,                  //公众号名称，由商户传入
-                                "timeStamp": obj.timeStamp,          //时间戳，自 1970 年以来的秒数
-                                "nonceStr": obj.nonceStr,         //随机串
-                                "package": obj.package,           //商品包信息
-                                "signType": obj.signType,        //微信签名方式:
-                                "paySign": obj.paySign           //微信签名
-                            }, function (res) {
-                                layer.open({
-                                    content: '<i class="ico ico-right2"></i><br /><br />付款完成'
-                                    ,btn: '确定'
-                                    ,yes: function(index, layero){
-                                        window.location.href = "${contextPath}/wechat/order/myOrder/index";
-                                    }
-                                });
-                            });
-                        }
-                    });
-                }else {
-                    layer.open({
-                        content: '<i class="ico ico-right2"></i><br /><br />付款失败'
-                        ,btn: '确定'
-                    });
-                }
+                var obj = eval('(' + result + ')');
+                WeixinJSBridge.invoke('getBrandWCPayRequest', {
+                    "appId": obj.appId,                  //公众号名称，由商户传入
+                    "timeStamp": obj.timeStamp,          //时间戳，自 1970 年以来的秒数
+                    "nonceStr": obj.nonceStr,         //随机串
+                    "package": obj.package,           //商品包信息
+                    "signType": obj.signType,        //微信签名方式:
+                    "paySign": obj.paySign           //微信签名
+                },function (res) {
+                    //支付成功
+                    if (res.err_msg == "get_brand_wcpay_request:ok") {
+
+                        $.ajax({
+                            "url": "${contextPath}/wechat/order/pay/save",
+                            "data": {
+                                id:id,
+                                price:price,
+                                couponId : couponId
+                            },
+                            "dataType": "json",
+                            "type": "POST",
+                            success: function (result) {
+                                if (result.status==0) {
+                                    layer.open({
+                                        content: '<i class="ico ico-right2"></i><br /><br />付款完成'
+                                        ,btn: '确定'
+                                        ,yes: function(index, layero){
+                                            window.location.href = "${contextPath}/wechat/order/myOrder/index";
+                                        }
+                                    });
+                                }
+                            }
+                        });
+
+
+                    }
+                    //支付过程中用户取消
+                    if(res.err_msg == "get_brand_wcpay_request：cancel"){
+
+                    }
+                    //支付失败
+                    if(res.err_msg == "get_brand_wcpay_request：fail"){
+                        layer.open({
+                            content: '<i class="ico ico-right2"></i><br /><br />支付失败,请联系客服'
+                            ,btn: '确定'
+                        });
+                    }
+
+                });
             }
         });
+
         return false;
     }
 </script>

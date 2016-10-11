@@ -56,17 +56,17 @@
     <div class="box-tips">
         <%-- 两天前 --%>
         <c:if test="${index eq 1}">
-            <p>根据<a href="javascript:;" id="rule">退改规则</a>，取消订单您的返回金额为全额<fmt:formatNumber value="${val}" type="currency" pattern=".0"/>元，请点击确认后取消订单。</p>
+            <p>根据<a href="javascript:;" id="rule">退改规则</a>，取消订单您的返回金额为全额<fmt:formatNumber value="${val}" type="currency" pattern="#0.00"/>元，请点击确认后取消订单。</p>
             <input type="hidden" value="${val}" id="val">
         </c:if>
         <%-- 一天前 --%>
         <c:if test="${index eq 2}">
-            <p>根据<a href="javascript:;" id="rule">退改规则</a>，取消订单您将会被扣除全额10%（<fmt:formatNumber value="${val * 0.1}" type="currency" pattern=".0"/>元）预定金，返回金额为<fmt:formatNumber value="${val * 0.9}" type="currency" pattern=".0"/>元，请点击确认后取消订单。</p>
+            <p>根据<a href="javascript:;" id="rule">退改规则</a>，取消订单您将会被扣除全额10%（<fmt:formatNumber value="${val * 0.10}" type="currency" pattern="#0.00"/>元）预定金，返回金额为<fmt:formatNumber value="${val * 0.90}" type="currency" pattern="#0.00"/>元，请点击确认后取消订单。</p>
             <input type="hidden" value="<fmt:formatNumber value="${val * 0.9}" type="currency" pattern=".0"/>" id="val">
         </c:if>
         <%-- 5小时前 --%>
         <c:if test="${index eq 3}">
-            <p>根据<a href="javascript:;" id="rule">退改规则</a>，取消订单您将会被扣除全额50%（<fmt:formatNumber value="${val * 0.5}" type="currency" pattern=".0"/>元）预定金，返回金额为<fmt:formatNumber value="${val * 0.5}" type="currency" pattern=".0"/>元，请点击确认后取消订单。</p>
+            <p>根据<a href="javascript:;" id="rule">退改规则</a>，取消订单您将会被扣除全额50%（<fmt:formatNumber value="${val * 0.50}" type="currency" pattern="#0.00"/>元）预定金，返回金额为<fmt:formatNumber value="${val * 0.50}" type="currency" pattern="#0.00"/>元，请点击确认后取消订单。</p>
             <input type="hidden" value="<fmt:formatNumber value="${val * 0.5}" type="currency" pattern=".0"/>" id="val">
         </c:if>
         <c:if test="${index eq 4}">
@@ -85,12 +85,12 @@
             <dt>预订车型</dt>
             <dd>${modelNo} (${CarRental.carType.name})</dd>
             <dt>行程总价</dt>
-            <dd><fmt:formatNumber value="${val}" type="currency" pattern=".0"/>元(最终价)</dd>
+            <dd><fmt:formatNumber value="${val}" type="currency" pattern=".00"/>元(最终价)</dd>
             <dt>取消订单</dt>
             <dd>
-                <p>起点发车时间前≥48小时，全额退(<fmt:formatNumber value="${val}" type="currency" pattern=".0"/>元)</p>
-                <p>起点发车时间前≥24小时，全额退90%(<fmt:formatNumber value="${val * 0.9}" type="currency" pattern=".0"/>元)</p>
-                <p>起点发车时间前≥5小时，全额退50%(<fmt:formatNumber value="${val * 0.5}" type="currency" pattern=".0"/>元)</p>
+                <p>起点发车时间前≥48小时，全额退(<fmt:formatNumber value="${val}" type="currency" pattern="#0.00"/>元)</p>
+                <p>起点发车时间前≥24小时，全额退90%(<fmt:formatNumber value="${val * 0.90}" type="currency" pattern="#0.00"/>元)</p>
+                <p>起点发车时间前≥5小时，全额退50%(<fmt:formatNumber value="${val * 0.50}" type="currency" pattern="#0.00"/>元)</p>
                 <p>起点发车时间前<5小时，不予退款</p>
             </dd>
             <dt>备注详情</dt>

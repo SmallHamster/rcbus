@@ -67,10 +67,12 @@
                 <span>发车时间</span>
                 <em><date:date value="${CarRental.startDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
             </dd>
-            <dd>
-                <span>返程时间</span>
-                <em><date:date value="${CarRental.endDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
-            </dd>
+            <c:if test="${CarRental.endDate ne null}">
+                <dd>
+                    <span>返程时间</span>
+                    <em><date:date value="${CarRental.endDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
+                </dd>
+            </c:if>
             <dd>
                 <span>乘车人数</span>
                 <em>${CarRental.totalNumber}</em>
@@ -267,7 +269,7 @@
         //获取“分享到朋友圈”按钮点击状态及自定义分享内容接口
         wx.onMenuShareTimeline({
             title: '江城巴士-优惠券', // 分享标题
-            link: 'http://27298829.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
+            link: 'http://1e5e3f44.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
             imgUrl: '', // 分享图标
             success: function () {
                 // 用户确认分享后执行的回调函数
@@ -280,7 +282,7 @@
         wx.onMenuShareAppMessage({
             title: "江城巴士-优惠券", // 分享标题
             desc: "来输入手机号领取优惠券吧~", // 分享描述
-            link: 'http://27298829.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
+            link: 'http://1e5e3f44.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
             imgUrl: "", // 分享图标
             type: 'link', // 分享类型,music、video或link，不填默认为link
             dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
@@ -295,7 +297,7 @@
         wx.onMenuShareQQ({
             title: '江城巴士-优惠券', // 分享标题
             desc: '来输入手机号领取优惠券吧~', // 分享描述
-            link: 'http://27298829.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
+            link: 'http://1e5e3f44.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
             imgUrl: '', // 分享图标
             success: function () {
                 // 用户确认分享后执行的回调函数
@@ -308,7 +310,7 @@
         wx.onMenuShareWeibo({
             title: '江城巴士-优惠券', // 分享标题
             desc: '来输入手机号领取优惠券吧~', // 分享描述
-            link: 'http://27298829.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
+            link: 'http://1e5e3f44.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
             imgUrl: '', // 分享图标
             success: function () {
                 // 用户确认分享后执行的回调函数
@@ -321,7 +323,7 @@
         wx.onMenuShareQZone({
             title: '江城巴士-优惠券', // 分享标题
             desc: '来输入手机号领取优惠券吧~', // 分享描述
-            link: 'http://27298829.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
+            link: 'http://1e5e3f44.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
             imgUrl: '', // 分享图标
             success: function () {
                 // 用户确认分享后执行的回调函数

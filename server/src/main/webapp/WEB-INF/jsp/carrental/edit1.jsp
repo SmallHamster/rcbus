@@ -327,7 +327,7 @@
                 });
                 $admin.fn.endDateChk($("#rwType").val());
 
-                $admin.fn.invoiceChk($("#invoice").val());
+                $admin.fn.invoiceChk($("input[name='isInvoice']:checked").val());
             },
             dataTableInit: function () {
                 $admin.v.dTable = $leoman.dataTable($('#dataTables'), {

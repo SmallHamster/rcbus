@@ -79,7 +79,7 @@
                                         <th>客人名称</th>
                                         <th>客人手机</th>
                                         <th>订单金额</th>
-                                        <th>已收金额</th>
+                                        <th>付款金额</th>
                                         <th>退款金额</th>
                                         <th>详情</th>
                                     </tr>
@@ -185,6 +185,9 @@
                         },
                         {
                             "data": "income",
+//                            "render": function (data, type, row, meta){
+//                                return row.income - row.refund;
+//                            },
                             "sDefaultContent" : ""
                         },
                         {

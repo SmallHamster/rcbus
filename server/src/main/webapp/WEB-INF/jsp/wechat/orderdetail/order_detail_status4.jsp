@@ -67,10 +67,12 @@
                 <span>发车时间</span>
                 <em><date:date value="${CarRental.startDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
             </dd>
-            <dd>
-                <span>返程时间</span>
-                <em><date:date value="${CarRental.endDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
-            </dd>
+            <c:if test="${CarRental.endDate ne null}">
+                <dd>
+                    <span>返程时间</span>
+                    <em><date:date value="${CarRental.endDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
+                </dd>
+            </c:if>
             <dd>
                 <span>乘车人数</span>
                 <em>${CarRental.totalNumber}</em>

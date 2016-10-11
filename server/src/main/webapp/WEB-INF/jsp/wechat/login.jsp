@@ -94,7 +94,7 @@
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            location.href = "${contextPath}/wechat/index";
+                            location.href = "${contextPath}//wechat/user/index";
                         }else {
                             alertMsg(result.msg);
                         }

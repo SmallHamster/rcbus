@@ -76,24 +76,22 @@ public class WeChatPayController {
                    String orderId) {
         WeChatUser wxUser = weChatUserService.getWXUserByRequest(request);
         Map<String, String> result = wxMpService.getJSSDKPayInfo(wxUser.getOpenId(), orderId, 0.01, "xxx", "JSAPI",
-                request.getRemoteAddr(), Configue.getBaseUrl() + "weixin/pay/callback");
+                request.getRemoteAddr(), Configue.getBaseUrl() + "wechat/pay/callback");
         WebUtil.printJson(response, result);
     }
 
     @RequestMapping(value = "goPay")
     public void goPay(HttpServletRequest request,
                       HttpServletResponse response,
-                      Long rentalId) {
+                      Long rentalId,Double price) {
         System.out.println("rentalId：" + rentalId);
         CarRental carRental = carRentalService.queryByPK(rentalId);
         System.out.println("order：" + carRental.getOrder().getOrderNo());
         //订单号
         String orderNo = carRental.getOrder().getOrderNo();
-        //应付金额
-        Double totalPrice = carRental.getIncome();
         WeChatUser weChatUser = weChatUserService.getWXUserByRequest(request);
-        Map<String, String> result = wxMpService.getJSSDKPayInfo(weChatUser.getOpenId(), orderNo, 0.01, "租车出行", "JSAPI",
-                request.getRemoteAddr(), Configue.getBaseUrl() + "weixin/pay/callback");
+        Map<String, String> result = wxMpService.getJSSDKPayInfo(weChatUser.getOpenId(), orderNo, price, "租车出行", "JSAPI",
+                request.getRemoteAddr(), Configue.getBaseUrl() + "wechat/pay/callback");
 
         WebUtil.printJson(response, result);
     }
@@ -125,7 +123,7 @@ public class WeChatPayController {
                 String orderNo = wxMpPayCallback.getOut_trade_no();
 
                 //改变状态进行中
-                Order order = orderService.findOne(orderNo);
+/*                Order order = orderService.findOne(orderNo);
                 order.setStatus(2);
                 orderService.save(order);
 
@@ -143,7 +141,7 @@ public class WeChatPayController {
                         userCoupon.setRentalId(carRental.getId());
                         userCouponService.save(userCoupon);
                     }
-                }
+                }*/
             }
 
             System.out.println("----------");

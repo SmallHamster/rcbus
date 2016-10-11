@@ -125,13 +125,21 @@ public class WechatIndexController extends CommonController {
                              HttpServletResponse response,
                              ModelMap model) {
         try {
-            UserInfo user = loginService.login(username,Md5Util.md5(password));
-            if(user != null){
-                request.getSession().setAttribute(Constant.SESSION_MEMBER_USER, user);
 
-                int loginMaxAge = 30 * 24 * 60 * 60; // 定义cookies的生命周期，这里是一个月。单位为秒
-                CookiesUtils.addCookie(response, "username", username, loginMaxAge);
+
+            Boolean success = loginService.loginWeixin(request,response,username,password);
+            if(success){
+                return Result.success();
+            }else {
+                return Result.failure();
             }
+//            UserInfo user = loginService.login(username,Md5Util.md5(password));
+//            if(user != null){
+//                request.getSession().setAttribute(Constant.SESSION_MEMBER_USER, user);
+//
+//                int loginMaxAge = 30 * 24 * 60 * 60; // 定义cookies的生命周期，这里是一个月。单位为秒
+//                CookiesUtils.addCookie(response, "username", username, loginMaxAge);
+//            }
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();
@@ -458,9 +466,9 @@ public class WechatIndexController extends CommonController {
         button3_2.setUrl(UrlManage.getProUrl("wechat/user/index"));
 
         WxMenu.WxMenuButton button3_3 = new WxMenu.WxMenuButton();
-        button3_2.setType(WxConsts.BUTTON_VIEW);
-        button3_2.setName("反馈建议");
-        button3_2.setUrl(UrlManage.getProUrl("wechat/report/index"));
+        button3_3.setType(WxConsts.BUTTON_VIEW);
+        button3_3.setName("反馈建议");
+        button3_3.setUrl(UrlManage.getProUrl("wechat/report/index"));
 
         button3.getSubButtons().add(button3_1);
         button3.getSubButtons().add(button3_2);

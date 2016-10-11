@@ -91,20 +91,20 @@ public class WechatFilter implements Filter {
             System.out.println("weChatUser:" + weChatUser.getOpenId());
         }
 
-//        if (null == weChatUser) {
-//            WxMpService wxMpService = (WxMpService) BeanUtils.getBean("wxMpService");
-//
-//            String fullUrl = HttpUtil.getFullUrl(httpRequest, Configue.getBaseDomain());
-//            System.out.println("fullUrl:" + fullUrl);
-//
-//            String OAUTH_URL = wxMpService.oauth2buildAuthorizationUrl(fullUrl, WxConsts.OAUTH2_SCOPE_USER_INFO, Constant.WEIXIN_STATE);
-//            System.out.println("domain:" + httpRequest.getSession().getAttributeNames());
-//
-//            httpResponse.sendRedirect(OAUTH_URL);
-//            System.out.println("OAUTH_URL:" + OAUTH_URL);
-//            chain.doFilter(request, response);
-//            return;
-//        }
+        if (null == weChatUser) {
+            WxMpService wxMpService = (WxMpService) BeanUtils.getBean("wxMpService");
+
+            String fullUrl = HttpUtil.getFullUrl(httpRequest, Configue.getBaseDomain());
+            System.out.println("fullUrl:" + fullUrl);
+
+            String OAUTH_URL = wxMpService.oauth2buildAuthorizationUrl(fullUrl, WxConsts.OAUTH2_SCOPE_USER_INFO, Constant.WEIXIN_STATE);
+            System.out.println("domain:" + httpRequest.getSession().getAttributeNames());
+
+            httpResponse.sendRedirect(OAUTH_URL);
+            System.out.println("OAUTH_URL:" + OAUTH_URL);
+            chain.doFilter(request, response);
+            return;
+        }
 
 
 

@@ -176,7 +176,7 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
             String noncestr = String.valueOf(System.currentTimeMillis() / 1000);
 
             // 生成签名
-            String signature = getSignature(request, noncestr, timestamp, "http://27298829.ittun.com/rcbus/wechat/order/myOrder/detail?id=" + id + "&status=" + status);
+            String signature = getSignature(request, noncestr, timestamp, "http://1e5e3f44.ittun.com/rcbus/wechat/order/myOrder/detail?id=" + id + "&status=" + status);
             System.out.println("signature:==================" + signature);
             model.addAttribute("timestamp", timestamp);
             model.addAttribute("noncestr", noncestr);
@@ -270,7 +270,7 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
     }
 
     /**
-     * 付款
+     * 付款成功
      * @param id
      * @param price
      * @param couponId
@@ -282,28 +282,28 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
         UserInfo userInfo = new CommonController().getSessionUser(request);
         try{
 
-            HttpSession session = request.getSession();
-            session.setAttribute("couponId",couponId);
-
             //支付金额
             CarRental carRental = carRentalService.queryByPK(id);
             carRental.setIncome(Double.parseDouble(StringUtils.isNotBlank(price) ? price : "0.0"));
             carRentalService.save(carRental);
 
-// (付款完成)
-//            Order order = carRental.getOrder();
-//            //改变状态进行中
-//            order.setStatus(2);
-//            orderService.save(order);
+            // (付款完成)
+            Order order = carRental.getOrder();
+            //改变状态进行中
+            order.setStatus(2);
+            orderService.save(order);
 
             //改变优惠券状态为已使用
-//            List<UserCoupon> userCoupons = userCouponService.findList(userInfo.getId(),couponId);
-//            if(!userCoupons.isEmpty() && userCoupons.size()>0){
-//                UserCoupon userCoupon = userCoupons.get(0);
-//                userCoupon.setIsUse(2);
-//                userCoupon.setRentalId(carRental.getId());
-//                userCouponService.save(userCoupon);
-//            }
+            if(couponId!=null) {
+                List<UserCoupon> userCoupons = userCouponService.findList(userInfo.getId(),couponId);
+                if(!userCoupons.isEmpty() && userCoupons.size()>0){
+                    UserCoupon userCoupon = userCoupons.get(0);
+                    userCoupon.setIsUse(2);
+                    userCoupon.setRentalId(carRental.getId());
+                    userCouponService.save(userCoupon);
+                }
+            }
+
         }catch (Exception e){
             e.printStackTrace();
             return Result.failure();
