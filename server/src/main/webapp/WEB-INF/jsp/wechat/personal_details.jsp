@@ -23,7 +23,8 @@
 <section class="wrap user-box">
     <div class="info">
         <div class="inner">
-            <img src="${contextPath}/wechat-html/images/f/avatar.png" alt="">
+            <img src="${user.weChatUser.headImgUrl}" alt="">
+            <%--<img src="${contextPath}/wechat-html/images/f/avatar.png" alt="">--%>
             <%--<em><a href="#">点击修改</a></em>--%>
             <em>${user.mobile}</em>
         </div>
@@ -81,7 +82,7 @@
     </div>
 
     <div class="button">
-        <a href="#" class="ubtn ubtn-red">注销登录</a>
+        <a href="javascript:;" onclick="logout()" class="ubtn ubtn-red">注销登录</a>
     </div>
 
 </section>
@@ -125,6 +126,11 @@
     //我的收藏
     function toHelp(){
         location.href = "${contextPath}/wechat/help";
+    }
+
+    //注销
+    function logout(){
+        location.href = "${contextPath}/wechat/logout";
     }
 
 

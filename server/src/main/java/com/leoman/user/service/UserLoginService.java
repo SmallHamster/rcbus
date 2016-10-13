@@ -1,5 +1,6 @@
 package com.leoman.user.service;
 
+import com.leoman.common.core.Result;
 import com.leoman.common.service.GenericManager;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.user.entity.UserLogin;
@@ -16,5 +17,5 @@ public interface UserLoginService extends GenericManager<UserLogin>{
 
     public UserLogin findByUsername(String username);
 
-    public Boolean loginWeixin(HttpServletRequest request, HttpServletResponse response, String username, String password);
+    public Result loginWeixin(HttpServletRequest request, HttpServletResponse response, String username, String password);
 }

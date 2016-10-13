@@ -2,16 +2,13 @@ package com.leoman.pay.util;
 
 public class ConstantUtil {
 	
-	public static String APP_ID = "wx3fa474ed9399b244";// �ͻ�
-//	public static String APP_ID = "wxf4b70027ec00a7dc";
-//	public static String APP_SECRET = "97ffe50dd6e8cfbe9de22e5302026fa9";// �ͻ�
-	public static String APP_SECRET = "9ae35dcd6580adde34ab3584cb46cfc6";// �ͻ�
-	
+	public static String APP_ID = "wxd7e6d638dcb6bfbf";// �ͻ�
+	public static String APP_SECRET = "590a56ca299e9823a88d93025eed7f4f";// �ͻ�
+	public static String AES_KEY = "jjQlRibNnfnJJ3hTjXAKfGd5ltLtLmk3TfdsWbsLuZV";
+	public static String PARTNER_ID = "1386320702";// �ͻ�
+	public static String PARTNER_KEY = "4294fa96d2f13610d60bddfba6da1629";// �ͻ�
+
 	public static String APP_KEY = "";
-	public static String PARTNER = "1304179001";// �ͻ�
-//	public static String PARTNER = "1269932701";// �ͻ�
-	
-//	public static String API_KEY = "Uhoem20151008123weixin4000279600";
 	public static String API_KEY = "3B4148AD65127AB962BEF13CCD296EF5";
 	public static String TOKENURL = "https://api.weixin.qq.com/cgi-bin/token";
 	public static String GRANT_TYPE = "client_credential";//�����̶�ֵ 

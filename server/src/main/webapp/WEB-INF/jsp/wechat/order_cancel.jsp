@@ -57,21 +57,21 @@
         <%-- 两天前 --%>
         <c:if test="${index eq 1}">
             <p>根据<a href="javascript:;" id="rule">退改规则</a>，取消订单您的返回金额为全额<fmt:formatNumber value="${val}" type="currency" pattern="#0.00"/>元，请点击确认后取消订单。</p>
-            <input type="hidden" value="${val}" id="val">
+            <input type="hidden" value="<fmt:formatNumber value="${val}" type="currency" pattern="#0.00"/>" id="val">
         </c:if>
         <%-- 一天前 --%>
         <c:if test="${index eq 2}">
             <p>根据<a href="javascript:;" id="rule">退改规则</a>，取消订单您将会被扣除全额10%（<fmt:formatNumber value="${val * 0.10}" type="currency" pattern="#0.00"/>元）预定金，返回金额为<fmt:formatNumber value="${val * 0.90}" type="currency" pattern="#0.00"/>元，请点击确认后取消订单。</p>
-            <input type="hidden" value="<fmt:formatNumber value="${val * 0.9}" type="currency" pattern=".0"/>" id="val">
+            <input type="hidden" value="<fmt:formatNumber value="${val * 0.9}" type="currency" pattern="#0.00"/>" id="val">
         </c:if>
         <%-- 5小时前 --%>
         <c:if test="${index eq 3}">
             <p>根据<a href="javascript:;" id="rule">退改规则</a>，取消订单您将会被扣除全额50%（<fmt:formatNumber value="${val * 0.50}" type="currency" pattern="#0.00"/>元）预定金，返回金额为<fmt:formatNumber value="${val * 0.50}" type="currency" pattern="#0.00"/>元，请点击确认后取消订单。</p>
-            <input type="hidden" value="<fmt:formatNumber value="${val * 0.5}" type="currency" pattern=".0"/>" id="val">
+            <input type="hidden" value="<fmt:formatNumber value="${val * 0.5}" type="currency" pattern="#0.00"/>" id="val">
         </c:if>
         <c:if test="${index eq 4}">
             <p>根据<a href="javascript:;" id="rule">退改规则</a>，取消订单您将会被扣除全额的预定金，不返回金额，请点击确认后取消订单。</p>
-            <input type="hidden" value="0" id="val">
+            <input type="hidden" value="0.00" id="val">
         </c:if>
     </div>
     <div class="button">
@@ -85,7 +85,7 @@
             <dt>预订车型</dt>
             <dd>${modelNo} (${CarRental.carType.name})</dd>
             <dt>行程总价</dt>
-            <dd><fmt:formatNumber value="${val}" type="currency" pattern=".00"/>元(最终价)</dd>
+            <dd><fmt:formatNumber value="${val}" type="currency" pattern="#0.00"/>元(最终价)</dd>
             <dt>取消订单</dt>
             <dd>
                 <p>起点发车时间前≥48小时，全额退(<fmt:formatNumber value="${val}" type="currency" pattern="#0.00"/>元)</p>
@@ -242,35 +242,50 @@
 
     $('#submit').on('click', function() {
         var unsubscribe = $("#unsubscribe").val();
-        var id = $("#id").val();
-        var val = $("#val").val();
+        var rentalId = $("#id").val();
+        var refund = $("#val").val();
+
         $.ajax({
-            "url": "${contextPath}/wechat/order/cancel/save",
+            "url": "${contextPath}/wechat/refund/refundPay",
             "data": {
-                id:id,
-                val:val,
-                unsubscribe:unsubscribe
+                rentalId:rentalId,
+                refund:refund
             },
             "dataType": "json",
             "type": "POST",
             success: function (result) {
-                if (result.status==0) {
-                    layer.open({
-                        content: '<i class="ico ico-right2"></i><br /><br />您的订单已退订成功，请等待<br />客服人员与您联系'
-                        ,btn: '确定'
-                        ,yes: function(index, layero){
-                            window.location.href = "${contextPath}/wechat/order/myOrder/index";
+                if(result.status==0){
+                    $.ajax({
+                        "url": "${contextPath}/wechat/order/cancel/save",
+                        "data": {
+                            rentalId:rentalId,
+                            refund:refund,
+                            unsubscribe:unsubscribe
+                        },
+                        "dataType": "json",
+                        "type": "POST",
+                        success: function (result) {
+                            if (result.status==0) {
+                                layer.open({
+                                    content: '<i class="ico ico-right2"></i><br /><br />您的订单已退订成功，请等待<br />客服人员与您联系'
+                                    ,btn: '确定'
+                                    ,yes: function(index, layero){
+                                        window.location.href = "${contextPath}/wechat/order/myOrder/index";
+                                    }
+                                });
+                            }
                         }
                     });
-                }else {
+                }else{
                     layer.open({
-                        content: '<i class="ico ico-right2"></i><br /><br />退订失败'
+                        content: '<i class="ico ico-right2"></i><br /><br />退订失败,请联系客服人员'
                         ,btn: '确定'
                     });
                 }
             }
+
         });
-        return false;
+
     })
 
 </script>

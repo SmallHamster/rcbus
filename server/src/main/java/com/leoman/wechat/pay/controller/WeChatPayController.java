@@ -39,30 +39,6 @@ public class WeChatPayController {
     @Autowired
     private CarRentalService carRentalService;
 
-    @Autowired
-    private OrderService orderService;
-
-    @Autowired
-    private UserCouponService userCouponService;
-
-//
-//    @Autowired
-//    private WxUserService wxUserService;
-//
-//    @Autowired
-//    private KUserService kUserService;
-//
-//    @Autowired
-//    private PayrecordService payrecordService;
-//
-//    @Autowired
-//    private CoinlogService coinlogService;
-//
-//    @Autowired
-//    private WebPayrecordService webPayrecordService;
-//
-//    @Autowired
-//    private SalamanRecordService salamanRecordService;
 
     @RequestMapping(value = "index")
     public String index(HttpServletRequest request,

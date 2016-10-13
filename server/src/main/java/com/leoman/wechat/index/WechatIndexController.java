@@ -109,6 +109,21 @@ public class WechatIndexController extends CommonController {
     }
 
     /**
+     * 注销
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/logout")
+    public String logout(HttpServletRequest request, HttpServletResponse response) {
+        request.getSession().removeAttribute(Constant.SESSION_MEMBER_USER);
+        request.getSession().removeAttribute(Constant.SESSION_WEIXIN_WXUSER);
+        CookiesUtils.logoutCookie(request, response);
+        return "wechat/login";
+    }
+
+
+    /**
      * 登录验证
      * @param username
      * @param password
@@ -125,14 +140,7 @@ public class WechatIndexController extends CommonController {
                              HttpServletResponse response,
                              ModelMap model) {
         try {
-
-
-            Boolean success = loginService.loginWeixin(request,response,username,password);
-            if(success){
-                return Result.success();
-            }else {
-                return Result.failure();
-            }
+            return loginService.loginWeixin(request,response,username,password);
 //            UserInfo user = loginService.login(username,Md5Util.md5(password));
 //            if(user != null){
 //                request.getSession().setAttribute(Constant.SESSION_MEMBER_USER, user);
@@ -142,10 +150,9 @@ public class WechatIndexController extends CommonController {
 //            }
         } catch (Exception e) {
             e.printStackTrace();
-            Result.failure();
             WebUtil.printJson(response,new com.leoman.common.core.bean.Result(false).msg(e.getMessage()));
+            return Result.failure();
         }
-        return Result.success();
     }
 
     /**

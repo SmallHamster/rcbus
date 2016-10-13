@@ -78,17 +78,19 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
     @RequestMapping(value = "/myOrder/index")
     public String myOrderIndex(Model model, HttpServletRequest request) throws ParseException {
         UserInfo userInfo = new CommonController().getSessionUser(request);
-        List<RouteOrder> routeOrders = routeOrderService.findList(userInfo.getId());
-        List<RouteOrder> routeOrderList = new ArrayList<>();
-        model.addAttribute("carRentalList",carRentalService.findList(userInfo.getId()));
-        for(RouteOrder routeOrder : routeOrders){
-            String time = DateUtils.longToString(routeOrder.getOrder().getCreateDate(),"yyyy-MM-dd")+" "+routeOrder.getDepartTime();
-            if(System.currentTimeMillis()<DateUtils.stringToLong(time,"yyyy-MM-dd HH:mm")){
-                routeOrderList.add(routeOrder);
+        if(userInfo!=null){
+            List<RouteOrder> routeOrders = routeOrderService.findList(userInfo.getId());
+            List<RouteOrder> routeOrderList = new ArrayList<>();
+            model.addAttribute("carRentalList",carRentalService.findList(userInfo.getId()));
+            for(RouteOrder routeOrder : routeOrders){
+                String time = DateUtils.longToString(routeOrder.getOrder().getCreateDate(),"yyyy-MM-dd")+" "+routeOrder.getDepartTime();
+                if(System.currentTimeMillis()<DateUtils.stringToLong(time,"yyyy-MM-dd HH:mm")){
+                    routeOrderList.add(routeOrder);
+                }
             }
-        }
-        model.addAttribute("routeOrderList",routeOrderList);
+            model.addAttribute("routeOrderList",routeOrderList);
 
+        }
         return "wechat/my_order";
     }
 
@@ -101,16 +103,18 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
     @RequestMapping(value = "/myTrip/index")
     public String myTripIndex(Model model, HttpServletRequest request) throws ParseException {
         UserInfo userInfo = new CommonController().getSessionUser(request);
-        List<RouteOrder> routeOrders = routeOrderService.findList(userInfo.getId());
-        List<RouteOrder> routeOrderList = new ArrayList<>();
-        model.addAttribute("carRentalList",carRentalService.findList(userInfo.getId()));
-        for(RouteOrder routeOrder : routeOrders){
-            String time = DateUtils.longToString(routeOrder.getOrder().getCreateDate(),"yyyy-MM-dd")+" "+routeOrder.getDepartTime();
-            if(System.currentTimeMillis()>=DateUtils.stringToLong(time,"yyyy-MM-dd HH:mm")){
-                routeOrderList.add(routeOrder);
+        if(userInfo!=null){
+            List<RouteOrder> routeOrders = routeOrderService.findList(userInfo.getId());
+            List<RouteOrder> routeOrderList = new ArrayList<>();
+            model.addAttribute("carRentalList",carRentalService.findList(userInfo.getId()));
+            for(RouteOrder routeOrder : routeOrders){
+                String time = DateUtils.longToString(routeOrder.getOrder().getCreateDate(),"yyyy-MM-dd")+" "+routeOrder.getDepartTime();
+                if(System.currentTimeMillis()>=DateUtils.stringToLong(time,"yyyy-MM-dd HH:mm")){
+                    routeOrderList.add(routeOrder);
+                }
             }
+            model.addAttribute("routeOrderList",routeOrderList);
         }
-        model.addAttribute("routeOrderList",routeOrderList);
         return "wechat/my_trip";
     }
 
@@ -128,7 +132,7 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
     public String myOrderDetail(Model model,Long id,Integer status,HttpServletRequest request) throws ParseException {
         CarRental carRental = new CarRental();
         UserInfo userInfo = new CommonController().getSessionUser(request);
-        if(id!=null){
+        if(id!=null && userInfo!=null){
             carRental = carRentalService.queryByPK(id);
             model.addAttribute("CarRental",carRental);
             //分类收费
@@ -294,7 +298,7 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
             orderService.save(order);
 
             //改变优惠券状态为已使用
-            if(couponId!=null) {
+            if(couponId!=null && userInfo!=null) {
                 List<UserCoupon> userCoupons = userCouponService.findList(userInfo.getId(),couponId);
                 if(!userCoupons.isEmpty() && userCoupons.size()>0){
                     UserCoupon userCoupon = userCoupons.get(0);
@@ -341,15 +345,17 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
 
     /**
      * 确定退订
-     * @param unsubscribe
-     * @param id
+     * @param unsubscribe 退订理由
+     * @param rentalId  租单ID
+     * @param refund    退款金额
+     * @param request
      * @return
      */
     @RequestMapping(value = "/cancel/save")
     @ResponseBody
-    public Result cancelSave(String unsubscribe,Long id,Double val,HttpServletRequest request){
+    public Result cancelSave(String unsubscribe,Long rentalId,Double refund,HttpServletRequest request){
         try{
-            CarRental carRental = carRentalService.queryByPK(id);
+            CarRental carRental = carRentalService.queryByPK(rentalId);
             Order order = carRental.getOrder();
 
             //取消订单
@@ -358,12 +364,12 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
             carRental.setUnsubscribe(StringUtils.isNotBlank(unsubscribe) ? unsubscribe : "");
 
             //退款金额
-            carRental.setRefund(val!=null ? val : 0.0);
+            carRental.setRefund(refund!=null ? refund : 0.00);
             carRentalService.save(carRental);
 
             //退优惠券
             UserInfo userInfo = new CommonController().getSessionUser(request);
-            UserCoupon userCoupon = userCouponService.findOne(userInfo.getId(),id);
+            UserCoupon userCoupon = userCouponService.findOne(userInfo.getId(),rentalId);
             if(userCoupon!=null){
                 userCoupon.setIsUse(1);
                 userCoupon.setRentalId(0L);

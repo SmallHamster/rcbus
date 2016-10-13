@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Random;
+import java.util.UUID;
 
 public class CommonUtils {
 
@@ -121,4 +122,12 @@ public class CommonUtils {
 //        }
 //        return null;
 //    }
+
+    public static String generateUUID() {
+        return UUID.randomUUID().toString().replace("-","");
+    }
+
+    public static void main(String[] args) {
+        System.out.println(generateUUID());
+    }
 }

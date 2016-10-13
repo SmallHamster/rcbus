@@ -52,6 +52,7 @@
 
 <%@ include file="../inc/new2/foot.jsp" %>
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
+<script src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script>
     $(function() {
         var $username = $('#username'),
@@ -94,7 +95,8 @@
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            location.href = "${contextPath}//wechat/user/index";
+                            WeixinJSBridge.call('closeWindow');
+                            <%--location.href = "${contextPath}//wechat/user/index";--%>
                         }else {
                             alertMsg(result.msg);
                         }

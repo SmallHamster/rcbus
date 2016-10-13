@@ -61,7 +61,7 @@ public class PayRequest {
 			prepayReqHandler.setParameter("body", "还款支付");
 			prepayReqHandler.setParameter("device_info", ConstantUtil.DEVICE_INFO);
 			prepayReqHandler.setParameter("fee_type", "CNY");
-			prepayReqHandler.setParameter("mch_id", ConstantUtil.PARTNER);
+			prepayReqHandler.setParameter("mch_id", ConstantUtil.PARTNER_ID);
 			String noncestr = WXUtil.getNonceStr();
 			prepayReqHandler.setParameter("nonce_str", noncestr);
 			prepayReqHandler.setParameter("notify_url", type == 1?notify_url_borrow:notify_url_pb); 
@@ -100,7 +100,7 @@ public class PayRequest {
 //				clientHandler.setParameter("appkey", ConstantUtil.APP_KEY);
 				clientHandler.setParameter("noncestr", noncestr);
 				clientHandler.setParameter("package", "Sign=WXPay");
-				clientHandler.setParameter("partnerid", ConstantUtil.PARTNER);
+				clientHandler.setParameter("partnerid", ConstantUtil.PARTNER_ID);
 				clientHandler.setParameter("prepayid", prepayid);
 				clientHandler.setParameter("timestamp", WXUtil.getTimeStamp());
 				

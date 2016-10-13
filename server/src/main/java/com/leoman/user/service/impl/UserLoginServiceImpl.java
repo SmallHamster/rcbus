@@ -67,42 +67,59 @@ public class UserLoginServiceImpl extends GenericManagerImpl<UserLogin, UserLogi
     }
 
     @Override
-    public Boolean loginWeixin(HttpServletRequest request, HttpServletResponse response, String username, String password) {
+    public Result loginWeixin(HttpServletRequest request, HttpServletResponse response, String username, String password) {
         try {
-            UserInfo user = this.login(username, Md5Util.md5(password));
-            if (user != null) {
-                WeChatUser wxUser = (WeChatUser) request.getSession().getAttribute(Constant.SESSION_WEIXIN_WXUSER);
+//            UserInfo user = this.login(username, Md5Util.md5(password));
+            Result result = new Result();
 
-                if (null != wxUser) {
-                    WeChatUser wxUser1 = weChatUserService.findByOpenId(wxUser.getOpenId());
-                    if (null == wxUser1) {
-                        weChatUserService.save(wxUser);
-                    }
-                    user.setWeChatUser(wxUser);
-                    userService.update(user);
-                }
-
-                request.getSession().setAttribute(Constant.SESSION_MEMBER_USER, user);
-
-                // 登录成功后，写入cookies
-                try {
-                    int loginMaxAge = 7 * 24 * 60 * 60; // 定义cookies的生命周期，这里是一个月。单位为秒
-                    CookiesUtils.addCookie(response, "username", username, loginMaxAge);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    Result.failure();
-                    WebUtil.printJson(response,new com.leoman.common.core.bean.Result(false).msg(e.getMessage()));
-                }
-
-                return true;
-            } else {
-                return false;
+            UserLogin userLogin = userLoginDao.findByUsername(username);
+            if(userLogin == null){
+                result.setStatus(1);
+                result.setMsg("该用户不存在");
+                return result;
             }
+
+            UserLogin login = userLoginDao.findByUsernameAndPass(username,Md5Util.md5(password));
+            if(login == null){
+                result.setStatus(1);
+                result.setMsg("用户名或密码错误");
+                return result;
+            }
+
+            UserInfo user = userInfoDao.findByMobile(username);
+            if(user == null){
+                result.setStatus(1);
+                result.setMsg("找不到该用户");
+                return result;
+            }
+
+            WeChatUser wxUser = (WeChatUser) request.getSession().getAttribute(Constant.SESSION_WEIXIN_WXUSER);
+
+            if (null != wxUser) {
+                WeChatUser wxUser1 = weChatUserService.findByOpenId(wxUser.getOpenId());
+                if (null == wxUser1) {
+                    weChatUserService.save(wxUser);
+                }
+                user.setWeChatUser(wxUser);
+                userService.update(user);
+            }
+
+            request.getSession().setAttribute(Constant.SESSION_MEMBER_USER, user);
+
+            // 登录成功后，写入cookies
+            try {
+                int loginMaxAge = 7 * 24 * 60 * 60; // 定义cookies的生命周期，这里是一个月。单位为秒
+                CookiesUtils.addCookie(response, "username", username, loginMaxAge);
+            } catch (Exception e) {
+                e.printStackTrace();
+                WebUtil.printJson(response,new com.leoman.common.core.bean.Result(false).msg(e.getMessage()));
+            }
+
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
+            return Result.failure();
         }
-
+        return Result.success();
     }
 
 }

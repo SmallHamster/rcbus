@@ -345,8 +345,8 @@
                 <pro.jdbc.url>jdbc:mysql://4.16.1.158:3306/leoman_rcbus?characterEncoding=UTF-8</pro.jdbc.url>
                 <pro.jdbc.username>root</pro.jdbc.username>
                 <pro.jdbc.password>root</pro.jdbc.password>
-                <pro.upload.url>http://127.0.0.1:8085/files/upload/</pro.upload.url>
-                <pro.upload.path>D:/devsoftware/apache-tomcat-7.0.67/webapps/files/upload/</pro.upload.path>
+                <pro.upload.url>http://127.0.0.1/files/upload/</pro.upload.url>
+                <pro.upload.path>D:/tomcat/apache-tomcat-7.0.69/webapps/files/upload/</pro.upload.path>
                 <base.url>http://1e5e3f44.ittun.com/rcbus/</base.url>
                 <base.domain>http://1e5e3f44.ittun.com</base.domain>
             </properties>

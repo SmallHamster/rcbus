@@ -102,8 +102,8 @@
             <dt>报价详情：</dt>
             <dd class="extra">
                 <div class="price">
-                    <em id="priceTotal">&yen; <fmt:formatNumber value="${CarRental.income}" type="currency" pattern=".0"/></em>
-                    <input type="hidden" value="<fmt:formatNumber value="${CarRental.income}" type="currency" pattern=".0"/>" id="price">
+                    <em id="priceTotal">&yen; <fmt:formatNumber value="${CarRental.income}" type="currency" pattern="#0.00"/></em>
+                    <input type="hidden" value="<fmt:formatNumber value="${CarRental.income}" type="currency" pattern="#0.00"/>" id="price">
                 </div>
                 <div class="cost">
                     <c:forEach var="v" items="${carRentalOffer}">

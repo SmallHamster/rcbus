@@ -227,7 +227,7 @@
         $('body').on('click', function() {
             $('#coupons').removeClass('select-on');
         })
-    })
+    });
 
 
     function pay (){

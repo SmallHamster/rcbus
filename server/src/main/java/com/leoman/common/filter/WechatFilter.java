@@ -91,7 +91,7 @@ public class WechatFilter implements Filter {
             System.out.println("weChatUser:" + weChatUser.getOpenId());
         }
 
-        if (null == weChatUser) {
+        /*if (null == weChatUser) {
             WxMpService wxMpService = (WxMpService) BeanUtils.getBean("wxMpService");
 
             String fullUrl = HttpUtil.getFullUrl(httpRequest, Configue.getBaseDomain());
@@ -104,7 +104,7 @@ public class WechatFilter implements Filter {
             System.out.println("OAUTH_URL:" + OAUTH_URL);
             chain.doFilter(request, response);
             return;
-        }
+        }*/
 
 
 

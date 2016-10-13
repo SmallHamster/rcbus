@@ -30,6 +30,9 @@ public class CustomSimpleMappingExceptionResolver extends SimpleMappingException
         // 记录错误日志
         LOGGER.info("============================================");
         Admin admin = (Admin) request.getSession().getAttribute(Constant.SESSION_MEMBER_GLOBLE);
+        if(admin==null){
+            return null;
+        }
         LOGGER.info(admin.getUsername());
         LOGGER.info(request.getQueryString());
         LOGGER.info(request.getRequestURI().toLowerCase());
