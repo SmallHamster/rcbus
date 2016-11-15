@@ -15,9 +15,14 @@
     </servlet-mapping>
 
     <servlet-mapping>
-    <servlet-name>default</servlet-name>
-    <url-pattern>/doc/*</url-pattern>
-</servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/doc/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>default</servlet-name>
+        <url-pattern>/rcbus-web/*</url-pattern>
+    </servlet-mapping>
 
     <listener>
         <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
