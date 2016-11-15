@@ -1,0 +1,418 @@
+*{
+    margin: 0;
+    padding: 0;
+}
+img{
+    border:0;
+}
+ol, ul ,li{list-style: none;} 
+
+html,body{width: 100%;height:auto;font-size: 14px;font-family: "Microsoft YaHei";background-color: rgb(245,246,247);}
+/*主题部分*/
+
+.page{
+    width:7.5rem;
+    position:relative;
+}
+
+.page1{
+    background:url("../images/page1_bg.png") no-repeat;
+    height:4.45rem;
+    padding-top: 0.55rem;
+}
+.page1 .page-tittle{
+    font-size: 0.26rem;
+    color:#fff;
+    text-align: center;
+}
+.page1 .page-tittle span{
+    font-size: 0.16rem;
+    display: inline-block;
+    margin-top: 0.2rem;
+    color:#92a1ba;
+}
+.page1-phone{
+    width:2.2rem;
+    height:3.3rem;
+    position:absolute;
+    bottom: 0;
+    left: 0.6rem;
+    background:url('../images/page1_phone.png') no-repeat;
+    background-size: 100% 100%;
+}
+.page-erweimaBox_one{
+    width:1.46rem;
+    height:2.2rem;
+    position:absolute;
+    right: 2.26rem;
+    bottom:0.2rem;
+    text-align: center;
+}
+.page-erweimaBox_one img{
+    width:1.46rem;
+    height:1.46rem;
+}
+.page-erweimaBox_one span{
+    color:#fff;
+    font-size: 0.14rem;
+
+}
+.page-erweimaBox_two{
+    width:1.46rem;
+    height:2.2rem;
+    position:absolute;
+    right: 0.6rem;
+    bottom:0.2rem;
+    text-align: center;
+}
+.page-erweimaBox_two img{
+    width:1.46rem;
+    height:1.46rem;
+}
+.page-erweimaBox_two span{
+    color:#fff;
+    font-size: 0.14rem;
+
+}
+
+
+
+.page2{
+    background:#efefef;
+    height:auto;
+    min-height:4.6rem;
+    padding-top: 0.4rem;
+}
+.page2 .page-tittle{
+    font-size: 0.2rem;
+    color:#347af3;
+    text-align: center;
+  }
+  .page-p{
+    width:6.34rem;
+    margin:8px auto;
+    font-size: 0.14rem;
+    color:#a5a5a5;
+  }
+  .page2-phone{
+    width:6.34rem;
+    height:2.5rem;
+    margin:0 auto;
+    background:url('../images/page2_phone.png') no-repeat;
+    background-size: 100% auto;
+  }
+
+
+.page3{
+    background:#fff;
+    height:auto;
+    min-height:4.6rem;
+    padding-top: 0.4rem;
+}
+ .page3 .page-tittle{
+    font-size: 0.2rem;
+    color:#347af3;
+    text-align: center;
+    line-height: 18px;
+ }
+ .page3-bus_one{
+    width:3.1rem;
+    height:2.6rem;
+    position:absolute;
+    text-align: center;
+    font-size: 0.14rem;
+    color:#666;
+    bottom:0.68rem;
+    left:0.5rem;
+ }
+ .page3-bus_one img,.page3-bus_two img{
+    width:3.1rem;
+    height:1.56rem;
+ }
+.page3-bus_one span,.page3-bus_two span{
+    color:#0093ff;
+}
+
+.page3-bus_two{
+    width:3.1rem;
+    height:2.6rem;
+    position:absolute;
+    text-align: center;
+    font-size: 0.14rem;
+    color:#666;
+    bottom:0.68rem;
+    right:0.5rem;
+}
+
+
+
+.page4{
+    background:url('../images/page4_bg.png') no-repeat;
+    height:auto;
+    min-height:4.4rem;
+    padding-top: 0.6rem;
+}
+.page4 .page-tittle{
+    font-size: 0.2rem;
+    color:#fff;
+    text-align: center;
+    line-height: 18px;
+ }
+ .page-content{
+    width:6.4rem;
+    margin:0.8rem auto 0;
+ }
+.page-content:after{
+    content:' ';
+    width:0;
+    height:0;
+    clear: both;
+    display:block;
+}
+.page-content .page-z{
+    float: left;
+    width: 1.44rem;
+    height:2.44rem;
+    margin:0.08rem;
+    text-align: center;
+    font-size: 0.12rem;
+    color:#fff;
+}
+.page-content .page-z img{
+    width:1.42rem;
+    height:1.86rem;
+}
+.page-content .page-z span{
+    font-size: 0.16rem;
+}
+
+
+
+
+.page5{
+    background:#efefef;
+    height:auto;
+    min-height:4.4rem;
+    padding-top: 0.6rem;
+}
+.page5 .page-tittle{
+    font-size: 0.2rem;
+    color:#347af3;
+    text-align: center;
+    line-height: 18px;
+ }
+ .page5-phone{
+    width:3.4rem;
+    height:3.42rem;
+    position:absolute;
+    background:url('../images/page5_phone.png') no-repeat;
+    left:0.5rem;
+    bottom:0.4rem;
+    background-size: 100% 100%;
+ }
+ .page5-text{
+    position:absolute;
+    right:0.2rem;
+    top:1.4rem;
+ }
+.page5-text span{
+    color:#333;
+    font-size: 0.18rem;
+}
+.page5-text p{
+    width:3.2rem;
+    color:#666;
+    font-size: 0.12rem;
+    margin-top: 0.2rem;
+}
+.page5-yuan{
+    width:2.14rem;
+    height:0.66rem;
+    position:absolute;
+    background:url('../images/page5_yuan.png') no-repeat;
+    right:1rem;
+    bottom:0.7rem;
+    background-size: 100% 100%;
+}
+
+
+
+
+.page6{
+    background:#F9F9F9;
+    height:auto;
+    min-height:4.4rem;
+    padding-top: 0.6rem;
+}
+.page6 .page-tittle{
+    font-size: 0.2rem;
+    color:#347af3;
+    text-align: center;
+    line-height: 18px;
+ }
+ .page6-phone{
+    width:4.14rem;
+    height:4.1rem;
+    position:absolute;
+    background:url('../images/page6_phone.png') no-repeat;
+    right:0rem;
+    bottom:0rem;
+    background-size: 100% 100%;
+ }
+.page6-text{
+    position:absolute;
+    left:0.4rem;
+    top:1.6rem;
+ }
+.page6-text span{
+    color:#333;
+    font-size: 0.18rem;
+}
+.page6-text p{
+    width:3.2rem;
+    color:#666;
+    font-size: 0.12rem;
+    margin-top: 0.2rem;
+}
+.page6-yuan{
+    width:2.14rem;
+    height:0.6rem;
+    position:absolute;
+    background:url('../images/page6_yuan.png') no-repeat;
+    left:0.8rem;
+    bottom:0.7rem;
+    background-size: 100% 100%;
+}
+
+
+
+.page7{
+    background:#3378f3;
+    height:auto;
+    min-height:4.8rem;
+    padding-top: 0.6rem;
+}
+.page7 .page-tittle{
+    font-size: 0.2rem;
+    color:#fff;
+    text-align: center;
+    line-height: 18px;
+ }
+ .page7-phone{
+    width:4rem;
+    height:3.46rem;
+    position:absolute;
+    background:url('../images/page7_phone.png') no-repeat;
+    left:0.58rem;
+    bottom:0.26rem;
+    background-size: 100% 100%;
+ }
+ .page7-text{
+    position:absolute;
+    right:0.2rem;
+    top:1.18rem;
+ }
+.page7-text span{
+    color:#fff;
+    font-size: 0.16rem;
+}
+.page7-text p{
+    width:3.2rem;
+    color:#fff;
+    font-size: 0.12rem;
+    margin-top: 0.2rem;
+}
+
+
+.page8{
+    background:#efefef;
+    height:auto;
+    min-height:4.4rem;
+    padding-top: 0.6rem;
+}
+.page8 .page-tittle{
+    font-size: 0.2rem;
+    color:#347af3;
+    text-align: center;
+    line-height: 18px;
+ }
+ .page8-phone{
+    width:4.5rem;
+    height:3.67rem;
+    position:absolute;
+    background:url('../images/page8_phone.png') no-repeat;
+    right:0.32rem;
+    bottom:0rem;
+    background-size: 100% 100%;
+ }
+.page8-text{
+    position:absolute;
+    left:0.8rem;
+    top:1.6rem;
+ }
+.page8-text span{
+    color:#333;
+    font-size: 0.16rem;
+}
+.page8-text p{
+    width:2.9rem;
+    color:#666;
+    font-size: 0.12rem;
+    margin-top: 0.2rem;
+}
+
+
+
+
+.page9{
+    background:#fff;
+    height:auto;
+    min-height:1.9rem;
+    padding-top: 0.5rem;
+}
+.page9 .page-tittle{
+    font-size: 0.2rem;
+    color:#666;
+    text-align: center;
+    line-height: 18px;
+ }
+ .page9-imageBox{
+    width:6.8rem;
+    margin:0.55rem auto 0;
+ }
+ .page9-imageBox:after{
+    content:' ';
+    width:0;
+    height:0;
+    clear: both;
+    display:block;
+ }
+ .page9-imageBox img{
+    width:1.7rem;
+    height:0.7rem;
+    display:block;
+    float:left;
+ }
+
+
+
+
+ .page10{
+    background:#3378f3;
+    height:auto;
+    min-height:2.5rem;
+    padding-top: 0.5rem;
+}
+.page10 .page-tittle{
+    font-size: 0.2rem;
+    color:#fff;
+    text-align: center;
+    line-height: 18px;
+ }
+ .page10-imageBox{
+    width:6.86rem;
+    height:1.28rem;
+    margin:0.2rem auto 0;
+    background:url('../images/page10_p.png') no-repeat;
+    background-size: 100% 100%;
+ }
