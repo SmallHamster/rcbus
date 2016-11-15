@@ -171,43 +171,39 @@ public class WechatIndexController extends CommonController {
      * @param mobile
      */
     @RequestMapping(value = "/sms/code")
-    public void smsCode(HttpServletRequest request,
+    @ResponseBody
+    public Result smsCode(HttpServletRequest request,
                         HttpServletResponse response,
                         @RequestParam(required=true) String mobile,
                         @RequestParam(required=true) String type){
 
-        try {
 
-            UserInfo user = userService.findByMobile(mobile);
+        UserInfo user = userService.findByMobile(mobile);
 
-            //注册获取验证码
-            if("register".equals(type)){
-                if(user != null){
-                    WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0009));//用户已存在
-                    return ;
-                }
+        //注册获取验证码
+        if("register".equals(type)){
+            if(user != null){
+                return Result.failure(ErrorType.ERROR_CODE_0009);//用户已存在
             }
-            //忘记密码获取验证码
-            else if("findPwd".equals(type)){
-                if(user == null){
-                    WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0003));//用户已存在
-                    return ;
-                }
-            }
-
-            //发送验证码
-            String code = SeqNoUtils.getVerCode(6);
-            logger.info("--------------------->"+code);
-
-            //发送短信
-            sendSms(mobile,code);
-            codeMap.put("CODE_"+mobile,code);
-            codeMap.put("SENDTIME_"+mobile, System.currentTimeMillis());
-            WebUtil.printJson(response,new Result().success(createMap("code",code)));
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
+        //忘记密码获取验证码
+        else if("findPwd".equals(type)){
+            if(user == null){
+                return Result.failure(ErrorType.ERROR_CODE_0003);//找不到用户
+            }
+        }
+
+        //发送验证码
+        String code = SeqNoUtils.getVerCode(6);
+        logger.info("--------------------->"+code);
+
+        //发送短信
+        sendSms(mobile,code);
+        codeMap.put("CODE_"+mobile,code);
+        codeMap.put("SENDTIME_"+mobile, System.currentTimeMillis());
+        WebUtil.printJson(response,new Result().success(createMap("code",code)));
+
+        return Result.success();
     }
 
     /**
@@ -409,7 +405,7 @@ public class WechatIndexController extends CommonController {
      * @param phone
      * @param code
      */
-    public void sendSms(String phone,String code){
+    public static void sendSms(String phone,String code){
         String url = "https://sms.yunpian.com/v1/sms/send.json";
         String apikey = Configue.getSmsApiKey();
         Map<String,String> map = new HashMap<>();
