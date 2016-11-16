@@ -119,7 +119,7 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
         model.addAttribute("enterprise",enterpriseService.queryAll());
 
         UserInfo userInfo = this.getUser(request);
-        model.addAttribute("userInfo",userService.findByMobile(admin.getMobile()));
+        model.addAttribute("userInfo",userInfo);
 
         return "permissions/admin/add";
     }

@@ -2,6 +2,7 @@ package com.leoman.permissions.module.service.impl;
 
 import com.leoman.common.core.bean.Role;
 import com.leoman.common.service.impl.GenericManagerImpl;
+import com.leoman.index.other.ModuleCampare;
 import com.leoman.permissions.module.dao.ModuleDao;
 import com.leoman.permissions.module.entity.Module;
 import com.leoman.permissions.module.entity.vo.ModuleVo;
@@ -105,31 +106,45 @@ public class ModuleServiceImpl extends GenericManagerImpl<Module, ModuleDao> imp
             moduleList = this.queryAll(query);
         }
         else {
-            moduleList = this.queryAll();
+            com.leoman.common.service.Query query = com.leoman.common.service.Query.forClass(Module.class, this);
+            query.setOrder("index", "desc");
+            moduleList = this.queryAll(query);
         }
 
-        List<ModuleVo> allModule = new ArrayList<ModuleVo>();
-        Map<Long, ModuleVo> topModule = new HashMap<Long, ModuleVo>();
-        for (Module moduel : moduleList) {
-            Module superModule = moduel.getSuperModule();
-            if (superModule != null) {
-                if (topModule.get(superModule.getId()) == null) {
-                    ModuleVo moduleVo = new ModuleVo();
-                    moduleVo.setId(superModule.getId());
-                    moduleVo.setName(superModule.getName());
-                    moduleVo.setModuleIcon(superModule.getModuleIcon());
-                    moduleVo.addModule(moduel);
-                    topModule.put(superModule.getId(), moduleVo);
-                } else {
-                    topModule.get(superModule.getId()).addModule(moduel);
+        try {
+            List<ModuleVo> allModule = new ArrayList<ModuleVo>();
+            Map<Long, ModuleVo> topModule = new HashMap<Long, ModuleVo>();
+
+            for (int i = 0; i < moduleList.size(); i++) {
+                Module moduel = moduleList.get(i);
+                Module superModule = moduel.getSuperModule();
+                if (superModule != null) {
+                    if (topModule.get(superModule.getId()) == null) {
+                        ModuleVo moduleVo = new ModuleVo();
+                        moduleVo.setId(superModule.getId());
+                        moduleVo.setName(superModule.getName());
+                        moduleVo.setModuleIcon(superModule.getModuleIcon());
+                        moduleVo.addModule(moduel);
+                        moduleVo.setIndex(superModule.getIndex());
+                        topModule.put(superModule.getId(), moduleVo);
+                    } else {
+                        topModule.get(superModule.getId()).addModule(moduel);
+                    }
                 }
             }
+            for (Map.Entry<Long, ModuleVo> moduleVoEntry : topModule.entrySet()) {
+                allModule.add(moduleVoEntry.getValue());
+            }
+            Collections.sort(allModule, new ModuleCampare());
+            return allModule;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        for (Map.Entry<Long, ModuleVo> moduleVoEntry : topModule.entrySet()) {
-            allModule.add(moduleVoEntry.getValue());
-        }
-        return allModule;
+        return null;
+
     }
+
+
 
 
     public List<ModuleVo> entityToVo(List<Module> list) {

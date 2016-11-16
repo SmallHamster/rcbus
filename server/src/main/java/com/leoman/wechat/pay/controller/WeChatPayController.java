@@ -60,16 +60,21 @@ public class WeChatPayController {
     public void goPay(HttpServletRequest request,
                       HttpServletResponse response,
                       Long rentalId,Double price) {
-        System.out.println("rentalId：" + rentalId);
-        CarRental carRental = carRentalService.queryByPK(rentalId);
-        System.out.println("order：" + carRental.getOrder().getOrderNo());
-        //订单号
-        String orderNo = carRental.getOrder().getOrderNo();
-        WeChatUser weChatUser = weChatUserService.getWXUserByRequest(request);
-        Map<String, String> result = wxMpService.getJSSDKPayInfo(weChatUser.getOpenId(), orderNo, price, "租车出行", "JSAPI",
-                request.getRemoteAddr(), Configue.getBaseUrl() + "wechat/pay/callback");
+        try{
+            System.out.println("rentalId：" + rentalId);
+            CarRental carRental = carRentalService.queryByPK(rentalId);
+            System.out.println("order：" + carRental.getOrder().getOrderNo());
+            //订单号
+            String orderNo = carRental.getOrder().getOrderNo();
+            WeChatUser weChatUser = weChatUserService.getWXUserByRequest(request);
+            Map<String, String> result = wxMpService.getJSSDKPayInfo(weChatUser.getOpenId(), orderNo, price, "租车出行", "JSAPI",
+                    request.getRemoteAddr(), Configue.getBaseUrl() + "wechat/pay/callback");
 
-        WebUtil.printJson(response, result);
+            WebUtil.printJson(response, result);
+        }catch (RuntimeException e){
+            e.printStackTrace();
+        }
+
     }
 
     @RequestMapping(value = "callback")

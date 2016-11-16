@@ -210,6 +210,7 @@
                                 api.column( 5 ).data().reduce( function ( a, b ) {
                                     var sum = a + b;
                                     console.log("sum1:"+sum);
+                                    sum = Math.round(sum*100)/100;
                                     return sum;
                                 } )
                         );
@@ -217,6 +218,7 @@
                                 api.column( 6 ).data().reduce( function ( a, b ) {
                                     var sum = a + b;
                                     console.log("sum2:"+sum);
+                                    sum = Math.round(sum*100)/100;
                                     return sum;
                                 } )
                         );
@@ -224,6 +226,7 @@
                                 api.column( 7 ).data().reduce( function ( a, b ) {
                                     var sum = a + b;
                                     console.log("sum3:"+sum);
+                                    sum = Math.round(sum*100)/100;
                                     return sum;
                                 } )
                         )

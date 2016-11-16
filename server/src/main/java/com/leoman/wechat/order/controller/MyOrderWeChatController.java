@@ -89,7 +89,6 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
                 }
             }
             model.addAttribute("routeOrderList",routeOrderList);
-
         }
         return "wechat/my_order";
     }
@@ -166,6 +165,15 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
             //待付款
             return "wechat/orderdetail/order_detail_status1";
         }else if(status==2){
+            String timestamp = System.currentTimeMillis() + "";
+            timestamp = timestamp.substring(0, 10);
+
+            // 生成随机字符串
+            String noncestr = String.valueOf(System.currentTimeMillis() / 1000);
+
+            // 生成签名
+            String signature = getSignature(request, noncestr, timestamp, "http://www.whjcbs.com/leoman_rcbus/wechat/order/myOrder/detail?id=" + id + "&status=" + status);
+            System.out.println("signature:==================" + signature);
             if(!busSendService.findBus(id,2).isEmpty() && busSendService.findBus(id,2).size()>0){
                 model.addAttribute("modelNo",busSendService.findBus(id,2).get(0).getBus().getModelNo());
             }
@@ -180,7 +188,7 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
             String noncestr = String.valueOf(System.currentTimeMillis() / 1000);
 
             // 生成签名
-            String signature = getSignature(request, noncestr, timestamp, "http://1e5e3f44.ittun.com/rcbus/wechat/order/myOrder/detail?id=" + id + "&status=" + status);
+            String signature = getSignature(request, noncestr, timestamp, "http://www.whjcbs.com/leoman_rcbus/wechat/order/myOrder/detail?id=" + id + "&status=" + status);
             System.out.println("signature:==================" + signature);
             model.addAttribute("timestamp", timestamp);
             model.addAttribute("noncestr", noncestr);

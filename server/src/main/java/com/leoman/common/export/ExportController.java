@@ -36,8 +36,8 @@ public class ExportController {
 
     // 导出模版
     // 收入明细
-//    private static String USER_TEMPLATE = webpath.substring(0,webpath.indexOf("target")) + "src/main/webapp/" + "excelTemplate" + "/" + "feedback.xls";
-    private static String USER_TEMPLATE = "/usr/local/tomcat/webapps/leoman_rcbus/excelTemplate/feedback.xls";
+    private static String USER_TEMPLATE = webpath.substring(0,webpath.indexOf("target")) + "src/main/webapp/" + "excelTemplate" + "/" + "feedback.xls";
+//    private static String USER_TEMPLATE = "/usr/local/tomcat/webapps/leoman_rcbus/excelTemplate/feedback.xls";
 
     // 导出字段排序，按模板的顺序列出数据库对应字段，中间用逗号隔开
     // 收入明细

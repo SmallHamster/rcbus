@@ -19,7 +19,17 @@ public class ModuleVo {
 
     private String moduleIcon;
 
+    private Integer index;
+
     private List<ModuleVo> list = new ArrayList<ModuleVo>();
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
 
     public String getModuleIcon() {
         return moduleIcon;

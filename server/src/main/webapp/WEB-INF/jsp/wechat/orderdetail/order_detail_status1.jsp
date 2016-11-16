@@ -54,6 +54,7 @@
                 <span>返程时间</span>
                 <em><date:date value="${CarRental.endDate}" format="yyyy-MM-dd HH:mm"></date:date></em>
             </dd>
+
             <dd>
                 <span>乘车人数</span>
                 <em>${CarRental.totalNumber}</em>

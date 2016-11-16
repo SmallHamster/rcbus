@@ -371,6 +371,10 @@
             },
             dispatch: function (driverName,carNo,seatNum,id) {
 
+                driverName = driverName =='null' ? '暂无' : driverName;
+                carNo = carNo =='null' ? '暂无' : carNo;
+                seatNum = seatNum =='null' ? '0' : seatNum;
+
                 var dispatchs = $admin.v.dispatch;
                 for(var i=0;i<dispatchs.length;i++){
                     if(dispatchs[i] == id){

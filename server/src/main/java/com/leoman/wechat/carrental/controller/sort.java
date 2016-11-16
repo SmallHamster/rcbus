@@ -9,24 +9,7 @@ import java.util.Map;
  * Created by Administrator on 2016/9/18.
  */
 class Sort {
-    public static void main(String[] args) {
-        Sort obj1 = new Sort();
-        System.out.println("======================");
-        ArrayList list=new ArrayList();
-        list.add("adisen");
-        list.add("bulsi");
-        list.add("Kobe");
-        list.add("布丁");
-        list.add("杜甫");
-        list.add("元方");
-        Map map=obj1.sort(list);
-        System.out.println("-------分组后的输出-----------");
-        System.out.println(map.get("A"));
-        System.out.println(map.get("B"));
-        System.out.println(map.get("C"));
-        System.out.println(map.get("D"));
-        System.out.println(map.get("Y"));
-    }
+
     public Sort() {
 
     }

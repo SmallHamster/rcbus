@@ -30,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartRequest;
 
 import javax.persistence.Transient;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.*;
 
@@ -105,9 +106,10 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
             params.put("mobile", "");
             params.put("busNum", "");
 
-            params.put("totalAmount", "总和 : " + sumTotalAmount);
-            params.put("income", "总和 : " + sumIncome);
-            params.put("refund", "总和 : " + sumRefund);
+            DecimalFormat df =new DecimalFormat("#.##");
+            params.put("totalAmount", "总和 : " + df.format(sumTotalAmount));
+            params.put("income", "总和 : " + df.format(sumIncome));
+            params.put("refund", "总和 : " + df.format(sumRefund));
 
             list.add(params);
         }

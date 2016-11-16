@@ -269,7 +269,7 @@
         //获取“分享到朋友圈”按钮点击状态及自定义分享内容接口
         wx.onMenuShareTimeline({
             title: '江城巴士-优惠券', // 分享标题
-            link: 'http://1e5e3f44.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
+            link: 'http://www.whjcbs.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
             imgUrl: '', // 分享图标
             success: function () {
                 // 用户确认分享后执行的回调函数
@@ -281,8 +281,8 @@
         //获取“分享给朋友”按钮点击状态及自定义分享内容接口
         wx.onMenuShareAppMessage({
             title: "江城巴士-优惠券", // 分享标题
-            desc: "来输入手机号领取优惠券吧~", // 分享描述
-            link: 'http://1e5e3f44.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
+            desc: "输入手机号领取优惠券吧~", // 分享描述
+            link: 'http://www.whjcbs.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
             imgUrl: "", // 分享图标
             type: 'link', // 分享类型,music、video或link，不填默认为link
             dataUrl: '', // 如果type是music或video，则要提供数据链接，默认为空
@@ -296,8 +296,8 @@
         //获取“分享到QQ”按钮点击状态及自定义分享内容接口
         wx.onMenuShareQQ({
             title: '江城巴士-优惠券', // 分享标题
-            desc: '来输入手机号领取优惠券吧~', // 分享描述
-            link: 'http://1e5e3f44.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
+            desc: '输入手机号领取优惠券吧~', // 分享描述
+            link: 'http://www.whjcbs.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
             imgUrl: '', // 分享图标
             success: function () {
                 // 用户确认分享后执行的回调函数
@@ -310,7 +310,7 @@
         wx.onMenuShareWeibo({
             title: '江城巴士-优惠券', // 分享标题
             desc: '来输入手机号领取优惠券吧~', // 分享描述
-            link: 'http://1e5e3f44.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
+            link: 'http://www.whjcbs.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
             imgUrl: '', // 分享图标
             success: function () {
                 // 用户确认分享后执行的回调函数
@@ -323,7 +323,7 @@
         wx.onMenuShareQZone({
             title: '江城巴士-优惠券', // 分享标题
             desc: '来输入手机号领取优惠券吧~', // 分享描述
-            link: 'http://1e5e3f44.ittun.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
+            link: 'http://www.whjcbs.com/rcbus/wechat/coupon/receive?rentalId=' + $('#id').val(), // 分享链接
             imgUrl: '', // 分享图标
             success: function () {
                 // 用户确认分享后执行的回调函数
