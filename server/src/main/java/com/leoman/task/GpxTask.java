@@ -21,8 +21,8 @@ public class GpxTask {
 
     @Scheduled(cron="0/10 * * * * ? ")
     public void Task(){
-//        List<Map> groups = GpxUtil.getGroupsBus();
-//        if(groups != null){
+        List<Map> groups = GpxUtil.getGroupsBus();
+        if(groups != null){
 //            System.out.println("===================定时任务开启=====================");
 //            for (Map group:groups) {
 //                List<Map> busList = (List<Map>)group.get("vehicles");
@@ -35,8 +35,8 @@ public class GpxTask {
 //                            String uuid = String.valueOf(loc.get("id"));
 //                            Double curLat = (Double)loc.get("lat");//纬度
 //                            Double curLng = (Double)loc.get("lng");//经度
-//                            Double curLatXZ = (Double) loc.get("lat_xz");//纬度修正值
-//                            Double curLngXZ = (Double)loc.get("lng_xz");//经度修正值
+////                            Double curLatXZ = (Double) loc.get("lat_xz");//纬度修正值
+////                            Double curLngXZ = (Double)loc.get("lng_xz");//经度修正值
 //                            System.out.println("--------- busID = "+uuid+", current lat = "+curLat+", current lng = "+curLng+" ---------");
 //                            Bus bus = busService.findByUuid(uuid);
 //                            if(bus != null){
@@ -49,7 +49,7 @@ public class GpxTask {
 //                }
 //            }
 //            System.out.println("===================定时任务结束=====================");
-//        }
+        }
     }
 
 }
