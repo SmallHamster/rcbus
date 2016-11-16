@@ -61,7 +61,8 @@ public class WeChatRefundController {
         System.out.println("----------order：" + carRental.getOrder().getOrderNo());
         //订单号
         String orderNo = carRental.getOrder().getOrderNo();
-        String path = "E:\\projects\\rcbus\\server\\src\\main\\webapp\\cert\\apiclient_cert.p12";
+//       String path = "E:\\projects\\rcbus\\server\\src\\main\\webapp\\cert\\apiclient_cert.p12";
+        String path = "//usr//local//tomcat//webapps//leoman_rcbus//cert//apiclient_cert.p12";
         String refundId = CommonUtils.generateUUID();
         String nonce_str = System.currentTimeMillis() + "";
          /*-----  1.生成预支付订单需要的的package数据-----*/
@@ -101,7 +102,9 @@ public class WeChatRefundController {
             FileInputStream instream = new FileInputStream(new File(path));
             try {
                 keyStore.load(instream, ConstantUtil.PARTNER_ID.toCharArray());
-            } finally {
+            }catch (Exception e){
+                e.printStackTrace();
+            }finally {
                 instream.close();
             }
             // Trust own CA and all self-signed certs
@@ -125,6 +128,7 @@ public class WeChatRefundController {
             }
 
         }catch (Exception e){
+            e.printStackTrace();
             return Result.failure();
         }
 

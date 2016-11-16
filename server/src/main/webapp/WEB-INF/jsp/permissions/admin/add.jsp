@@ -126,15 +126,22 @@
             init: function () {
                 var userType = $("#userType").val();
                 console.log("userType :"+userType);
-                var role,
-                    enterprise;
-                if(userType == 0){
-                    role = 12;
-                    enterprise = $("#userEp").val();
-                }else {
-                    role = $("#role").val();
-                    enterprise = $("#enterprise").val();
-                }
+                var role = $("#role").val();
+                var enterprise = $("#enterprise").val();
+
+        /*        var role,
+                        enterprise;
+
+                if(userType != ''){
+                    if(userType == 0){
+                        role = 12;
+                        enterprise = $("#userEp").val();
+                    }else {
+                        role = $("#role").val();
+                        enterprise = $("#enterprise").val();
+                    }
+
+                }*/
                 console.log("role :"+role);
                 console.log("enterprise :"+enterprise);
                 if(role!=null && role!=""){

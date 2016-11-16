@@ -5,6 +5,8 @@ import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.entity.Constant;
 import com.leoman.exception.GeneralException;
 import com.leoman.exception.GeneralExceptionHandler;
+import com.leoman.permissions.admin.entity.Admin;
+import com.leoman.permissions.admin.service.AdminService;
 import com.leoman.user.dao.UserInfoDao;
 import com.leoman.user.dao.UserLoginDao;
 import com.leoman.user.entity.UserInfo;
@@ -42,6 +44,9 @@ public class UserLoginServiceImpl extends GenericManagerImpl<UserLogin, UserLogi
     @Autowired
     private WeChatUserService weChatUserService;
 
+    @Autowired
+    private AdminService adminService;
+
     @Override
     public UserInfo login(String username, String password){
         UserLogin userLogin = userLoginDao.findByUsername(username);
@@ -72,24 +77,31 @@ public class UserLoginServiceImpl extends GenericManagerImpl<UserLogin, UserLogi
 //            UserInfo user = this.login(username, Md5Util.md5(password));
             Result result = new Result();
 
-            UserLogin userLogin = userLoginDao.findByUsername(username);
-            if(userLogin == null){
-                result.setStatus(1);
-                result.setMsg("该用户不存在");
-                return result;
-            }
-
-            UserLogin login = userLoginDao.findByUsernameAndPass(username,Md5Util.md5(password));
-            if(login == null){
-                result.setStatus(1);
-                result.setMsg("用户名或密码错误");
-                return result;
-            }
-
             UserInfo user = userInfoDao.findByMobile(username);
             if(user == null){
                 result.setStatus(1);
                 result.setMsg("找不到该用户");
+                return result;
+            }
+
+            boolean index = false;
+            if(user.getType()==0){
+                //管理员
+                Admin admin = adminService.findByUsernameAndPass(username,Md5Util.md5(password));
+                if(admin == null){
+                    index = true;
+                }
+            }else {
+                //非管理员
+                UserLogin login = userLoginDao.findByUsernameAndPass(username,Md5Util.md5(password));
+                if(login == null){
+                    index = true;
+                }
+            }
+
+            if(index){
+                result.setStatus(1);
+                result.setMsg("用户名或密码错误");
                 return result;
             }
 

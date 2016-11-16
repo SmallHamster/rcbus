@@ -35,6 +35,9 @@ public class Module extends BaseEntity{
     @Column(name = "code")
     private Integer code;
 
+    @Column(name = "index")
+    private Integer index;
+
     @Column(name = "description")
     private String description;
 
@@ -45,6 +48,15 @@ public class Module extends BaseEntity{
 //    public void setSubModuleList(List<Module> subModuleList) {
 //        this.subModuleList = subModuleList;
 //    }
+
+
+    public Integer getIndex() {
+        return index;
+    }
+
+    public void setIndex(Integer index) {
+        this.index = index;
+    }
 
     public String getModuleIcon() {
         return moduleIcon;

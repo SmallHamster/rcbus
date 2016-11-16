@@ -23,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -62,13 +63,16 @@ public class CarRentalWeChatController extends GenericEntityController<CarRental
     @RequestMapping(value = "/add")
     public String line(Long carTypeId,HttpServletRequest request,Model model,Integer index,String city,Long id) throws ParseException {
         UserInfo userInfo = new CommonController().getSessionUser(request);
+
         HttpSession session = request.getSession();
         CarRentalVo carRentalVo = new CarRentalVo();
         if(index == 1){
             if(carTypeId != null){
                 carRentalVo.setCarTypeId(carTypeId);
             }
-            carRentalVo.setMobile(userInfo.getMobile());
+            if(userInfo!=null){
+                carRentalVo.setMobile(userInfo.getMobile());
+            }
             session.setAttribute("carRentalVo",carRentalVo);
         }else if(index == 2) {
             carRentalVo = (CarRentalVo) session.getAttribute("carRentalVo");
@@ -139,10 +143,18 @@ public class CarRentalWeChatController extends GenericEntityController<CarRental
         for(City city : cities){
             list.add(city.getName());
         }
+        System.out.println("-----------------------");
+        System.out.println(list);
+        System.out.println("-----------------------");
         Map map = sort.sort(list);
         model.addAttribute("city",map);
+        System.out.println("-----------------------");
+        System.out.println(map);
+        System.out.println("-----------------------");
         return "wechat/city";
     }
+
+
 
     /**
      * 保存页面信息

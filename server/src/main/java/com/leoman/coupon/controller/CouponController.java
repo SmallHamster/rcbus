@@ -129,7 +129,7 @@ public class CouponController extends GenericEntityController<Coupon, Coupon, Co
         return Result.success();
     }
 
-    @RequestMapping(value = "/imageIndex")
+    @RequestMapping(value = "/image/index")
     public String imageIndex(Model model) {
         SystemConfig config = systemConfigService.queryByPK(1l);
         if(config.getImage() != null){

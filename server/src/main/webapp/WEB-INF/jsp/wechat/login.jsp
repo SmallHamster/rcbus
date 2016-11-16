@@ -95,7 +95,7 @@
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            WeixinJSBridge.call('closeWindow');
+//                            WeixinJSBridge.call('closeWindow');
                             <%--location.href = "${contextPath}//wechat/user/index";--%>
                         }else {
                             alertMsg(result.msg);

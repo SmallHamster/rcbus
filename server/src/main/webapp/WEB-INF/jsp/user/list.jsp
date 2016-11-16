@@ -67,7 +67,9 @@
                                 <button class="btn btn-info" type="button" onclick="$user.fn.del();" id="deleteBatch" style="display: none">删除</button>
                             </span>
                             <span class="tools pull-right">
-                                <button class="btn btn-info" type="button" onclick="$user.fn.giving();" >赠送</button>
+                                <c:if test="${userInfo.enterprise.id eq null}">
+                                    <button class="btn btn-info" type="button" onclick="$user.fn.giving();" >赠送</button>
+                                </c:if>
                                 <button class="btn btn-default " type="button" id="refresh"><i class="fa fa-refresh"></i>刷新</button>
                                 <button class="btn btn-info" type="button" onclick="$user.fn.add();">新增会员</button>
                             </span>
@@ -179,6 +181,8 @@
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {
+                                var enterprise_type = $("#enterpriseId").val();
+                                console.log(enterprise_type == '');
                                 var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$user.fn.detail(\'" + data + "\')\">" +
                                         "<i class='fa fa-eye'></i> 查看</button>";
 
@@ -197,11 +201,26 @@
                                 var giving = "<button title='赠送' class='btn btn-primary btn-circle edit' onclick=\"$user.fn.giving(\'" + data + "\')\">" +
                                         "<i class='fa fa-pencil-square-o'></i> 赠送</button>";
 
-                                if(row.type==1){
-                                    return giving  + "&nbsp;" + detail  + "&nbsp;" + departure + "&nbsp;" + del;
+                                if(enterprise_type!=''){
+                                    if(row.type==1){
+                                        return detail  + "&nbsp;" + departure + "&nbsp;" + del;
+                                    }else if(row.type==2){
+                                        return detail  + "&nbsp;" + enterprise + "&nbsp;" + del;
+                                    }else {
+                                        return detail  + "&nbsp;" + del;
+                                    }
+
                                 }else {
-                                    return giving  + "&nbsp;" + detail  + "&nbsp;" + enterprise + "&nbsp;" + del;
+                                    if(row.type==1){
+                                        return giving  + "&nbsp;" + detail  + "&nbsp;" + departure + "&nbsp;" + del;
+                                    }else if(row.type==2){
+                                        return giving  + "&nbsp;" + detail  + "&nbsp;" + enterprise + "&nbsp;" + del;
+                                    }else {
+                                        return giving  + "&nbsp;" + detail  + "&nbsp;" + del;
+                                    }
+
                                 }
+
                             }
                         }
                     ],

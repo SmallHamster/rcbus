@@ -17,4 +17,6 @@ public interface AdminService extends GenericManager<Admin> {
     public Page<Admin> page(Integer pageNum, Integer pageSize);
 
     public Result save(Admin admin, Long enterpriseId, Long roleId);
+
+    public Admin findByUsernameAndPass(String mobile, String password);
 }

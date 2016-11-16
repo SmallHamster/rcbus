@@ -181,8 +181,6 @@
                                 }
                                 else {
 
-                                    var type = $("#userType").val();
-
                                     var detail = "<button title='查看' class='btn btn-primary btn-circle add' onclick=\"$admin.fn.detail(\'" + data + "\')\">" +
                                             "<i class='fa fa-eye'></i> 查看</button>";
 
@@ -198,11 +196,8 @@
                                     var selectRole = "<button title='赋予角色' class='btn btn-primary btn-circle edit' onclick=\"$admin.fn.openModal(\'" + data + "\')\">" +
                                             "<i class='fa fa-exchange'></i> 赋予角色</button>";
 
-                                    if(type != "" && type != null && type ==0){
-                                        return edit  + "&nbsp;" + reset + "&nbsp;" + del;
-                                    }else {
-                                        return edit  + "&nbsp;" + del;
-                                    }
+                                    return edit  + "&nbsp;" + reset + "&nbsp;" + del;
+
                                 }
                             }
                         }

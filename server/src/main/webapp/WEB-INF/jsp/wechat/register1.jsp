@@ -105,7 +105,7 @@
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            location.href = "${contextPath}/wechat/register2??type=findPwd&mobile="+$("#mobile").val();
+                            location.href = "${contextPath}/wechat/register2?type=register&mobile="+$("#mobile").val();
                         }else {
                             alertMsg(result.msg);
                         }

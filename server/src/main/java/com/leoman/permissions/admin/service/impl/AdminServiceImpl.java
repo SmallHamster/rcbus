@@ -12,6 +12,7 @@ import com.leoman.permissions.role.service.RoleService;
 import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
 import com.leoman.user.entity.UserInfo;
+import com.leoman.user.entity.UserLogin;
 import com.leoman.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -102,24 +103,17 @@ public class AdminServiceImpl extends GenericManagerImpl<Admin, AdminDao> implem
             }
             adminRoleService.save(adminRole);
 
-            //新增一条企业管理员信息
-            if(enterpriseId!=null){
-                List<UserInfo> userInfos = userService.queryByProperty("userId",admin.getId());
-                if(!userInfos.isEmpty() && userInfos.size()>0){
-                    UserInfo _userInfo = userInfos.get(0);
-                    _userInfo.setMobile(admin.getMobile());
-//                    _userInfo.setPassword(admin.getPassword());
-                    _userInfo.setEnterprise(admin.getEnterprise());
-                    userService.save(_userInfo);
-                }else {
-                    userInfo.setUserId(admin.getId());
-                    userInfo.setMobile(admin.getMobile());
-//                    userInfo.setPassword(admin.getPassword());
-                    userInfo.setEnterprise(admin.getEnterprise());
-                    userInfo.setType(0);
-                    userService.save(userInfo);
-                }
+            //新增一条用户信息
+            List<UserInfo> userInfos = userService.queryByProperty("userId",admin.getId());
+            if(!userInfos.isEmpty() && userInfos.size()>0){
+                userInfo = userInfos.get(0);
+            }else {
+                userInfo.setType(0);
+                userInfo.setUserId(admin.getId());
             }
+            userInfo.setMobile(admin.getMobile());
+            userInfo.setEnterprise(admin.getEnterprise());
+            userService.save(userInfo);
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -128,6 +122,10 @@ public class AdminServiceImpl extends GenericManagerImpl<Admin, AdminDao> implem
         return Result.success();
     }
 
+    @Override
+    public Admin findByUsernameAndPass(String mobile, String password) {
+        return adminDao.findByUsernameAndPass(mobile,password);
+    }
 
 
 }
