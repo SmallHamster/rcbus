@@ -164,35 +164,31 @@
             cr_ids.push(id);
         });
 
-        if(ro_ids.length != 0 || ro_ids.length != 0){
-            $.ajax({
-                "url": "${contextPath}/wechat/order/del",
-                "data": {
-                    ro_ids:JSON.stringify(ro_ids),
-                    cr_ids:JSON.stringify(cr_ids)
-                },
-                "dataType": "json",
-                "type": "POST",
-                success: function (result) {
-                    if (result.status==0) {
-                        layer.open({
-                            content: '<i class="ico ico-right2"></i><br /><br />删除成功'
-                            ,btn: '确定'
-                            ,yes: function(index, layero){
-                                window.location.reload();
-                            }
-                        });
-                    }else {
-                        layer.open({
-                            content: '<i class="ico ico-right2"></i><br /><br />删除失败'
-                            ,btn: '确定'
-                        });
-                    }
+        $.ajax({
+            "url": "${contextPath}/wechat/order/del",
+            "data": {
+                ro_ids:JSON.stringify(ro_ids),
+                cr_ids:JSON.stringify(cr_ids)
+            },
+            "dataType": "json",
+            "type": "POST",
+            success: function (result) {
+                if (result.status==0) {
+                    layer.open({
+                        content: '<i class="ico ico-right2"></i><br /><br />删除成功'
+                        ,btn: '确定'
+                        ,yes: function(index, layero){
+                            window.location.reload();
+                        }
+                    });
+                }else {
+                    layer.open({
+                        content: '<i class="ico ico-right2"></i><br /><br />删除失败'
+                        ,btn: '确定'
+                    });
                 }
-            });
-        }
-
-
+            }
+        });
 
     }
 
