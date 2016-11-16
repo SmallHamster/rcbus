@@ -186,12 +186,14 @@
                     if(list[i].isCollect == 1){
                         template.find(".fav").addClass("faved");//给已收藏的路线添加已收藏的样式
                     }
-                    template.find(".detail").find("span").eq(0).text((list[i].bus.modelNo==null)?'':(list[i].bus.modelNo));
                     var times = list[i].tempTimes;
                     template.find(".detail").find("span").eq(1).text("即将出发："+(times==null||times.length==0?"无":times[0].departTime));
-                    template.find(".detail").find("span").eq(2).text("车牌号："+list[i].bus.carNo);
                     template.find(".detail").find("span").eq(3).text("预定人数："+(list[i].orderNum==null?0:list[i].orderNum));
-                    template.find(".bus").text(list[i].bus.stationName==null?'':list[i].bus.stationName);//当前站点名称
+                    if(list[i].bus != null){
+                        template.find(".detail").find("span").eq(0).text((list[i].bus.modelNo==null)?'':(list[i].bus.modelNo));
+                        template.find(".detail").find("span").eq(2).text("车牌号："+list[i].bus.carNo);
+                        template.find(".bus").text(list[i].bus.stationName==null?'':list[i].bus.stationName);//当前站点名称
+                    }
                     template.find(".op a").attr('onclick','toPosition('+list[i].id+')');
                     template.show();
                     $(".ui-list ul").append(template);
