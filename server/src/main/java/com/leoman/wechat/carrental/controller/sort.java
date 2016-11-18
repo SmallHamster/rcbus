@@ -1,9 +1,6 @@
 package com.leoman.wechat.carrental.controller;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Administrator on 2016/9/18.
@@ -136,6 +133,26 @@ class Sort {
             map.put(a,arraylist);
             arraylist=new ArrayList();
         }
+
         return map;
     }
+
+    /**
+     * 使用 Map按key进行排序
+     * @param map
+     * @return
+     */
+    public static Map<String, String> sortMapByKey(Map<String, String> map) {
+        if (map == null || map.isEmpty()) {
+            return null;
+        }
+
+        Map<String, String> sortMap = new TreeMap<String, String>(
+                new MapKeyComparator());
+
+        sortMap.putAll(map);
+
+        return sortMap;
+    }
+
 }

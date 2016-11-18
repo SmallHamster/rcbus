@@ -18,7 +18,7 @@ public interface RouteService extends GenericManager<Route> {
 
     public Result saveRoute(Route route, String departTimes, String backTimes, String busIds, Integer isRoundTrip, List<Map> list);
 
-    public void saveOrder(Long routeId, String departTime, UserInfo user);
+    public Result saveOrder(Long routeId, String departTime, UserInfo user);
 
     public void deleteRoute(Long routeId);
 

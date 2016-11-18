@@ -70,7 +70,7 @@ public final class Result {
             result.data.put("object", data);
         } else {
             String objName = data.getClass().getSimpleName().substring(0, 1).toLowerCase() + data.getClass().getSimpleName().substring(1);
-            result.data.put(objName, BeanUtils.beanToMap(data));
+            result.data.put(objName, data);
         }
         return result;
     }

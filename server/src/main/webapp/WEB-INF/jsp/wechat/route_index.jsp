@@ -91,6 +91,7 @@
 
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat-html/js/app.js"></script>
+<script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
 <script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
 
@@ -126,14 +127,15 @@
             });
         })
 
-        // 清空输入框文本
-        $('.clear').on('click', function() {
-            $(this).prev().val('');
-        });
-
         //初始化查询
         search();
         init();
+
+        // 清空输入框文本
+        $('.clear').on('click', function() {
+            $(this).prev().val('');
+            search();
+        });
 
     });
 
@@ -141,7 +143,12 @@
         // 收藏&取消收藏
         $('.fav').on('click', function() {
             $(this).toggleClass('faved');
-            var isFaved = $(this).hasClass('faved');
+            var isFaved = 0;
+            if($(this).hasClass('faved')){
+                isFaved = 0;
+            }else{
+                isFaved = 1;
+            }
             $.ajax({
                 url: "${contextPath}/wechat/route/collect/oper",
                 data: {'isCollect': isFaved,'routeId': $(this).attr("val")},
@@ -176,29 +183,34 @@
             if(result.status == 0) {
                 var list = result.data.object.list;
                 $(".ui-list ul").empty();
-                for(var i=0; i<list.length;i++){
-                    var template = $("#routeTemplate").clone().removeAttr("id");
-                    template.find("em").eq(0).text(list[i].startStation);
-                    template.find("em").eq(1).text(list[i].endStation);
-                    template.find("b").text(i+1);
-                    template.find(".fromto").attr('onclick','toDetail('+list[i].id+')');
-                    template.find(".fav").attr("val",list[i].id);
-                    if(list[i].isCollect == 1){
-                        template.find(".fav").addClass("faved");//给已收藏的路线添加已收藏的样式
+                if(list.length > 0){
+                    $(".ui-list .hd").eq(0).text("全部路线");
+                    for(var i=0; i<list.length;i++){
+                        var template = $("#routeTemplate").clone().removeAttr("id");
+                        template.find("em").eq(0).text(list[i].startStation);
+                        template.find("em").eq(1).text(list[i].endStation);
+                        template.find("b").text(i+1);
+                        template.find(".fromto").attr('onclick','toDetail('+list[i].id+')');
+                        template.find(".fav").attr("val",list[i].id);
+                        if(list[i].isCollect == 0){
+                            template.find(".fav").addClass("faved");//给已收藏的路线添加已收藏的样式
+                        }
+                        var times = list[i].tempTimes;
+                        template.find(".detail").find("span").eq(1).text("即将出发："+(times==null||times.length==0?"无":times[0].departTime));
+                        template.find(".detail").find("span").eq(3).text("预定人数："+(list[i].orderNum==null?0:list[i].orderNum));
+                        if(list[i].bus != null){
+                            template.find(".detail").find("span").eq(0).text((list[i].bus.modelNo==null)?'':(list[i].bus.modelNo));
+                            template.find(".detail").find("span").eq(2).text("车牌号："+list[i].bus.carNo);
+                            template.find(".bus").text(list[i].bus.stationName==null?'':list[i].bus.stationName);//当前站点名称
+                        }
+                        template.find(".op a").attr('onclick','toPosition('+list[i].id+')');
+                        template.show();
+                        $(".ui-list ul").append(template);
                     }
-                    var times = list[i].tempTimes;
-                    template.find(".detail").find("span").eq(1).text("即将出发："+(times==null||times.length==0?"无":times[0].departTime));
-                    template.find(".detail").find("span").eq(3).text("预定人数："+(list[i].orderNum==null?0:list[i].orderNum));
-                    if(list[i].bus != null){
-                        template.find(".detail").find("span").eq(0).text((list[i].bus.modelNo==null)?'':(list[i].bus.modelNo));
-                        template.find(".detail").find("span").eq(2).text("车牌号："+list[i].bus.carNo);
-                        template.find(".bus").text(list[i].bus.stationName==null?'':list[i].bus.stationName);//当前站点名称
-                    }
-                    template.find(".op a").attr('onclick','toPosition('+list[i].id+')');
-                    template.show();
-                    $(".ui-list ul").append(template);
+                    initFav();
+                }else{
+                    $(".ui-list .hd").eq(0).text("您搜索的路线暂不存在，如以后开通该路线我们会及时通知您哦~");
                 }
-                initFav();
 
             }else {
                 alertMsg("查询失败");
@@ -213,6 +225,24 @@
     function toPosition(id){
 //        location.href = "http://221.234.42.20:89/Interface/findPosition.action?carNum=鄂ALB229";
         location.href = "${contextPath}/wechat/route/toPosition?routeId="+id;
+    }
+
+    function alertMsg(msg,func){
+        if(func == '' || func == undefined){
+            layer.open({
+                content: msg
+                ,btn: '确定'
+            });
+        }else{
+            layer.open({
+                content: msg
+                ,btn: ['确定']
+                ,yes: function(index){
+                    layer.close(index);
+                    func();
+                }
+            });
+        }
     }
 
 </script>

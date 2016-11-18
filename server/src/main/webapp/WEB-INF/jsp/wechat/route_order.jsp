@@ -81,7 +81,8 @@
         $.post("${contextPath}/wechat/route/saveOrder",{'routeId':"${routeId}",'departTime':departTime},function(res){
             if(res.status == 0){
                 alertMsg("预定成功",function(){
-                    location.href = "${contextPath}/wechat/route/detail?routeId=${routeId}";
+                    var routeOrderId = res.data.routeOrder.id;
+                    location.href = "${contextPath}/wechat/order/myRoute/detail?status=0&id="+routeOrderId;
                 });
             }else{
                 alertMsg("预定失败");

@@ -359,7 +359,7 @@
             <properties>
                 <pro.jdbc.url>jdbc:mysql://106.75.62.100:3306/rcbus?characterEncoding=UTF-8</pro.jdbc.url>
                 <pro.jdbc.username>root</pro.jdbc.username>
-                <pro.jdbc.password>root</pro.jdbc.password>
+                <pro.jdbc.password>rcbus881177</pro.jdbc.password>
                 <pro.upload.url>http://www.whjcbs.com/files/upload/</pro.upload.url>
                 <pro.upload.path>/usr/local/tomcat/webapps/files/upload/</pro.upload.path>
                 <base.url>http://www.whjcbs.com/leoman_rcbus/</base.url>

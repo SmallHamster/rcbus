@@ -51,7 +51,7 @@
             <span>预定人数：48</span>
         </div>
         <div class="bus">野芷湖西路保利心语</div>
-        <div class="fav faved"></div>
+        <div class="fav"></div>
     </div>
     <div class="check">
         <input type="checkbox" value="iid_1" class="rdo2">
@@ -122,7 +122,12 @@
         // 收藏&取消收藏
         $('.fav').on('click', function() {
             $(this).toggleClass('faved');
-            var isFaved = $(this).hasClass('faved');
+            var isFaved = 0;
+            if($(this).hasClass('faved')){
+                isFaved = 0;
+            }else{
+                isFaved = 1;
+            }
             $.ajax({
                 url: "${contextPath}/wechat/route/collect/oper",
                 data: {'isCollect': isFaved,'routeId': $(this).attr("val")},

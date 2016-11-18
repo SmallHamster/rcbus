@@ -240,7 +240,7 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
      */
     @Override
     @Transactional
-    public void saveOrder(Long routeId, String departTime, UserInfo user){
+    public Result saveOrder(Long routeId, String departTime, UserInfo user){
         //保存订单
         Order order = new Order();
         order.setType(1);
@@ -261,6 +261,8 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         routeOrder.setDepartTime(departTime);
         routeOrder.setIsDel(0);
         routeOrderDao.save(routeOrder);
+
+        return Result.success(routeOrder);
     }
 
 }

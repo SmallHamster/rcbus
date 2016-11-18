@@ -202,14 +202,15 @@ public class RouteWeChatController extends RouteBaseController {
                           HttpServletResponse response,
                           Long routeId,
                           String departTime) {
+        Result result = Result.success();
         try {
             UserInfo user = super.getSessionUser(request);
-            routeService.saveOrder(routeId,departTime,user);
+            result = routeService.saveOrder(routeId,departTime,user);
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();
         }
-        return Result.success();
+        return result;
     }
 
     /**
