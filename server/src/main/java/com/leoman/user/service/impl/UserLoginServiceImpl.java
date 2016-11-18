@@ -25,6 +25,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.net.URLEncoder;
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/6/17 0017.
@@ -109,10 +110,12 @@ public class UserLoginServiceImpl extends GenericManagerImpl<UserLogin, UserLogi
 
             if (null != wxUser) {
                 weChatUserService.save(wxUser);
-                if(user.getWeChatUser()==null){
+                List<UserInfo> list = userService.queryByProperty("weChatUser.id",wxUser.getId());
+                if(list.isEmpty() && user.getWeChatUser()==null){
                     user.setWeChatUser(wxUser);
                     userService.update(user);
                 }
+
             }
 
             request.getSession().setAttribute(Constant.SESSION_MEMBER_USER, user);
