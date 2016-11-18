@@ -22,10 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 租车
@@ -147,7 +144,8 @@ public class CarRentalWeChatController extends GenericEntityController<CarRental
         System.out.println(list);
         System.out.println("-----------------------");
         Map map = sort.sort(list);
-        model.addAttribute("city",map);
+        TreeMap treemap = new TreeMap(map);
+        model.addAttribute("city",treemap);
         System.out.println("-----------------------");
         System.out.println(map);
         System.out.println("-----------------------");

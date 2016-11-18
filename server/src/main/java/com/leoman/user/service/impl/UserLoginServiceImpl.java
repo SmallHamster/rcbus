@@ -108,12 +108,11 @@ public class UserLoginServiceImpl extends GenericManagerImpl<UserLogin, UserLogi
             WeChatUser wxUser = (WeChatUser) request.getSession().getAttribute(Constant.SESSION_WEIXIN_WXUSER);
 
             if (null != wxUser) {
-                WeChatUser wxUser1 = weChatUserService.findByOpenId(wxUser.getOpenId());
-                if (null == wxUser1) {
-                    weChatUserService.save(wxUser);
+                weChatUserService.save(wxUser);
+                if(user.getWeChatUser()==null){
+                    user.setWeChatUser(wxUser);
+                    userService.update(user);
                 }
-                user.setWeChatUser(wxUser);
-                userService.update(user);
             }
 
             request.getSession().setAttribute(Constant.SESSION_MEMBER_USER, user);

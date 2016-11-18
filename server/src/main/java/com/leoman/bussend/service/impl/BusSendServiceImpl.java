@@ -46,7 +46,7 @@ public class BusSendServiceImpl extends GenericManagerImpl<BusSend,BusSendDao> i
         sql.append("   (SELECT                    ");
         sql.append("     b.id                     ");
         sql.append("   FROM                       ");
-        sql.append("     t_Bus b                  ");
+        sql.append("     t_bus b                  ");
         sql.append("   WHERE 1=1 ");
         if(StringUtils.isNotBlank(carNo)){
             sql.append("   AND b.car_no LIKE '%"+carNo+"%') ");

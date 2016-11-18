@@ -32,4 +32,7 @@ public interface CarRentalService extends GenericManager<CarRental> {
 
     //微信删除
     public void del(String ro_ids,String cr_ids);
+
+    //物理删除
+    public void del1(String ro_ids,String cr_ids) ;
 }

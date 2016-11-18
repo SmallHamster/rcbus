@@ -24,4 +24,7 @@ public interface UserService extends GenericManager<UserInfo> {
 
     public void saveUser(String mobile,String password, String ip);
 
+    public UserInfo findByWechatId(Integer WechatId);
+
+
 }

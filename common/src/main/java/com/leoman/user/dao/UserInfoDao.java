@@ -15,4 +15,9 @@ public interface UserInfoDao extends IBaseJpaRepository<UserInfo> {
     @Query("select a from UserInfo a where a.mobile = ?1")
     public UserInfo findByMobile(String mobile);
 
+    @Query("select a from UserInfo a where a.weChatUser.id = ?1")
+    public UserInfo findByWechatId(Integer WechatId);
+
+
+
 }

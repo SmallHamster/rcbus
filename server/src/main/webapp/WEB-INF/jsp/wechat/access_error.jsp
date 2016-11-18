@@ -23,7 +23,7 @@
 
 <section class="wrap article-box">
     <div class="article">
-        <p>${errorMsg}</p>
+        <p style="text-align:center">您的权限无法访问</p>
     </div>
 </section>
 

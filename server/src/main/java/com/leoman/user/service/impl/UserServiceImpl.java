@@ -1,10 +1,16 @@
 package com.leoman.user.service.impl;
 
+import com.leoman.bus.entity.RouteOrder;
+import com.leoman.bus.service.RouteOrderService;
+import com.leoman.carrental.entity.CarRental;
+import com.leoman.carrental.service.CarRentalService;
 import com.leoman.common.controller.common.CommonController;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.coupon.entity.Coupon;
 import com.leoman.coupon.service.CouponService;
+import com.leoman.order.entity.Order;
+import com.leoman.order.service.OrderService;
 import com.leoman.pay.util.MD5Util;
 import com.leoman.permissions.admin.service.AdminService;
 import com.leoman.system.enterprise.entity.Enterprise;
@@ -57,6 +63,14 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
     private NotUserCouponService notUserCouponService;
     @Autowired
     private CouponOrderService couponOrderService;
+    @Autowired
+    private CarRentalService carRentalService;
+
+    @Autowired
+    private RouteOrderService routeOrderService;
+
+    @Autowired
+    private OrderService orderService;
 
 
     @Override
@@ -87,8 +101,39 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
         return 1;
     }
 
+    public void delOrder(UserInfo userInfo){
+        StringBuffer cr_ids = new StringBuffer();
+        cr_ids.append("[");
+        StringBuffer ro_ids = new StringBuffer();
+        ro_ids.append("[");
+        List<Order> orders = orderService.queryByProperty("userInfo.id",userInfo.getId());
+        if(!orders.isEmpty()){
+            for(Order o : orders){
+                if(o.getType() == 2){
+                    CarRental carRental = carRentalService.findOne(o.getId());
+                    Long cr_id = carRental.getId();
+                    cr_ids.append(cr_id+",");
+                }else {
+                    RouteOrder routeOrder = routeOrderService.findOne(o.getId());
+                    Long ro_id = routeOrder.getId();
+                    ro_ids.append(ro_id+",");
+                }
+
+            }
+
+            String a = ro_ids.toString().substring(0,ro_ids.toString().length()-1);
+            String b = cr_ids.toString().substring(0,cr_ids.toString().length()-1);
+            a += "]";
+            b += "]";
+            carRentalService.del1(a,b);
+        }
+    }
+
+
     @Override
+    @Transactional
     public Integer del(Long id, String ids) {
+
         if (id==null && StringUtils.isBlank(ids)){
             return 1;
         }
@@ -96,6 +141,7 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
         try {
             if(id!=null){
                 userInfo = queryByPK(id);
+                this.delOrder(userInfo);
                 delete(userInfo);
                 //删除登录表信息
                 if(userInfo.getType()==0){
@@ -107,7 +153,8 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
                 Long[] ss = JsonUtil.json2Obj(ids,Long[].class);
                 for (Long _id : ss) {
                     userInfo = queryByPK(_id);
-                    delete(queryByPK(_id));
+                    this.delOrder(userInfo);
+                    delete(userInfo);
                     //删除登录表信息
                     if(userInfo.getType()==0){
                         adminService.delete(adminService.queryByPK(userInfo.getUserId()));
@@ -259,6 +306,11 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
         }
 
 
+    }
+
+    @Override
+    public UserInfo findByWechatId(Integer WechatId) {
+        return userInfoDao.findByWechatId(WechatId);
     }
 
 }
