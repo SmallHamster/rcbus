@@ -3,6 +3,7 @@ package com.leoman.common.filter;
 import com.leoman.common.logger.Logger;
 import com.leoman.entity.Configue;
 import com.leoman.entity.Constant;
+import com.leoman.user.service.UserService;
 import com.leoman.utils.BeanUtils;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.user.entity.UserInfo;
@@ -14,6 +15,7 @@ import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -87,32 +89,8 @@ public class WechatFilter implements Filter {
         UserInfo user = (UserInfo) httpRequest.getSession().getAttribute(Constant.SESSION_MEMBER_USER);
         WeChatUser weChatUser = (WeChatUser) httpRequest.getSession().getAttribute(Constant.SESSION_WEIXIN_WXUSER);
 
-        if (null != weChatUser) {
-            System.out.println("weChatUser:" + weChatUser.getOpenId());
-        }
-//
-//        if (null == weChatUser) {
-//            WxMpService wxMpService = (WxMpService) BeanUtils.getBean("wxMpService");
-//
-//            String fullUrl = HttpUtil.getFullUrl(httpRequest, Configue.getBaseDomain());
-//            System.out.println("fullUrl:" + fullUrl);
-//
-//            String OAUTH_URL = wxMpService.oauth2buildAuthorizationUrl(fullUrl, WxConsts.OAUTH2_SCOPE_USER_INFO, Constant.WEIXIN_STATE);
-//            System.out.println("domain:" + httpRequest.getSession().getAttributeNames());
-//
-//            httpResponse.sendRedirect(OAUTH_URL);
-//            System.out.println("OAUTH_URL:" + OAUTH_URL);
-//            chain.doFilter(request, response);
-//            return;
-//        }
 
-        if(null != user){
-            chain.doFilter(request, response);
-            return;
-        }
-
-
-        /*if (null != user) {
+        if (null != user) {
             //如果该用户为普通会员，则只能访问部分菜单
             if(user.getType().equals(2) || user.getType().equals(0)){
                 String [] FORBID_URLS = FORBID_URL_Map.get(user.getType());
@@ -120,7 +98,9 @@ public class WechatFilter implements Filter {
                     Pattern pattern = Pattern.compile(forbinUrl, Pattern.DOTALL);
                     Matcher matcher = pattern.matcher(url);
                     if (matcher.find()) {
-                        httpResponse.sendRedirect(contextPath + "/wechat/error?errorMsg=您的权限无法访问");
+                        String msg = "您的权限无法访问";
+                        httpResponse.sendRedirect(contextPath + "/wechat/error?errorMsg="+msg);
+                        return;
                     }else{
                         chain.doFilter(request, response);
                         return;
@@ -131,7 +111,28 @@ public class WechatFilter implements Filter {
                 chain.doFilter(request, response);
                 return ;
             }
-        }*/
+        }
+
+        if (null != weChatUser) {
+            System.out.println("weChatUser:" + weChatUser.getOpenId());
+        }
+
+        if (null == weChatUser) {
+            WxMpService wxMpService = (WxMpService) BeanUtils.getBean("wxMpService");
+
+            String fullUrl = HttpUtil.getFullUrl(httpRequest, Configue.getBaseDomain());
+            System.out.println("fullUrl:" + fullUrl);
+
+            String OAUTH_URL = wxMpService.oauth2buildAuthorizationUrl(fullUrl, WxConsts.OAUTH2_SCOPE_USER_INFO, Constant.WEIXIN_STATE);
+            System.out.println("domain:" + httpRequest.getSession().getAttributeNames());
+
+            httpResponse.sendRedirect(OAUTH_URL);
+            System.out.println("OAUTH_URL:" + OAUTH_URL);
+            chain.doFilter(request, response);
+            return;
+        }
+
+
 
         String xRequested = httpRequest.getHeader("X-Requested-With");
         if (xRequested != null && xRequested.indexOf("XMLHttpRequest") != -1) {

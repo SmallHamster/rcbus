@@ -366,7 +366,10 @@
                 <base.domain>http://www.whjcbs.com</base.domain>
             </properties>
         </profile>
+
     </profiles>
+
+
 
     <build>
         <finalName>leoman_rcbus</finalName>
