@@ -7,16 +7,20 @@
         <groupId>com.leoman</groupId>
         <version>1.0-SNAPSHOT</version>
     </parent>
+
     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.leoman.api</groupId>
+    <groupId>com.leoman</groupId>
     <artifactId>api</artifactId>
+    <version>1.0</version>
     <packaging>war</packaging>
     <name>api</name>
+    <url>http://maven.apache.org</url>
+
     <dependencies>
         <dependency>
             <groupId>com.leoman</groupId>
             <artifactId>common</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
     </dependencies>
 </project>

@@ -1,6 +1,7 @@
 package com.leoman.task;
 
 import com.leoman.bus.entity.Bus;
+import com.leoman.bus.entity.CarType;
 import com.leoman.bus.service.BusService;
 import com.leoman.bus.util.GpxUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,8 +41,17 @@ public class GpxTask {
 //                            System.out.println("--------- busID = "+uuid+", current lat = "+curLat+", current lng = "+curLng+" ---------");
                             Bus bus = busService.findByUuid(uuid);
                             if(bus != null){
-                                bus.setCurLat(curLat);
-                                bus.setCurLng(curLng);
+                                if(curLat != bus.getCurLat() || curLng != bus.getCurLng()){
+                                    bus.setCurLat(curLat);
+                                    bus.setCurLng(curLng);
+                                    busService.save(bus);
+                                }
+                            }else{
+                                bus = new Bus();
+                                bus.setUuid(String.valueOf(map.get("id")));//id
+                                bus.setCarNo((String) map.get("name"));//车牌号
+                                bus.setVkey((String) map.get("vKey"));//车辆授权码
+                                bus.setCarType(new CarType(1l));//类型为通勤班车
                                 busService.save(bus);
                             }
                         }

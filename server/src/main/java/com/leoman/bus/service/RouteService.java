@@ -5,7 +5,6 @@ import com.leoman.bus.entity.Route;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.GenericManager;
 import com.leoman.user.entity.UserInfo;
-import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.Map;

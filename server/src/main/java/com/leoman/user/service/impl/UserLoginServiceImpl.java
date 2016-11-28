@@ -3,7 +3,6 @@ package com.leoman.user.service.impl;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.entity.Constant;
-import com.leoman.exception.GeneralException;
 import com.leoman.exception.GeneralExceptionHandler;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.permissions.admin.service.AdminService;
@@ -18,13 +17,11 @@ import com.leoman.user.service.WeChatUserService;
 import com.leoman.utils.CookiesUtils;
 import com.leoman.utils.Md5Util;
 import com.leoman.utils.WebUtil;
-import com.sun.org.apache.regexp.internal.RE;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.net.URLEncoder;
 import java.util.List;
 
 /**

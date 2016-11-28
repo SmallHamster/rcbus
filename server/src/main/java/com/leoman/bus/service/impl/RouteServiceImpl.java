@@ -12,26 +12,16 @@ import com.leoman.bussend.entity.BusSend;
 import com.leoman.common.core.ErrorType;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
-import com.leoman.exception.GeneralExceptionHandler;
 import com.leoman.order.dao.OrderDao;
 import com.leoman.order.entity.Order;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.ClassUtil;
 import com.leoman.utils.SeqNoUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -103,7 +93,7 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
             //删除已有的发车时间
             List<RouteTime> timeList = routeTimeDao.findByRouteId(routeId);
             for (RouteTime rt:timeList) {
-                routeTimeDao.delete(rt.getId());
+                routeTimeDao.delete(rt);
             }
 
             //如果重新上传了路线文件，则覆盖
@@ -111,14 +101,14 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
                 //删除已有的路线站点
                 List<RouteStation> stationList = routeStationDao.findByRouteId(routeId);
                 for (RouteStation rs:stationList) {
-                    routeStationDao.delete(rs.getId());
+                    routeStationDao.delete(rs);
                 }
             }
 
             //删除已有的路线班车
             List<BusSend> sendList = busSendDao.findBus(routeId,1);
             for (BusSend bs:sendList) {
-                busSendDao.delete(bs.getId());
+                busSendDao.delete(bs);
             }
 
             routeId = route.getId();

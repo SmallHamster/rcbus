@@ -4,7 +4,6 @@ import com.leoman.common.core.bean.Response;
 import com.leoman.utils.HttpRequestUtil;
 import com.leoman.utils.JsonUtil;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +14,7 @@ import java.util.Map;
  */
 public class GpxUtil {
 
-	private static String basicUrl= "http://221.234.42.20:89/gpsonline/GPSAPI";
+	private static String basicUrl= "http://120.77.65.158:89/gpsonline/GPSAPI";//120.77.65.158  221.234.42.20
 
 	private static String username = "gdtqtest";
 

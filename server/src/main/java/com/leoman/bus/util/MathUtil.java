@@ -15,15 +15,15 @@ public class MathUtil {
 	public final static double x_pi = 3.14159265358979324 * 3000.0 / 180.0;
 
 	public static void main(String[] args) {
-//		System.out.println(wgs2gcj(30.4719130, 114.3191470)[0]+" "+wgs2gcj(30.4719130, 114.3191470)[1]);;
-		System.out.println(wgs2bd(30.4714050, 114.3179910)[0]+" "+wgs2bd(30.4714050, 114.3179910)[1]);
-		System.out.println(wgs2bd(30.4716750, 114.3181550)[0]+" "+wgs2bd(30.4716750, 114.3181550)[1]);;
-		System.out.println(wgs2bd(30.4716440, 114.3189660)[0]+" "+wgs2bd(30.4716440, 114.3189660)[1]);;
-		System.out.println(wgs2bd(30.4719130, 114.3191470)[0]+" "+wgs2bd(30.4719130, 114.3191470)[1]);;
-		System.out.println(wgs2bd(30.4729180, 114.3193000)[0]+" "+wgs2bd(30.4729180, 114.3193000)[1]);;
-		System.out.println(wgs2bd(30.4738270, 114.3196870)[0]+" "+wgs2bd(30.4738270, 114.3196870)[1]);;
-//		System.out.println(gcj2bd(30.4719130, 114.3191470)[0]+" "+gcj2bd(30.4719130, 114.3191470)[1]);;
-//		System.out.println(bd2gcj(30.4719130, 114.3191470)[0]+" "+bd2gcj(30.4719130, 114.3191470)[1]);;
+//		System.out.println(wgs2gcj(30.4719130, 114.3191470)[0]+" "+wgs2gcj(30.4719130, 114.3191470)[1]);
+//		System.out.println(wgs2bd(30.4714050, 114.3179910)[0]+" "+wgs2bd(30.4714050, 114.3179910)[1]);
+//		System.out.println(wgs2bd(30.4716750, 114.3181550)[0]+" "+wgs2bd(30.4716750, 114.3181550)[1]);
+//		System.out.println(wgs2bd(30.4716440, 114.3189660)[0]+" "+wgs2bd(30.4716440, 114.3189660)[1]);
+//		System.out.println(wgs2bd(30.4719130, 114.3191470)[0]+" "+wgs2bd(30.4719130, 114.3191470)[1]);
+//		System.out.println(wgs2bd(30.4729180, 114.3193000)[0]+" "+wgs2bd(30.4729180, 114.3193000)[1]);
+//		System.out.println(wgs2bd(30.4738270, 114.3196870)[0]+" "+wgs2bd(30.4738270, 114.3196870)[1]);
+//		System.out.println(gcj2bd(30.4719130, 114.3191470)[0]+" "+gcj2bd(30.4719130, 114.3191470)[1]);
+//		System.out.println(bd2gcj(30.4719130, 114.3191470)[0]+" "+bd2gcj(30.4719130, 114.3191470)[1]);
     }
 	
 	public static double[] wgs2bd(double lat, double lon) {
