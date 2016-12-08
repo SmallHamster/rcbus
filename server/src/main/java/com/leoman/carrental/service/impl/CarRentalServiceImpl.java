@@ -226,14 +226,18 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
 
             //删除派遣车辆
             List<BusSend> busSendList = busSendService.queryByProperty("contactId",id);
-            for (BusSend busSend : busSendList){
-                busSendService.delete(busSend);
+            if(!busSendList.isEmpty()){
+                for (BusSend busSend : busSendList){
+                    busSendService.delete(busSend);
+                }
             }
 
             //删除租车订单报价
             List<CarRentalOffer> carRentalOfferList = carRentalOfferService.queryByProperty("rentalId",id);
-            for (CarRentalOffer carRentalOffer : carRentalOfferList){
-                carRentalOfferService.delete(carRentalOffer);
+            if(!carRentalOfferList.isEmpty()){
+                for (CarRentalOffer carRentalOffer : carRentalOfferList){
+                    carRentalOfferService.delete(carRentalOffer);
+                }
             }
 
         } catch (Exception e) {
