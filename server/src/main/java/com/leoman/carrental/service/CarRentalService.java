@@ -19,7 +19,7 @@ public interface CarRentalService extends GenericManager<CarRental> {
 
     public void save(Long id, Long cityId, Integer rwType, String startPoint, String endPoint, String startDate, String endDate, Long carTypeId, Integer totalNumber, Integer busNum, Integer isInvoice, String invoice, String dispatch, String offter_name, String offter_amount) throws ParseException;
 
-    public Integer saveDispatch(Long id,String dispatch);
+    public Integer saveDispatch(Long id,String dispatch,String offter_name, String offter_amount);
 
     public Integer del(Long id);
 

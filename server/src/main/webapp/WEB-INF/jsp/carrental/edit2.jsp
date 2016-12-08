@@ -143,31 +143,42 @@
                                     报价信息
                                 </header>
                                 <div style="margin-top: 15px"></div>
-                                <c:forEach var="v" items="${carRentalOffer}">
-                                    <div class="form-group">
-                                        <label for="mobile" class="col-sm-2 control-label">${v.name}</label>
-                                        <div class="col-sm-6">
-                                            <input type="text" id="offter" name="offter" value="${v.amount}" class="form-control" disabled/>
+
+                                <div id="offterDiv" >
+                                    <c:forEach var="v" items="${carRentalOffer}">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">收费名称</label>
+                                            <div class="col-sm-3">
+                                                <input type="text" name="offter_name" value="${v.name}" class="form-control" />
+                                            </div>
                                         </div>
-                                    </div>
-                                </c:forEach>
-                                <c:if test="${carRentalOffer ne null}">
-                                    <div class="form-group">
-                                        <label for="mobile" class="col-sm-2 control-label">总金额</label>
-                                        <div class="col-sm-6">
+                                        <div class="form-group">
+                                            <label class="col-sm-2 control-label">金额</label>
+                                            <div class="col-sm-3">
+                                                <input type="text" name="offter_amount" value="${v.amount}" class="form-control" onblur="count()"/>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+
+                                <div>
+                                    <div class="form-group"  style='margin-top: 30px'>
+                                        <label class="col-sm-2 control-label">总金额</label>
+                                        <div class="col-sm-3">
                                             <input type="text" id="totalAmount" name="totalAmount" value="${totalAmount}" class="form-control" disabled/>
                                         </div>
+                                        <button type="button" onclick="$admin.fn.addOffter()" class="btn btn-primary"><i class='fa fa-plus-circle'></i></button>
                                     </div>
-                                </c:if>
+                                </div>
+
                                 <c:if test="${carRental.order.status eq 4}">
                                     <div class="form-group">
                                         <label for="mobile" class="col-sm-2 control-label">取消原因</label>
-                                        <div class="col-sm-6">
+                                        <div class="col-sm-3">
                                             <input type="text" id="unsubscribe" name="unsubscribe" value="${carRental.unsubscribe}" class="form-control" disabled/>
                                         </div>
                                     </div>
                                 </c:if>
-
 
                                 <header class="panel-heading">
                                     车辆信息
@@ -214,6 +225,8 @@
         v: {
             list: [],
             dispatch: [],
+            offter_name: [],
+            offter_amount: [],
             chart: null,
             dTable: null
         },
@@ -227,6 +240,7 @@
                 $("#c_search").on("click",function () {
                     $admin.v.dTable.ajax.reload(null,false);
                 });
+
                 //清空
                 $("#c_clear").click(function () {
                     $(this).parents(".modal-body").find("input,select").val("");
@@ -278,6 +292,32 @@
                     }
                 });
             },
+
+
+            addOffter: function(){
+                var html = "";
+                html += " <div style='margin-bottom: 30px'>																											 ";
+                html += " <div class='form-group'>																											 ";
+                html += " 	<label class='col-sm-2 control-label'>收费名称</label>                                                              ";
+                html += " 	<div class='col-sm-3'>                                                                                                           ";
+                html += " 		<input type='text' id='offter_name' name='offter_name' value='' class='form-control' />                                      ";
+                html += " 	</div>                                                                                                                           ";
+                html += " 	<button type='button' onclick='$admin.fn.delOffter(this)' class='btn btn-primary'><i class='fa fa-minus-circle'></i></button>     ";
+                html += " </div>                                                                                                                              ";
+                html += " <div class='form-group'>                                                                                                            ";
+                html += " 	<label class='col-sm-2 control-label'>金额</label>                                                                  ";
+                html += " 	<div class='col-sm-3'>                                                                                                           ";
+                html += " 		<input type='text' id='offter_amount' name='offter_amount' value='' class='form-control' onblur=\"count()\"/>                                  ";
+                html += " 	</div>                                                                                                                           ";
+                html += " </div>                                                                                                                              ";
+                html += " </div>                                                                                                                              ";
+                $("#offterDiv").append(html);
+            },
+
+            delOffter: function(data) {
+                $(data).parent().parent().remove()
+            },
+
             dispatch: function (driverName,carNo,seatNum,id) {
 
                 driverName = driverName =='null' ? '暂无' : driverName;
@@ -323,16 +363,32 @@
             openDispatch: function () {
                 $("#myModal").modal("show");
             },
+
+
             save : function() {
-                console.log(111)
                 if(!$("#formId").valid()) return;
                 //参数
                 var id = $("#id").val();
+
+                $admin.v.offter_name = [];
+                $("#offterDiv input[name=offter_name]").each(function(){
+                    console.log($(this).val())
+                    $admin.v.offter_name.push($(this).val());
+                });
+
+                $admin.v.offter_amount = [];
+                $("#offterDiv input[name=offter_amount]").each(function(){
+                    console.log($(this).val())
+                    $admin.v.offter_amount.push($(this).val());
+                });
+
                 $.ajax({
                     url : "${contextPath}/admin/carRental/saveDispatch",
                     data: {
                         "id" : id ,
-                        "dispatch": JSON.stringify($admin.v.dispatch)
+                        "dispatch": JSON.stringify($admin.v.dispatch),
+                        "offter_name": JSON.stringify($admin.v.offter_name),
+                        "offter_amount": JSON.stringify($admin.v.offter_amount)
                     },
                     type : "POST",
                     success : function(result) {
@@ -350,6 +406,17 @@
     $(function () {
         $admin.fn.init();
     })
+
+    function count(){
+        var num = 0;
+        $("#offterDiv input[name=offter_amount]").each(function(){
+            console.log($(this).val())
+            num += parseFloat($(this).val());
+
+        });
+        $("#totalAmount").val(num.toFixed(2));
+    }
+
 </script>
 </body>
 </html>

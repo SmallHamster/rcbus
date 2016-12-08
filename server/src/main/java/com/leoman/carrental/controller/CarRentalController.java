@@ -233,9 +233,9 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
      */
     @RequestMapping(value = "/saveDispatch")
     @ResponseBody
-    public Integer saveDispatch(Long id,String dispatch){
+    public Integer saveDispatch(Long id,String dispatch,String offter_name, String offter_amount){
 
-        return carRentalService.saveDispatch(id,dispatch);
+        return carRentalService.saveDispatch(id,dispatch,offter_name,offter_amount);
 
     }
 
