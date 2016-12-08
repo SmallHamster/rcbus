@@ -62,7 +62,8 @@ public class WeChatRefundController {
         //订单号
         String orderNo = carRental.getOrder().getOrderNo();
 //       String path = "E:\\projects\\rcbus\\server\\src\\main\\webapp\\cert\\apiclient_cert.p12";
-        String path = "//usr//local//tomcat//webapps//leoman_rcbus//cert//apiclient_cert.p12";
+        String path = request.getSession().getServletContext().getRealPath("/");
+        path = path + File.separator + "cert" + File.separator +"apiclient_cert.p12";
         String refundId = CommonUtils.generateUUID();
         String nonce_str = System.currentTimeMillis() + "";
          /*-----  1.生成预支付订单需要的的package数据-----*/

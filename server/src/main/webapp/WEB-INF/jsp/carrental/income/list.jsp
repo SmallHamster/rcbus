@@ -204,28 +204,47 @@
                         }
 
                     ],
+
                     "footerCallback": function( tfoot, data, start, end, display ) {
                         var api = this.api();
+
+                        var list = [0];
+                        var apiData = api.column( 5 ).data();
+                        for(var i=0;i< apiData.length;i++){
+                            list.push(apiData[i]);
+                        }
+
                         $( api.column( 5 ).footer() ).html(
-                                api.column( 5 ).data().reduce( function ( a, b ) {
+                                list.reduce( function ( a, b ) {
                                     var sum = a + b;
-                                    console.log("sum1:"+sum);
                                     sum = Math.round(sum*100)/100;
                                     return sum;
                                 } )
                         );
+
+                        list = [0];
+                        apiData = api.column( 6 ).data();
+                        for(i=0;i< apiData.length;i++){
+                            list.push(apiData[i]);
+                        }
+
                         $( api.column( 6 ).footer() ).html(
-                                api.column( 6 ).data().reduce( function ( a, b ) {
+                                list.reduce( function ( a, b ) {
                                     var sum = a + b;
-                                    console.log("sum2:"+sum);
                                     sum = Math.round(sum*100)/100;
                                     return sum;
                                 } )
                         );
+
+                        list = [0];
+                        apiData = api.column( 7 ).data();
+                        for(i=0;i< apiData.length;i++){
+                            list.push(apiData[i]);
+                        }
+
                         $( api.column( 7 ).footer() ).html(
-                                api.column( 7 ).data().reduce( function ( a, b ) {
+                                list.reduce( function ( a, b ) {
                                     var sum = a + b;
-                                    console.log("sum3:"+sum);
                                     sum = Math.round(sum*100)/100;
                                     return sum;
                                 } )

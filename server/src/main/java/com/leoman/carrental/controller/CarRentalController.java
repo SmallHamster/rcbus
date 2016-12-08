@@ -110,7 +110,7 @@ public class CarRentalController extends GenericEntityController<CarRental,CarRe
                 query.eq("id",0);
             }
         }
-
+        query.setOrder("id","desc");
         Page<CarRental> page = carRentalService.queryPage(query);
         List<CarRental> carRentals = page.getContent();
 
