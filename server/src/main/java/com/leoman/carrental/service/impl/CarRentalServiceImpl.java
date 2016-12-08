@@ -202,11 +202,11 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
 
     @Override
     @Transactional
-    public Integer saveDispatch(Long id, String dispatch) {
+    public Integer saveDispatch(Long id, String dispatch,String offter_name, String offter_amount) {
         try{
             if(id!=null){
                 CarRental carRental =  queryByPK(id);
-                this.DOsave(id,dispatch,null,null,carRental);
+                this.DOsave(id,dispatch,offter_name,offter_amount,carRental);
             }
         }catch (Exception e){
             e.printStackTrace();
