@@ -12,24 +12,26 @@ import com.leoman.carrental.entity.CarRentalOffer;
 import com.leoman.carrental.service.CarRentalOfferService;
 import com.leoman.carrental.service.CarRentalService;
 import com.leoman.city.service.CityService;
-import com.leoman.common.controller.common.CommonController;
-import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.order.entity.Order;
 import com.leoman.order.service.OrderService;
 import com.leoman.user.entity.UserInfo;
-import com.leoman.utils.DateUtils;
-import com.leoman.utils.JsonUtil;
-import com.leoman.utils.ReadExcelUtil;
-import com.leoman.utils.SeqNoUtils;
+import com.leoman.utils.*;
+import me.chanjar.weixin.mp.api.WxMpConfigStorage;
+import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.MultipartRequest;
 
-import javax.persistence.Transient;
+import javax.servlet.ServletRequest;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.*;
@@ -57,6 +59,8 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
     private OrderService orderService;
     @Autowired
     private RouteOrderService routeOrderService;
+    @Autowired
+    private WxMpConfigStorage wxMpConfigStorage;
 
 
     @Override
@@ -128,7 +132,7 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
         String[] amounts = JsonUtil.json2Obj(offter_amount, String[].class);
         Long[] busIds = JsonUtil.json2Obj(dispatch, Long[].class);
 
-        if(names!=null && StringUtils.isNotBlank(names[0])){
+        if(names.length!=0 && StringUtils.isNotBlank(names[0])){
 
             List<CarRentalOffer> carRentalOfferList = carRentalOfferService.queryByProperty("rentalId",id);
             for(CarRentalOffer c : carRentalOfferList){
@@ -143,7 +147,7 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
                 carRentalOfferService.save(carRentalOffer);
             }
 
-            //一旦保存了金额,状态就变为代付款
+            //一旦保存了金额,状态就变为待付款
             Order order = orderService.queryByPK(carRental.getOrder().getId());
             order.setStatus(1);
             orderService.save(order);
@@ -202,11 +206,13 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
 
     @Override
     @Transactional
-    public Integer saveDispatch(Long id, String dispatch,String offter_name, String offter_amount) {
+    public Integer saveDispatch(Long id, String dispatch, String offter_name, String offter_amount) {
         try{
             if(id!=null){
                 CarRental carRental =  queryByPK(id);
                 this.DOsave(id,dispatch,offter_name,offter_amount,carRental);
+                String openId = carRental.getOrder().getUserInfo().getWeChatUser().getOpenId();
+                sendTextMessageToUser("您的订单状态已经改变,请注意查看",openId);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -371,7 +377,7 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
     }
 
 
-    //(废,改为逻辑删除)
+    //物理删除
     @Transactional
     public void del1(String ro_ids,String cr_ids) {
         if(StringUtils.isBlank(ro_ids) && StringUtils.isBlank(cr_ids)){
@@ -421,5 +427,67 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
             }
         }
 
+    }
+
+
+    public void sendTextMessageToUser(String content,String toUser){
+
+        String json = "{\"touser\": \""+toUser+"\",\"msgtype\": \"text\", \"text\": {\"content\": \""+content+"\"}}";
+
+        //获取access_token
+
+        String accesstoken = wxMpConfigStorage.getAccessToken();
+
+        //获取请求路径
+
+        String action = "https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token="+accesstoken;
+
+        System.out.println("json:"+json);
+
+        try {
+
+            connectWeiXinInterface(action,json);
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+
+        }
+    }
+
+    public static JSONObject connectWeiXinInterface(String reqPath, String json) {
+        URL url;
+        String result = "";
+        JSONObject jsonObject = null;
+        try {
+            url = new URL(reqPath);
+            HttpURLConnection http = (HttpURLConnection) url.openConnection();
+            http.setRequestMethod("POST");
+            http.setRequestProperty("Content-Type",
+                    "application/x-www-form-urlencoded");
+            http.setDoInput(true);
+            http.setDoOutput(true);
+            System.setProperty("sun.net.client.defaultConnectTimeout", "30000");// 连接超时30秒
+            System.setProperty("sun.net.client.defaultReadTimeout", "30000"); // 读取超时30秒
+
+            http.connect();
+            OutputStream os = http.getOutputStream();
+            os.write(json.getBytes("UTF-8"));// 传入参数
+            InputStream is = http.getInputStream();
+            int size = is.available();
+            byte[] b = new byte[size];
+            is.read(b);
+            result = new String(b, "UTF-8");
+//            log.info("请求返回结果:" + result);
+            System.out.print("请求返回结果:" + result);
+            jsonObject = JSONObject.fromObject(result);
+            os.flush();
+            os.close();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return jsonObject;
     }
 }
