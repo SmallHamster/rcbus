@@ -6,7 +6,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-    <title>错误提示-江城巴士</title>
+    <title>温馨提示-江城巴士</title>
     <meta name="description" content="">
     <meta name="author" content="">
     <link rel="icon" href="favicon.ico">
@@ -17,13 +17,13 @@
 <body>
 
 <header>
-    <div class="title">错误提示</div>
+    <div class="title">温馨提示</div>
 </header>
 
 
 <section class="wrap article-box">
     <div class="article">
-        <p style="text-align:center">您的权限无法访问</p>
+        <p style="text-align:center">很抱歉,您的权限无法访问</p>
     </div>
 </section>
 
