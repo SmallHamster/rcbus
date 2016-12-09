@@ -13,6 +13,8 @@ import com.leoman.order.entity.Order;
 import com.leoman.order.service.OrderService;
 import com.leoman.pay.util.MD5Util;
 import com.leoman.permissions.admin.service.AdminService;
+import com.leoman.report.entity.Report;
+import com.leoman.report.service.ReportService;
 import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
 import com.leoman.user.dao.UserInfoDao;
@@ -65,6 +67,8 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
     private CouponOrderService couponOrderService;
     @Autowired
     private CarRentalService carRentalService;
+    @Autowired
+    private ReportService reportService;
 
     @Autowired
     private RouteOrderService routeOrderService;
@@ -149,6 +153,13 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
                 }else {
                     userLoginService.delete(userLoginService.queryByPK(userInfo.getUserId()));
                 }
+                List<Report> reports = reportService.queryByProperty("userInfo.id",userInfo.getId());
+                if(!reports.isEmpty()){
+                    for(Report report : reports){
+                        //删除举报信息
+                        reportService.delete(report);
+                    }
+                }
             }else {
                 Long[] ss = JsonUtil.json2Obj(ids,Long[].class);
                 for (Long _id : ss) {
@@ -160,6 +171,13 @@ public class UserServiceImpl extends GenericManagerImpl<UserInfo, UserInfoDao> i
                         adminService.delete(adminService.queryByPK(userInfo.getUserId()));
                     }else {
                         userLoginService.delete(userLoginService.queryByPK(userInfo.getUserId()));
+                    }
+                    List<Report> reports = reportService.queryByProperty("userInfo.id",userInfo.getId());
+                    if(!reports.isEmpty()){
+                        for(Report report : reports){
+                            //删除举报信息
+                            reportService.delete(report);
+                        }
                     }
                 }
             }
