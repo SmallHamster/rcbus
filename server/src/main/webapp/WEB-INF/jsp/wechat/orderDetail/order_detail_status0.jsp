@@ -126,7 +126,7 @@
                     $.ajax({
                         url : "${contextPath}/wechat/order/cancel/save",
                         data : {
-                            "id" : id
+                            "rentalId" : id
                         },
                         type : "post",
                         success : function (result){

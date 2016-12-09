@@ -214,6 +214,7 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
 
                 userCoupon.setUserId(id);
                 userCoupon.setCoupon(couponOrder);
+                userCoupon.setIsUse(1);
                 userCouponService.save(userCoupon);
             }else {
                 Long[] ss = JsonUtil.json2Obj(ids,Long[].class);
@@ -237,6 +238,7 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
 
                     userCoupon.setUserId(_id);
                     userCoupon.setCoupon(couponOrder);
+                    userCoupon.setIsUse(1);
                     userCouponService.save(userCoupon);
                 }
             }
