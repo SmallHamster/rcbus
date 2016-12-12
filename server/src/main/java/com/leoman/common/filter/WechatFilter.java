@@ -3,19 +3,15 @@ package com.leoman.common.filter;
 import com.leoman.common.logger.Logger;
 import com.leoman.entity.Configue;
 import com.leoman.entity.Constant;
-import com.leoman.user.service.UserService;
-import com.leoman.utils.BeanUtils;
-import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.user.entity.WeChatUser;
+import com.leoman.utils.BeanUtils;
 import com.leoman.utils.HttpUtil;
 import com.leoman.utils.WebUtil;
-import com.sun.tools.internal.xjc.reader.xmlschema.bindinfo.BIConversion;
 import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.mp.api.WxMpService;
 import org.apache.commons.collections.map.HashedMap;
 import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
@@ -113,11 +109,9 @@ public class WechatFilter implements Filter {
             }
         }
 
-        if (null != weChatUser) {
-            System.out.println("weChatUser:" + weChatUser.getOpenId());
-        }
-
         if (null == weChatUser) {
+            System.out.println("weChatUser:" + weChatUser.getOpenId());
+
             WxMpService wxMpService = (WxMpService) BeanUtils.getBean("wxMpService");
 
             String fullUrl = HttpUtil.getFullUrl(httpRequest, Configue.getBaseDomain());

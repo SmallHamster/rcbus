@@ -19,4 +19,7 @@ public interface BusDao extends IBaseJpaRepository<Bus> {
 
     @Query("select a from Bus a where a.carNo = ?1")
     public Bus findByCarNo(String carNo);
+
+    @Query("select a from Bus a where a.carNo = ?1 and a.id != ?2")
+    public Bus findByCarNoAndId(String carNo, Long id);
 }

@@ -190,7 +190,8 @@
                         template.find("em").eq(0).text(list[i].startStation);
                         template.find("em").eq(1).text(list[i].endStation);
                         template.find("b").text(i+1);
-                        template.find(".fromto").attr('onclick','toDetail('+list[i].id+')');
+                        template.find(".fromto").attr('onclick','toDetail('+list[i].id+')');//路线名称跳转至详情页
+                        template.find(".detail").attr('onclick','toDetail('+list[i].id+')');//路线详情区跳转至详情页
                         template.find(".fav").attr("val",list[i].id);
                         if(list[i].isCollect == 0){
                             template.find(".fav").addClass("faved");//给已收藏的路线添加已收藏的样式

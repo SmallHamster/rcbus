@@ -24,9 +24,20 @@
     <div class="ui-list3">
         <ul>
             <c:forEach items="${routeOrderList}" var="ro" >
+                <c:if test="${ro.route.enterprise.type == 0}">
                 <li class="c1">
+                </c:if>
+                <c:if test="${ro.route.enterprise.type == 1}">
+                    <li class="c2">
+                </c:if>
                     <a onclick="carRoute(${ro.id})">
-                        <div class="cat">通勤班车</div>
+                        <c:if test="${ro.route.enterprise.type == 0}">
+                            <div class="cat">通勤班车</div>
+                        </c:if>
+                        <c:if test="${ro.route.enterprise.type == 1}">
+                            <div class="cat">永旺专线</div>
+                        </c:if>
+
                         <div class="state state6">已结束</div>
                         <div class="inner">
                             <div class="date"><date:date format='yyyy年MM月dd日' value='${ro.order.createDate}'></date:date></div>
