@@ -3,27 +3,13 @@ package com.leoman.bus.service.impl;
 import com.leoman.bus.dao.BusDao;
 import com.leoman.bus.entity.Bus;
 import com.leoman.bus.service.BusService;
-import com.leoman.bussend.entity.BusSend;
 import com.leoman.common.core.ErrorType;
 import com.leoman.common.core.Result;
-import com.leoman.common.service.GenericManager;
 import com.leoman.common.service.impl.GenericManagerImpl;
-import org.apache.commons.lang.StringUtils;
+import com.leoman.utils.ClassUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Query;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -65,12 +51,23 @@ public class BusServiceImpl extends GenericManagerImpl<Bus, BusDao> implements B
 
     @Override
     public Result saveBus(Bus bus) {
-        if(bus.getId() == null){
+        Long busId = bus.getId();
+        if(busId == null){
             Bus b = busDao.findByCarNo(bus.getCarNo());
             if(b != null){
                 return new Result().failure(ErrorType.ERROR_CODE_00032);//车牌已存在
             }
+        }else{
+            Bus b = busDao.findByCarNoAndId(bus.getCarNo(), busId);
+            if(b != null){
+                return new Result().failure(ErrorType.ERROR_CODE_00032);//车牌已存在
+            }
+            Bus org = busDao.findOne(busId);
+            ClassUtil.copyProperties(org, bus);
+            bus = org;
         }
+
+        busDao.save(bus);
         return new Result().success();
     }
 }

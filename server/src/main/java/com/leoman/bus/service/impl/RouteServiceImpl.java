@@ -255,4 +255,36 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         return Result.success(routeOrder);
     }
 
+    /**
+     * 获取路线列表，若收藏，则放在前面
+     * @param startStation
+     * @param endStation
+     * @param type
+     * @param userId
+     * @return
+     */
+    @Override
+    public List<Route> findList(String startStation, String endStation, Integer type, Long userId){
+        StringBuffer sql = new StringBuffer("SELECT \n" +
+                "  r.* \n" +
+                "FROM\n" +
+                "  t_route r \n" +
+                "  LEFT JOIN t_enterprise e \n" +
+                "    ON e.`id` = r.`enterprise_id` \n" +
+                "    AND e.`type` = "+type+"\n" +
+                "  LEFT JOIN t_route_collection rc \n" +
+                "    ON rc.`route_id` = r.`id` \n" +
+                "    AND rc.`user_id` = "+userId+" \n" +
+                "WHERE 1 = 1 ");
+        if(!StringUtils.isEmpty(startStation)){
+            sql.append("  AND r.`start_station` LIKE '%"+startStation+"%'  ");
+        }
+        if(!StringUtils.isEmpty(endStation)){
+            sql.append("  AND r.`end_station` LIKE '%"+endStation+"%'  ");
+        }
+        sql.append(" ORDER BY IF(rc.`id` IS NULL, 0, 1) DESC ");
+        List<Route> list = queryBySql(sql.toString(), Route.class);
+        return list;
+    }
+
 }

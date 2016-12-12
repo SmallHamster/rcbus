@@ -4,9 +4,11 @@ import com.leoman.bus.entity.Bus;
 import com.leoman.bus.entity.Route;
 import com.leoman.bus.entity.RouteStation;
 import com.leoman.bus.entity.RouteTime;
-import com.leoman.bus.service.*;
+import com.leoman.bus.service.BusService;
+import com.leoman.bus.service.RouteService;
+import com.leoman.bus.service.RouteStationService;
+import com.leoman.bus.service.RouteTimeService;
 import com.leoman.common.core.Result;
-import com.leoman.common.service.Query;
 import com.leoman.entity.Configue;
 import com.leoman.system.banner.entity.Banner;
 import com.leoman.system.banner.service.BannerService;
@@ -23,7 +25,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,22 +85,17 @@ public class RouteWeChatController extends RouteBaseController {
                        Double userLat,
                        Double userLng) {
         try {
-            Query query = Query.forClass(Route.class, routeService);
-            query.like("startStation",route.getStartStation());
-            query.like("endStation",route.getEndStation());
-            query.eq("enterprise.type",type);
-
-            List<Route> list = routeService.queryAll(query);
+//            Query query = Query.forClass(Route.class, routeService);
+//            query.like("startStation",route.getStartStation());
+//            query.like("endStation",route.getEndStation());
+//            query.eq("enterprise.type",type);
 
             UserInfo user = getSessionUser(request);
-            Date d1 =  new Date();
-            System.out.println("-------- 开始处理："+d1);
+            List<Route> list = routeService.findList(route.getStartStation(), route.getEndStation(), type, user.getId());
+
+
             //处理路线的最近车辆信息，收藏状态
             handleRoute(list, userLat, userLng, user.getId());
-            Date d2 =  new Date();
-            System.out.println("-------- 结束处理："+new Date());
-            System.out.println("-------- 处理时间："+(d2.getTime() - d1.getTime()));
-
             WebUtil.printJson(response,new Result().success(createMap("list",list)));
         } catch (Exception e) {
             e.printStackTrace();
