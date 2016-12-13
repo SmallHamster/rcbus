@@ -81,7 +81,11 @@ public class AdminServiceImpl extends GenericManagerImpl<Admin, AdminDao> implem
     public Result save(Admin admin, Long enterpriseId, Long roleId) {
         admin.setLastLoginDate(System.currentTimeMillis());
         AdminRole adminRole = new AdminRole();
-        UserInfo userInfo = new UserInfo();
+
+        List<Admin> _admin = this.queryByProperty("mobile",admin.getMobile());
+        if(!_admin.isEmpty()){
+            return Result.failure("手机号已存在");
+        }
         try {
             admin.setPassword(MD5Util.MD5Encode(admin.getPassword(),"UTF-8"));
 
@@ -89,7 +93,6 @@ public class AdminServiceImpl extends GenericManagerImpl<Admin, AdminDao> implem
                 Enterprise enterprise = enterpriseService.queryByPK(enterpriseId);
                 admin.setEnterprise(enterprise);
             }
-
             save(admin);
 
             //关联角色
@@ -102,19 +105,6 @@ public class AdminServiceImpl extends GenericManagerImpl<Admin, AdminDao> implem
                 }
             }
             adminRoleService.save(adminRole);
-
-            //新增一条用户信息
-            List<UserInfo> userInfos = userService.queryByProperty("userId",admin.getId());
-            if(!userInfos.isEmpty() && userInfos.size()>0){
-                userInfo = userInfos.get(0);
-            }else {
-                userInfo.setType(0);
-                userInfo.setUserId(admin.getId());
-            }
-            userInfo.setMobile(admin.getMobile());
-            userInfo.setEnterprise(admin.getEnterprise());
-            userService.save(userInfo);
-
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();

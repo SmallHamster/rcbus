@@ -33,7 +33,6 @@
                                 <div class="form-group col-sm-2">
                                     <select id="type" name="type" class="form-control input-sm">
                                         <option value="">权限</option>
-                                        <option value="0">企业管理</option>
                                         <option value="1">员工</option>
                                         <option value="2">普通会员</option>
                                     </select>

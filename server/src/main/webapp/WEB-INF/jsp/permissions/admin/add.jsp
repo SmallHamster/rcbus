@@ -58,7 +58,7 @@
                                 <div class="form-group">
                                     <label for="mobile" class="col-sm-1 control-label">手机</label>
                                     <div class="col-sm-6">
-                                        <input type="text" id="mobile" name="mobile" value="${admin.mobile}" class="form-control" required mobile="true"/>
+                                        <input type="text" id="mobile" name="mobile" value="${admin.mobile}" class="form-control" mobile="true"/>
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -126,11 +126,11 @@
             init: function () {
                 var userType = $("#userType").val();
                 console.log("userType :"+userType);
-                var role = $("#role").val();
-                var enterprise = $("#enterprise").val();
+/*                var role = $("#role").val();
+                var enterprise = $("#enterprise").val();*/
 
-        /*        var role,
-                        enterprise;
+                var role,
+                    enterprise;
 
                 if(userType != ''){
                     if(userType == 0){
@@ -141,7 +141,7 @@
                         enterprise = $("#enterprise").val();
                     }
 
-                }*/
+                }
                 console.log("role :"+role);
                 console.log("enterprise :"+enterprise);
                 if(role!=null && role!=""){
@@ -217,7 +217,7 @@
                             window.location.href = "${contextPath}/admin/admin/index";
                         }
                         else {
-                            alert("操作失败");
+                            alert(result.msg);
                         }
                     }
                 });

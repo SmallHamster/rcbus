@@ -26,7 +26,7 @@
                         <div class="panel-body">
                             <div class="form-group col-sm-2">
                                 <input type="text" id="username" name="username" class="form-control"
-                                       id="exampleInputEmail2" placeholder="姓名">
+                                       id="exampleInputEmail2" placeholder="管理员账号">
                                 <c:if test="${userInfo.type eq 0}">
                                     <input type="hidden" id="enterpriseId" name="enterpriseId" value="${userInfo.enterprise.id}">
                                 </c:if>
@@ -217,7 +217,7 @@
             },
             reset: function (id) {
                 $("#confirm").modal("show");
-                $('#showText').html('您确定要重置该管理员的密码吗？');
+                $('#showText').html('您确定要重置该管理员的密码为 [888888] 吗？');
                 $("#determine").off("click");
                 $("#determine").on("click",function(){
                     $.ajax({
