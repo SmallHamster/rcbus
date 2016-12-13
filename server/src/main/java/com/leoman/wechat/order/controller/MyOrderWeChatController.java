@@ -174,6 +174,10 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
             // 生成签名
             String signature = getSignature(request, noncestr, timestamp, "http://www.whjcbs.com/leoman_rcbus/wechat/order/myOrder/detail?id=" + id + "&status=" + status);
             System.out.println("signature:==================" + signature);
+            model.addAttribute("timestamp", timestamp);
+            model.addAttribute("noncestr", noncestr);
+            model.addAttribute("signature", signature);
+
             if(!busSendService.findBus(id,2).isEmpty() && busSendService.findBus(id,2).size()>0){
                 model.addAttribute("modelNo",busSendService.findBus(id,2).get(0).getBus().getModelNo());
             }
