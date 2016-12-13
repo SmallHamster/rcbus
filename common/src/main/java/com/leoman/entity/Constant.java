@@ -18,7 +18,7 @@ public interface Constant {
 
     String MEMBER_TYPE_GLOBLE = "GLOBLE";
 
-    String jsApi_ticket = "";
+    String jsApi_ticket = "JSAPI_TICKET";
     String WEIXIN_STATE = "weixin_state";
 
     // 当前登录人id
