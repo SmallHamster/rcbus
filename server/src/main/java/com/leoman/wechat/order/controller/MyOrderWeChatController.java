@@ -141,8 +141,11 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
             List<UserCoupon> userCoupons1 = new ArrayList<>();
             if(!userCoupons.isEmpty() && userCoupons.size()>0){
                 for(UserCoupon userCoupon : userCoupons){
+                    if(userCoupon.getCoupon().getValidDateFrom() == null || userCoupon.getCoupon().getValidDateTo() == null){
+                        userCoupons1.add(userCoupon);
+                    }
                     //有效期
-                    if(userCoupon.getCoupon().getValidDateFrom()<System.currentTimeMillis() && userCoupon.getCoupon().getValidDateTo()>System.currentTimeMillis()){
+                    else if(userCoupon.getCoupon().getValidDateFrom()<System.currentTimeMillis() && userCoupon.getCoupon().getValidDateTo()>System.currentTimeMillis()){
                         userCoupons1.add(userCoupon);
                     }
                 }
