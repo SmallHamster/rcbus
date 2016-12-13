@@ -32,12 +32,12 @@ public class WechatFilter implements Filter {
 
     private static String[] USER_2_FORBID_URLS = new String[]{"/wechat/route/index/0"};//普通会员不能访问的路径
 
-    private static String[] USER_0_FORBID_URLS = new String[]{"/wechat/enterprise/apply"};//企业不能访问的路径
+//    private static String[] USER_0_FORBID_URLS = new String[]{"/wechat/enterprise/apply"};//企业不能访问的路径
 
     private static Map<Integer,String[]> FORBID_URL_Map = new HashedMap();
 
     public WechatFilter() {
-        FORBID_URL_Map.put(0,USER_0_FORBID_URLS);
+//        FORBID_URL_Map.put(0,USER_0_FORBID_URLS);
         FORBID_URL_Map.put(2,USER_2_FORBID_URLS);
     }
 
@@ -88,7 +88,7 @@ public class WechatFilter implements Filter {
 
         if (null != user) {
             //如果该用户为普通会员，则只能访问部分菜单
-            if(user.getType().equals(2) || user.getType().equals(0)){
+            if(user.getType().equals(2)){
                 String [] FORBID_URLS = FORBID_URL_Map.get(user.getType());
                 for (String forbinUrl : FORBID_URLS) {
                     Pattern pattern = Pattern.compile(forbinUrl, Pattern.DOTALL);

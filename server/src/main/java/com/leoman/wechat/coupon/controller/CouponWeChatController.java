@@ -48,7 +48,9 @@ public class CouponWeChatController extends GenericEntityController<Coupon,Coupo
         if(!userCoupons.isEmpty() && userCoupons.size()>0){
             for(UserCoupon userCoupon : userCoupons){
                 //有效期
-                if(userCoupon.getCoupon().getValidDateFrom()<System.currentTimeMillis() && userCoupon.getCoupon().getValidDateTo()>System.currentTimeMillis()){
+                if(userCoupon.getCoupon().getValidDateFrom() == null || userCoupon.getCoupon().getValidDateTo() == null ||
+                        (userCoupon.getCoupon().getValidDateFrom() != null && userCoupon.getCoupon().getValidDateFrom()<System.currentTimeMillis() ) ||
+                        (userCoupon.getCoupon().getValidDateTo() != null && userCoupon.getCoupon().getValidDateTo()>System.currentTimeMillis()) ){
                     //折扣
                     if(userCoupon.getCoupon().getCouponWay()==1){
                         couponWay1.add(userCoupon);
