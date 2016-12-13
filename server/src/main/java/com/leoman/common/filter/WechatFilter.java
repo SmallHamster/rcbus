@@ -109,9 +109,9 @@ public class WechatFilter implements Filter {
             }
         }
 
-        if (null == weChatUser) {
+        if (null != weChatUser) {
             System.out.println("weChatUser:" + weChatUser.getOpenId());
-
+        }else{
             WxMpService wxMpService = (WxMpService) BeanUtils.getBean("wxMpService");
 
             String fullUrl = HttpUtil.getFullUrl(httpRequest, Configue.getBaseDomain());
@@ -125,8 +125,6 @@ public class WechatFilter implements Filter {
             chain.doFilter(request, response);
             return;
         }
-
-
 
         String xRequested = httpRequest.getHeader("X-Requested-With");
         if (xRequested != null && xRequested.indexOf("XMLHttpRequest") != -1) {
