@@ -167,12 +167,12 @@
         var time1;
 
 
-        //求月份最大天数
-        function getDaysInMonth(year, month){
+    //求月份最大天数
+    function getDaysInMonth(year, month){
         return new Date(year, month + 1, 0).getDate();
     }
 
-    function getDate(mydate) {
+    /*function getDate(mydate) {
 
         var year = mydate.getFullYear();
         var month = mydate.getMonth();
@@ -192,6 +192,16 @@
             }
         }
 
+        return arr;
+    }*/
+
+    function getDate(mydate){
+        var arr = [];
+        arr.push(mydate.format("yyyy-MM-dd"));
+        for(var i=0; i<30; i++){
+            mydate.setDate(mydate.getDate()+1);
+            arr.push(mydate.format("yyyy-MM-dd"));
+        }
         return arr;
     }
 
