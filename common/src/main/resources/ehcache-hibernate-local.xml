@@ -21,4 +21,11 @@
 		eternal="true" 
 		overflowToDisk="true"
 		maxEntriesLocalDisk="1000000" />
+
+	<cache name="wxCache"
+		   maxElementsInMemory="100"
+		   eternal="false"
+		   timeToLiveSeconds="6000"
+		   overflowToDisk="true"/>
+
 </ehcache>

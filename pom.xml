@@ -304,11 +304,11 @@
             <version>0.4.8</version>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>com.github.qiujiayu</groupId>
             <artifactId>autoload-cache</artifactId>
             <version>4.2</version>
-        </dependency>
+        </dependency>-->
 
         <dependency>
             <groupId>org.quartz-scheduler</groupId>
