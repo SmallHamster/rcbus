@@ -44,22 +44,42 @@
             </c:forEach>
 
             <c:forEach var="cw2" items="${couponWay2}">
-                <li class="c2" onclick="giving(${cw2.id})">
-                    <div class="hd">
-                        <em>${fn:substring(cw2.coupon.name ,0,fn:length(cw2.coupon.name)-4)}</em>
-                        <sub>元</sub>
-                    </div>
-                    <div class="bd">
-                        <h4>${fn:substring(cw2.coupon.name ,fn:length(cw2.coupon.name)-3,fn:length(cw2.coupon.name))}</h4>
-                        <c:if test="${cw2.coupon.isLimit eq 0}">
-                            <p>无限制</p>
-                        </c:if>
-                        <c:if test="${cw2.coupon.isLimit eq 1}">
-                            <p>限${cw2.coupon.limitMoney}元以上使用</p>
-                        </c:if>
-                        <p style="font-size: 10px">有效期<date:date value="${cw2.coupon.validDateFrom}" format="yyyy-MM-dd HH:ss" ></date:date> 至<date:date value="${cw2.coupon.validDateTo}" format="yyyy-MM-dd HH:ss" ></date:date></p>
-                    </div>
-                </li>
+                <c:if test="${cw2.coupon.gainWay eq 0}">
+                    <li class="c2" onclick="giving(${cw2.id})">
+                        <div class="hd">
+                            <em>${cw2.coupon.reduceMoney}</em>
+                            <sub>元</sub>
+                        </div>
+                        <div class="bd">
+                            <h4>补偿券</h4>
+                            <c:if test="${cw2.coupon.isLimit eq 0}">
+                                <p>无限制</p>
+                            </c:if>
+                            <c:if test="${cw2.coupon.isLimit eq 1}">
+                                <p>限${cw2.coupon.limitMoney}元以上使用</p>
+                            </c:if>
+                            <p style="font-size: 10px">有效期<date:date value="${cw2.coupon.validDateFrom}" format="yyyy-MM-dd HH:ss" ></date:date> 至<date:date value="${cw2.coupon.validDateTo}" format="yyyy-MM-dd HH:ss" ></date:date></p>
+                        </div>
+                    </li>
+                </c:if>
+                <c:if test="${cw2.coupon.gainWay ne 0}">
+                    <li class="c2" onclick="giving(${cw2.id})">
+                        <div class="hd">
+                            <em>${fn:substring(cw2.coupon.name ,0,fn:length(cw2.coupon.name)-4)}</em>
+                            <sub>元</sub>
+                        </div>
+                        <div class="bd">
+                            <h4>${fn:substring(cw2.coupon.name ,fn:length(cw2.coupon.name)-3,fn:length(cw2.coupon.name))}</h4>
+                            <c:if test="${cw2.coupon.isLimit eq 0}">
+                                <p>无限制</p>
+                            </c:if>
+                            <c:if test="${cw2.coupon.isLimit eq 1}">
+                                <p>限${cw2.coupon.limitMoney}元以上使用</p>
+                            </c:if>
+                            <p style="font-size: 10px">有效期<date:date value="${cw2.coupon.validDateFrom}" format="yyyy-MM-dd HH:ss" ></date:date> 至<date:date value="${cw2.coupon.validDateTo}" format="yyyy-MM-dd HH:ss" ></date:date></p>
+                        </div>
+                    </li>
+                </c:if>
             </c:forEach>
         </ul>
     </div>

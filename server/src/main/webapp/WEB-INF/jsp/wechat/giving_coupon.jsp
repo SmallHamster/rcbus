@@ -37,13 +37,22 @@
             <li class="c2">
             </c:if>
                 <div class="hd">
-                    <em>${fn:substring(userCoupon.coupon.name ,0,fn:length(userCoupon.coupon.name)-4)}</em>
+                    <c:if test="${userCoupon.coupon.gainWay eq 0}">
+                        <em>${userCoupon.coupon.reduceMoney}</em>
+                    </c:if>
+                    <c:if test="${userCoupon.coupon.gainWay ne 0}">
+                        <em>${fn:substring(userCoupon.coupon.name ,0,fn:length(userCoupon.coupon.name)-4)}</em>
+                    </c:if>
                     <c:if test="${userCoupon.coupon.couponWay eq 1}"><sub>折</sub></c:if>
                     <c:if test="${userCoupon.coupon.couponWay eq 2}"><sub>元</sub></c:if>
-
                 </div>
                 <div class="bd">
-                    <h4>${fn:substring(userCoupon.coupon.name ,fn:length(userCoupon.coupon.name)-3,fn:length(userCoupon.coupon.name))}</h4>
+                    <c:if test="${userCoupon.coupon.gainWay eq 0}">
+                        <h4>补偿券</h4>
+                    </c:if>
+                    <c:if test="${userCoupon.coupon.gainWay ne 0}">
+                        <h4>${fn:substring(userCoupon.coupon.name ,fn:length(userCoupon.coupon.name)-3,fn:length(userCoupon.coupon.name))}</h4>
+                    </c:if>
                     <c:if test="${userCoupon.coupon.isLimit eq 0}">
                         <p>无限制</p>
                     </c:if>
