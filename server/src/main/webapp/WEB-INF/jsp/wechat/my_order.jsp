@@ -99,12 +99,18 @@
         var disY = 0;  // 滑动差值
 
         $('.ui-list3').on('touchstart', '.check', function(e) {
+            if($(this).find(".state4").length>=1 || $(this).find(".state1").length>=1){
+                return;
+            }
             var rdo2 = $(this).find('.rdo2')[0];
             rdo2.checked = !rdo2.checked;
             return false;
         });
 
         $('.ui-list3').on('touchstart', 'li', function(e){
+            if($(this).find(".state4").length>=1 || $(this).find(".state1").length>=1){
+                return;
+            }
             sX = e.changedTouches[0].pageX;
             sY = e.changedTouches[0].pageY;
         });
@@ -124,11 +130,14 @@
             if(disX>40){
                 $(this).find(".rdo2").removeAttr("checked");
             }
-            console.log(disX)
+//            console.log(disX)
 
         });
 
         $('.ui-list3').on('touchend', 'li', function(e){
+            if($(this).find(".state4").length>=1 || $(this).find(".state1").length>=1){
+                return;
+            }
             if (Math.abs(disY) > 40) {
                 return;
             }
