@@ -20,7 +20,7 @@ public class GpxTask {
     @Autowired
     private BusService busService;
 
-    /*@Scheduled(cron="0/10 * * * * ? ")
+    @Scheduled(cron="0/10 * * * * ? ")
     public void Task(){
         List<Map> groups = GpxUtil.getGroupsBus();
         if(groups != null){
@@ -57,6 +57,6 @@ public class GpxTask {
                 }
             }
         }
-    }*/
+    }
 
 }

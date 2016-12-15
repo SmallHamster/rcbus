@@ -16,7 +16,7 @@ public class GpxUtil {
 
 	private static String basicUrl= "http://120.77.65.158:89/gpsonline/GPSAPI";//120.77.65.158  221.234.42.20
 
-	private static String username = "gdtqtest";
+	private static String username = "whgdtq01";
 
 	private static String password = "000000";
 
