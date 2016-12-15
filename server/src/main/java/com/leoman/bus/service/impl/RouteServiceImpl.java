@@ -14,6 +14,7 @@ import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.order.dao.OrderDao;
 import com.leoman.order.entity.Order;
+import com.leoman.user.dao.UserInfoDao;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.ClassUtil;
 import com.leoman.utils.SeqNoUtils;
@@ -51,6 +52,9 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
 
     @Autowired
     private RouteOrderDao routeOrderDao;
+
+    @Autowired
+    private UserInfoDao userInfoDao;
 
     /**
      * 保存路线
@@ -271,16 +275,20 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
                 "  t_route r \n" +
                 "  LEFT JOIN t_enterprise e \n" +
                 "    ON e.`id` = r.`enterprise_id` \n" +
-                "    AND e.`type` = "+type+"\n" +
                 "  LEFT JOIN t_route_collection rc \n" +
                 "    ON rc.`route_id` = r.`id` \n" +
                 "    AND rc.`user_id` = "+userId+" \n" +
-                "WHERE 1 = 1 ");
+                "WHERE e.`type` = "+type);
         if(!StringUtils.isEmpty(startStation)){
             sql.append("  AND r.`start_station` LIKE '%"+startStation+"%'  ");
         }
         if(!StringUtils.isEmpty(endStation)){
             sql.append("  AND r.`end_station` LIKE '%"+endStation+"%'  ");
+        }
+        //如果是通勤班车，且用户为员工，则只查看该员工所在企业的班车
+        UserInfo user =  userInfoDao.findOne(userId);
+        if(type == 0 && user.getEnterprise() != null){
+            sql.append("  AND e.`id` = "+user.getEnterprise().getId());
         }
         sql.append(" ORDER BY IF(rc.`id` IS NULL, 0, 1) DESC ");
         List<Route> list = queryBySql(sql.toString(), Route.class);
