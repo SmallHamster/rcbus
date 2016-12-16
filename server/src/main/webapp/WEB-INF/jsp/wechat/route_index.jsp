@@ -187,6 +187,8 @@
                     $(".ui-list .hd").eq(0).text("全部路线");
                     for(var i=0; i<list.length;i++){
                         var template = $("#routeTemplate").clone().removeAttr("id");
+                        var clazz = getClassByIndex(i+1);
+                        template.attr("class", clazz);
                         template.find("em").eq(0).text(list[i].startStation);
                         template.find("em").eq(1).text(list[i].endStation);
                         template.find("b").text(i+1);
@@ -244,6 +246,16 @@
                 }
             });
         }
+    }
+
+    function getClassByIndex(index){
+        var clazz = "";
+        if(index >= 1 && index <=7){
+            clazz = "c"+index;
+        }else if(index > 7 && index <=10){
+            clazz = "c"+(index-7);
+        }
+        return clazz;
     }
 
 </script>
