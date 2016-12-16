@@ -215,7 +215,7 @@ header .title{line-height:50px;text-align:center;font-size:1.6rem;}
 	.location-box .slide .detail span{font-size:1.4rem;}
 }
 .location{padding:40px 10px;background:#fff;overflow:hidden;overflow-x:auto;}
-.location ul{width:1000%;overflow:hidden;}
+.location ul{width:1000%;overflow:hidden;margin: 0 auto;}
 .location li{position:relative;float:left;width:56px;padding:55px 36px 0 0;font-size:1.6rem;vertical-align:top;color:#00acff;text-align:center;}
 .location li.current{width:64px;color:#ff9f00;padding-left:2px;font-size:1.8rem;}
 .location li.current ~ li{color:#999;}
