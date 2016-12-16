@@ -170,6 +170,9 @@
                     length = $self.find('li').length;
 
             if (length < 2) {
+                if(sidArr.length > 0){
+                    showCurLoc(sidArr[0]);
+                }
                 return;
             }
             var nav = ['<div class="nav">'];
