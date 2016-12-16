@@ -249,12 +249,7 @@
     }
 
     function getClassByIndex(index){
-        var clazz = "";
-        if(index >= 1 && index <=7){
-            clazz = "c"+index;
-        }else if(index > 7 && index <=10){
-            clazz = "c"+(index-7);
-        }
+        var clazz = "c" + ((index%7)==0?7:(index%7));
         return clazz;
     }
 
