@@ -23,24 +23,24 @@ public class GpxUtil {
 	private static String version = "1";
 
 	public static void main(String[] args) {
-//		List list = getCurrentLoc("8365869", "d85e9cccfafa66c427f72210ee85f069");
-//		System.out.println(list);
-//		Map loc = (Map)list.get(0);
-//		Double lat = (Double) loc.get("lat");
-//		Double lng = (Double) loc.get("lng");
-//		Double curLatXZ = (Double) loc.get("lat_xz");//纬度修正值
-//        Double curLngXZ = (Double)loc.get("lng_xz");//经度修正值
-//		Double baidu_lat_xz = (Double) loc.get("baidu_lat_xz");//纬度修正值
-//		Double baidu_lng_xz = (Double)loc.get("baidu_lng_xz");//经度修正值
-//		System.out.println(lat );
-//		System.out.println(lng );
-//		System.out.println("------------------");
-//		System.out.println(lat + baidu_lat_xz);
-//		System.out.println(lng + baidu_lng_xz);
-//		System.out.println("------------------");
-//		double[] position = MathUtil.wgs2bd(lat ,lng);
-//		System.out.println(position[0]);
-//		System.out.println(position[1]);
+		List list = getCurrentLoc("8309640", "34dc5e4abcf3066c2bb7fca78ee33315");
+		System.out.println(list);
+		Map loc = (Map)list.get(0);
+		Double lat = (Double) loc.get("lat");
+		Double lng = (Double) loc.get("lng");
+		Double curLatXZ = (Double) loc.get("lat_xz");//纬度修正值
+        Double curLngXZ = (Double)loc.get("lng_xz");//经度修正值
+		Double baidu_lat_xz = (Double) loc.get("baidu_lat_xz");//纬度修正值
+		Double baidu_lng_xz = (Double)loc.get("baidu_lng_xz");//经度修正值
+		System.out.println(lat );
+		System.out.println(lng );
+		System.out.println("------------------");
+		System.out.println(lat + baidu_lat_xz);
+		System.out.println(lng + baidu_lng_xz);
+		System.out.println("------------------");
+		double[] position = MathUtil.wgs2bd(lat ,lng);
+		System.out.println(position[0]);
+		System.out.println(position[1]);
 	}
 
 	/**

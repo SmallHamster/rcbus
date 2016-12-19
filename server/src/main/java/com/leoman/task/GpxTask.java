@@ -21,7 +21,7 @@ public class GpxTask {
     @Autowired
     private BusService busService;
 
-    @Scheduled(cron="0/10 * * * * ? ")
+    @Scheduled(cron="0/3 * * * * ? ")
     public void Task(){
         List<Map> groups = GpxUtil.getGroupsBus();
         if(groups != null){
@@ -38,12 +38,12 @@ public class GpxTask {
                             Double curLng = (Double)loc.get("lng");//经度
                             Bus bus = busService.findByUuid(uuid);
                             if(bus != null){
-                                if(curLat != bus.getCurLat() || curLng != bus.getCurLng()){
+//                                if(curLat != bus.getCurLat() || curLng != bus.getCurLng()){
                                     double[] position = MathUtil.wgs2bd(curLat ,curLng);
                                     bus.setCurLat(position[0]);
                                     bus.setCurLng(position[1]);
                                     busService.save(bus);
-                                }
+//                                }
                             }else{
                                 bus = new Bus();
                                 bus.setUuid(String.valueOf(map.get("id")));//id

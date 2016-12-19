@@ -32,7 +32,6 @@ import java.util.Map;
  * Created by Daisy on 2016/9/6.
  */
 @Service
-@Transactional(readOnly = true)
 public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implements RouteService {
 
     @Autowired
@@ -204,26 +203,33 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
     @Override
     @Transactional
     public void deleteRoute(Long routeId){
-        //删除路线
-        routeDao.delete(routeId);
 
         //删除已有的发车时间
         List<RouteTime> timeList = routeTimeDao.findByRouteId(routeId);
         for (RouteTime rt:timeList) {
-            routeTimeDao.delete(rt.getId());
+            if(rt != null){
+                routeTimeDao.delete(rt);
+            }
         }
 
         //删除已有的路线站点
         List<RouteStation> stationList = routeStationDao.findByRouteId(routeId);
         for (RouteStation rs:stationList) {
-            routeStationDao.delete(rs.getId());
+            if(rs != null){
+                routeStationDao.delete(rs);
+            }
         }
 
         //删除已有的路线班车
         List<BusSend> sendList = busSendDao.findBus(routeId,1);
         for (BusSend bs:sendList) {
-            busSendDao.delete(bs.getId());
+            if(bs != null){
+                busSendDao.delete(bs);
+            }
         }
+
+        //删除路线
+        routeDao.delete(routeId);
     }
 
     /**
