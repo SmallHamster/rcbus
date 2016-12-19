@@ -4,6 +4,7 @@ import com.leoman.bus.entity.Bus;
 import com.leoman.bus.entity.CarType;
 import com.leoman.bus.service.BusService;
 import com.leoman.bus.util.GpxUtil;
+import com.leoman.bus.util.MathUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -35,13 +36,12 @@ public class GpxTask {
                             String uuid = String.valueOf(loc.get("id"));
                             Double curLat = (Double)loc.get("lat");//纬度
                             Double curLng = (Double)loc.get("lng");//经度
-//                            Double curLatXZ = (Double) loc.get("lat_xz");//纬度修正值
-//                            Double curLngXZ = (Double)loc.get("lng_xz");//经度修正值
                             Bus bus = busService.findByUuid(uuid);
                             if(bus != null){
                                 if(curLat != bus.getCurLat() || curLng != bus.getCurLng()){
-                                    bus.setCurLat(curLat);
-                                    bus.setCurLng(curLng);
+                                    double[] position = MathUtil.wgs2bd(curLat ,curLng);
+                                    bus.setCurLat(position[0]);
+                                    bus.setCurLng(position[1]);
                                     busService.save(bus);
                                 }
                             }else{
