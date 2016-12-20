@@ -15,4 +15,7 @@ public interface RouteDao extends IBaseJpaRepository<Route> {
     @Query("select a from Route a where a.lineName = ?1")
     public List<Route> findByLineName(String lineName);
 
+    @Query("select a from Route a where a.lineName = ?1 and a.id != ?2")
+    public Route findByLineNameAndId(String lineName, Long id);
+
 }

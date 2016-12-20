@@ -39,6 +39,7 @@ public enum ErrorType {
     ERROR_CODE_00032("该车牌号已存在", 32),
     ERROR_CODE_00033("返程时间不能为空", 33),
     ERROR_CODE_00034("该所属路线已存在1或2个，请选择其他所属路线", 34),
+    ERROR_CODE_00035("该路线没有返程路线", 35),
 
     ErrorType;
 

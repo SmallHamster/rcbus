@@ -85,14 +85,9 @@ public class RouteWeChatController extends RouteBaseController {
                        Double userLat,
                        Double userLng) {
         try {
-//            Query query = Query.forClass(Route.class, routeService);
-//            query.like("startStation",route.getStartStation());
-//            query.like("endStation",route.getEndStation());
-//            query.eq("enterprise.type",type);
 
             UserInfo user = getSessionUser(request);
             List<Route> list = routeService.findList(route.getStartStation(), route.getEndStation(), type, user.getId());
-
 
             //处理路线的最近车辆信息，收藏状态
             handleRoute(list, userLat, userLng, user.getId());
@@ -248,6 +243,22 @@ public class RouteWeChatController extends RouteBaseController {
             Result.failure();
         }
         return Result.success();
+    }
+
+    /**
+     * 获取该路线的返程路线
+     * @param request
+     * @param response
+     * @return
+     */
+    @RequestMapping(value = "/findBackRoute", method = RequestMethod.POST)
+    @ResponseBody
+    public Result findBackRoute(HttpServletRequest request,
+                       HttpServletResponse response,
+                       Long routeId) {
+
+        Result result = routeService.findBackRoute(routeId);
+        return result;
     }
 
 }

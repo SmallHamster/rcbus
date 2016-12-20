@@ -17,7 +17,7 @@
 <body>
 
 <header>
-    <div class="title">车辆位置</div>
+    <div class="title" onclick="findBackRoute()">车辆位置</div>
 </header>
 
 
@@ -34,7 +34,7 @@
     </div>
 
     <div class="hd">
-        <span><img src="${contextPath}/wechat-html/images/road.png" />发车线路</span>
+        <span><img src="${contextPath}/wechat-html/images/road.png"/>发车线路</span>
         <em onclick="toPosition()">实时线路</em>
     </div>
     <div class="location">
@@ -220,6 +220,18 @@
     function toPosition(){
 //        location.href = "http://221.234.42.20:89/Interface/findPosition.action?carNum=鄂ALB229";
         location.href = "${contextPath}/wechat/route/toPosition?routeId=${routeId}";
+    }
+
+    //查看返程
+    function findBackRoute(){
+        $.post("${contextPath}/wechat/route/findBackRoute",{routeId:"${routeId}"}, function(result){
+            if(result.status == 0){
+                var backRouteId = result.data.route.id;
+                location.href = "${contextPath}/wechat/route/detail?routeId="+backRouteId;
+            }else{
+                alertMsg(result.msg);
+            }
+        });
     }
 
 </script>

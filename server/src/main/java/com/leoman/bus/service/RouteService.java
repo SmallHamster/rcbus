@@ -23,4 +23,6 @@ public interface RouteService extends GenericManager<Route> {
 
     public List<Route> findList(String startStation, String endStation, Integer type, Long userId);
 
+    public Result findBackRoute(Long routeId);
+
 }

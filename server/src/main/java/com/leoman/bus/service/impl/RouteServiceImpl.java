@@ -309,4 +309,22 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         return list;
     }
 
+    /**
+     * 获取当前线路的返程路线
+     * @param routeId
+     * @return
+     */
+    @Override
+    public Result findBackRoute(Long routeId){
+        Route route = routeDao.findOne(routeId);
+        if(route == null){
+            return Result.failure();
+        }
+        Route backRoute = routeDao.findByLineNameAndId(route.getLineName(), route.getId());
+        if(backRoute == null){
+            return Result.failure(ErrorType.ERROR_CODE_00035);//该路线没有返程路线
+        }
+        return Result.success(backRoute);
+    }
+
 }
