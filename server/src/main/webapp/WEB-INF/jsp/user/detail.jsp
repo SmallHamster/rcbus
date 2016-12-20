@@ -113,7 +113,7 @@
                                         <div class="col-sm-6">
                                             <input type="text" value="${v.endStation}" class="form-control" disabled/>
                                         </div>
-                                        <button type="button" class="btn btn-primary" onclick="$admin.fn.routeDetail(${v.route.id})">详情</button>
+                                        <button type="button" class="btn btn-primary" onclick="$admin.fn.routeDetail(${v.routeId})">详情</button>
                                     </div>
                                     <header class="panel-heading"></header>
                                     <div class="form-group" style="margin-top: 15px"></div>

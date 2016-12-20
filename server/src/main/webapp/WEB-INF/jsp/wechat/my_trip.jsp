@@ -24,17 +24,17 @@
     <div class="ui-list3">
         <ul>
             <c:forEach items="${routeOrderList}" var="ro" >
-                <c:if test="${ro.route.enterprise.type == 0}">
+                <c:if test="${ro.enterpriseType == 0}">
                 <li class="c1">
                 </c:if>
-                <c:if test="${ro.route.enterprise.type == 1}">
+                <c:if test="${ro.enterpriseType == 1}">
                     <li class="c2">
                 </c:if>
                     <a onclick="carRoute(${ro.id})">
-                        <c:if test="${ro.route.enterprise.type == 0}">
+                        <c:if test="${ro.enterpriseType == 0}">
                             <div class="cat">通勤班车</div>
                         </c:if>
-                        <c:if test="${ro.route.enterprise.type == 1}">
+                        <c:if test="${ro.enterpriseType == 1}">
                             <div class="cat">永旺专线</div>
                         </c:if>
 
@@ -46,14 +46,16 @@
                                 <i></i>
                                 <em>${ro.endStation}</em>
                             </div>
-                            <div class="detail">
-                                <c:forEach items="${ro.route.busSends}" var="bs" begin="0" end="0">
-                                    <span>${bs.bus.modelNo}</span>
-                                    <span>发车时间：${ro.departTime}</span>
-                                    <span>车牌：${bs.bus.carNo}</span>
-                                    <span>保险单号：${bs.bus.policyNo}</span>
-                                </c:forEach>
-                            </div>
+                            <c:if test="${ro.route != null}">
+                                <div class="detail">
+                                    <c:forEach items="${ro.route.busSends}" var="bs" begin="0" end="0">
+                                        <span>${bs.bus.modelNo}</span>
+                                        <span>发车时间：${ro.departTime}</span>
+                                        <span>车牌：${bs.bus.carNo}</span>
+                                        <span>保险单号：${bs.bus.policyNo}</span>
+                                    </c:forEach>
+                                </div>
+                            </c:if>
                         </div>
                         <div class="check">
                             <input type="checkbox" class="rdo2" name="ro_id" value="${ro.id}">

@@ -51,7 +51,7 @@
             <span>预定人数：48</span>
         </div>
         <div class="bus">野芷湖西路保利心语</div>
-        <div class="fav"></div>
+        <div class="fav faved"></div>
     </div>
     <div class="check">
         <input type="checkbox" value="iid_1" class="rdo2">
@@ -60,6 +60,8 @@
 
 
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
+<script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
+<script src="${contextPath}/wechat-html/js/global.js"></script>
 <script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
     $(function() {
@@ -99,7 +101,7 @@
                     var template = $("#routeTemplate").clone().removeAttr("id");
                     template.find("em").eq(0).text(list[i].startStation);
                     template.find("em").eq(1).text(list[i].endStation);
-                    template.find("b").text(i+1);
+                    template.find("b").text(list[i].lineName==null?"":list[i].lineName);
                     template.find(".fromto").attr('onclick','toDetail('+list[i].id+')');
                     template.find(".fav").attr("val",list[i].id);
                     template.find("[type=checkbox]").val(list[i].id);
@@ -126,9 +128,9 @@
             $(this).toggleClass('faved');
             var isFaved = 0;
             if($(this).hasClass('faved')){
-                isFaved = 0;
-            }else{
                 isFaved = 1;
+            }else{
+                isFaved = 0;
             }
             $.ajax({
                 url: "${contextPath}/wechat/route/collect/oper",

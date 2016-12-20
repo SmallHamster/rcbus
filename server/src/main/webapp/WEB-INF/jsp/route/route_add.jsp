@@ -38,8 +38,8 @@
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >所属企业：</label>
-                                    <div class="col-sm-1">
-                                        <select class="form-control input-sm" name="enterprise.id">
+                                    <div class="col-sm-2">
+                                        <select class="form-control input-sm" name="enterpriseId">
                                             <c:forEach items="${enterpriseList}" var="enterprise">
                                                 <c:if test="${enterprise.id == route.enterprise.id}">
                                                     <option value="${enterprise.id}" selected>${enterprise.name}</option>
@@ -53,9 +53,9 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="col-sm-1 control-label" ><span style="color: red;">* </span>所属路线：</label>
+                                    <label class="col-sm-1 control-label" >所属路线：</label>
                                     <div class="col-sm-2">
-                                        <input type="text" name="lineName" value="${route.lineName}" class="form-control" required maxlength="30"/>
+                                        <input type="text" name="lineName" value="${route.lineName}" class="form-control" maxlength="30"/>
                                     </div>
                                 </div>
 

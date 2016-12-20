@@ -92,6 +92,7 @@
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat-html/js/app.js"></script>
 <script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
+<script src="${contextPath}/wechat-html/js/global.js"></script>
 <script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
 
@@ -145,9 +146,9 @@
             $(this).toggleClass('faved');
             var isFaved = 0;
             if($(this).hasClass('faved')){
-                isFaved = 0;
-            }else{
                 isFaved = 1;
+            }else{
+                isFaved = 0;
             }
             $.ajax({
                 url: "${contextPath}/wechat/route/collect/oper",
@@ -188,14 +189,17 @@
                     for(var i=0; i<list.length;i++){
                         var template = $("#routeTemplate").clone().removeAttr("id");
                         var clazz = getClassByIndex(i+1);
+                        if(i > 0 && list[i].lineName != null && (list[i].lineName == list[i-1].lineName)){
+                            clazz = getClassByIndex(i);
+                        }
                         template.attr("class", clazz);
                         template.find("em").eq(0).text(list[i].startStation);
                         template.find("em").eq(1).text(list[i].endStation);
-                        template.find("b").text(i+1);
+                        template.find("b").text(list[i].lineName==null?"":list[i].lineName);
                         template.find(".fromto").attr('onclick','toDetail('+list[i].id+')');//路线名称跳转至详情页
                         template.find(".detail").attr('onclick','toDetail('+list[i].id+')');//路线详情区跳转至详情页
                         template.find(".fav").attr("val",list[i].id);
-                        if(list[i].isCollect == 0){
+                        if(list[i].isCollect == 1){
                             template.find(".fav").addClass("faved");//给已收藏的路线添加已收藏的样式
                         }
                         var times = list[i].tempTimes;
@@ -230,7 +234,7 @@
         location.href = "${contextPath}/wechat/route/toPosition?routeId="+id;
     }
 
-    function alertMsg(msg,func){
+    /*function alertMsg(msg,func){
         if(func == '' || func == undefined){
             layer.open({
                 content: msg
@@ -246,7 +250,7 @@
                 }
             });
         }
-    }
+    }*/
 
     function getClassByIndex(index){
         var clazz = "c" + ((index%7)==0?7:(index%7));

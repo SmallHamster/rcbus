@@ -131,17 +131,21 @@ public class RouteController extends GenericEntityController<Route, Route, Route
         query.like("startStation",route.getStartStation());
         query.like("endStation",route.getEndStation());
         if(enterpriseId != null && enterpriseId != 0){
-            Enterprise enterprise = new Enterprise();
-            enterprise.setId(enterpriseId);
-            query.eq("enterprise",enterprise);
+            query.eq("enterpriseId", enterpriseId);
         }
         Admin admin = getSessionAdmin(request);
         if(admin != null && admin.getEnterprise() != null){
-            query.eq("enterprise.id",admin.getEnterprise().getId());
+            query.eq("enterpriseId",admin.getEnterprise().getId());
         }
         query.addOrder("id","desc");
 
         Page<Route> page = routeService.queryPage(query);
+        for (Route r:page.getContent()) {
+            if(r.getEnterpriseId() != null){
+                Enterprise enterprise = enterpriseService.queryByPK(r.getEnterpriseId());
+                r.setEnterprise(enterprise);
+            }
+        }
         return DataTableFactory.fitting(draw, page);
     }
 
@@ -166,18 +170,12 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Result save(Route route, String departTimes, String backTimes, String busIds, Integer isRoundTrip, MultipartFile file) {
-        Result result = Result.success();
-        try {
-            List<Map> list = null;
-            if(file != null){
-                list = this.doXMLParse(file);//解析xml
-            }
-            result = routeService.saveRoute(route,departTimes,backTimes,busIds,isRoundTrip, list);
-        } catch (Exception e) {
-            e.printStackTrace();
-            return Result.failure();
+    public Result save(Route route, String departTimes, String backTimes, String busIds, Integer isRoundTrip, MultipartFile file) throws JDOMException, ParserConfigurationException, SAXException, IOException {
+        List<Map> list = null;
+        if(file != null){
+            list = this.doXMLParse(file);//解析xml
         }
+        Result result = routeService.saveRoute(route,departTimes,backTimes,busIds,isRoundTrip, list);
         return result;
     }
 
@@ -220,21 +218,21 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      * @param ids
      * @return
      */
-    @RequestMapping(value = "/dispatch", method = RequestMethod.POST)
-    @ResponseBody
-    public Result dispatch(String ids) {
-        try {
-            String [] idArr = ids.split("\\,");
-            for (String id:idArr) {
-                Integer routeId = Integer.valueOf(id);
-                routeService.deleteByPK(routeId);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Result.failure();
-        }
-        return Result.success();
-    }
+//    @RequestMapping(value = "/dispatch", method = RequestMethod.POST)
+//    @ResponseBody
+//    public Result dispatch(String ids) {
+//        try {
+//            String [] idArr = ids.split("\\,");
+//            for (String id:idArr) {
+//                Integer routeId = Integer.valueOf(id);
+//                routeService.deleteByPK(routeId);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            Result.failure();
+//        }
+//        return Result.success();
+//    }
 
     /**
      * 修改路线的显示状态

@@ -16,7 +16,7 @@ public interface RouteOrderDao extends IBaseJpaRepository<RouteOrder>{
     @Query("SELECT b FROM RouteOrder b WHERE b.order.id IN (SELECT a.id FROM Order a WHERE a.userInfo.id =?1) AND b.isDel = '0' ")
     public List<RouteOrder> findList(Long id);
 
-    @Query("select count(a.id) from RouteOrder a where a.route.id = ?1 and a.departTime = ?2")
+    @Query("select count(a.id) from RouteOrder a where a.routeId = ?1 and a.departTime = ?2")
     public Integer findOrderNum(Long routeId, String departTime);
 
     //根据订单id查询

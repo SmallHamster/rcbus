@@ -68,6 +68,7 @@
                                     <tr>
                                         <th><input type="checkbox" class="list-parent-check"
                                                    onclick="$leoman.checkAll(this);"/></th>
+                                        <th>所属路线</th>
                                         <th>路线起始</th>
                                         <th>所属企业</th>
                                         <th>状态</th>
@@ -118,6 +119,7 @@
                                 return checkbox;
                             }
                         },
+                        {"data": "lineName"},
                         {
                             "data": "startStation",
                             "render": function (data, type, row, meta) {

@@ -27,9 +27,14 @@ public class RouteOrder extends BaseEntity{
     @JoinColumn(name = "order_id")
     private Order order;//订单
 
-    @ManyToOne
-    @JoinColumn(name = "route_id")
+    @Transient
     private Route route;//路线
+
+    @Column(name = "route_id")
+    private Long routeId;//路线id
+
+    @Column(name = "enterprise_type")
+    private Integer enterpriseType;//企业类型：0-企业，1-专线
 
     //是否用户删除 0:否 1:是
     @Column(name = "is_del")
@@ -67,12 +72,12 @@ public class RouteOrder extends BaseEntity{
         this.order = order;
     }
 
-    public Route getRoute() {
-        return route;
+    public Long getRouteId() {
+        return routeId;
     }
 
-    public void setRoute(Route route) {
-        this.route = route;
+    public void setRouteId(Long routeId) {
+        this.routeId = routeId;
     }
 
     public Integer getIsDel() {
@@ -81,5 +86,21 @@ public class RouteOrder extends BaseEntity{
 
     public void setIsDel(Integer isDel) {
         this.isDel = isDel;
+    }
+
+    public Route getRoute() {
+        return route;
+    }
+
+    public void setRoute(Route route) {
+        this.route = route;
+    }
+
+    public Integer getEnterpriseType() {
+        return enterpriseType;
+    }
+
+    public void setEnterpriseType(Integer enterpriseType) {
+        this.enterpriseType = enterpriseType;
     }
 }

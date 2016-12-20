@@ -310,12 +310,13 @@ public class WechatIndexController extends CommonController {
                 }
             }
 
-            WebUtil.printJson(response,new Result().success());
+            return loginService.loginWeixin(request, response, mobile, password);
+
+//            WebUtil.printJson(response,new Result().success());
         } catch (Exception e) {
             e.printStackTrace();
             return Result.failure();
         }
-        return Result.success();
     }
 
 

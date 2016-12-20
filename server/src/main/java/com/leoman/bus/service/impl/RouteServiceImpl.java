@@ -14,6 +14,8 @@ import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
 import com.leoman.order.dao.OrderDao;
 import com.leoman.order.entity.Order;
+import com.leoman.system.enterprise.dao.EnterpriseDao;
+import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.user.dao.UserInfoDao;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.ClassUtil;
@@ -55,6 +57,9 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
     @Autowired
     private UserInfoDao userInfoDao;
 
+    @Autowired
+    private EnterpriseDao enterpriseDao;
+
     /**
      * 保存路线
      * @param route
@@ -94,8 +99,8 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         //编辑
         else {
             Route orgRoute = routeDao.findOne(routeId);
-            orgRoute.setEnterprise(route.getEnterprise());
-            ClassUtil.copyProperties(route,orgRoute);
+            ClassUtil.copyProperties(orgRoute, route);
+            route = orgRoute;
             routeDao.save(route);
 
             //删除已有的发车时间
@@ -264,10 +269,14 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         RouteOrder routeOrder = new RouteOrder();
         routeOrder.setStartStation(route.getStartStation());
         routeOrder.setEndStation(route.getEndStation());
-        routeOrder.setRoute(new Route(routeId));
+        routeOrder.setRouteId(routeId);
         routeOrder.setOrder(new Order(order.getId()));
         routeOrder.setDepartTime(departTime);
         routeOrder.setIsDel(0);
+        if(route.getEnterpriseId() != null){
+            Enterprise enterprise = enterpriseDao.findOne(route.getEnterpriseId());
+            routeOrder.setEnterpriseType(enterprise.getType());
+        }
         routeOrderDao.save(routeOrder);
 
         return Result.success(routeOrder);

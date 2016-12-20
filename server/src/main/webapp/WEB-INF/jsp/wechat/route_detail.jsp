@@ -17,7 +17,7 @@
 <body>
 
 <header>
-    <div class="title" onclick="findBackRoute()">车辆位置</div>
+    <div class="title">车辆位置</div>
 </header>
 
 
@@ -34,7 +34,7 @@
     </div>
 
     <div class="hd">
-        <span class="fancheng">查看返程</span>
+        <span class="fancheng" onclick="findBackRoute()">查看返程</span>
         <span><img src="${contextPath}/wechat-html/images/road.png"/>发车线路</span>
         <em onclick="toPosition()">实时线路</em>
     </div>
@@ -85,6 +85,8 @@
 
 <script src="${contextPath}/wechat-html/js/zepto.min.js"></script>
 <script src="${contextPath}/wechat-html/js/app.js"></script>
+<script src="${contextPath}/wechat-html/js/layer/layer.js"></script>
+<script src="${contextPath}/wechat-html/js/global.js"></script>
 <script src="http://api.map.baidu.com/api?v=2.0&ak=pcExWaLfoopv7vZ5hO1B8ej8"></script>
 <script>
     $(function() {

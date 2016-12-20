@@ -90,7 +90,8 @@
                     type : "POST",
                     success : function(result) {
                         if(result.status == 0) {
-                            location.href = "${contextPath}/wechat/login";
+                            WeixinJSBridge.call('closeWindow');//注册成功后直接进入登录页面
+                            <%--location.href = "${contextPath}/wechat/login";--%>
                         }else {
                             alertMsg(result.msg);
                         }

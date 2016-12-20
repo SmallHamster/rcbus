@@ -32,9 +32,11 @@ public class Route extends BaseEntity{
     @Column(name = "end_station")
     private String endStation;//终点站
 
-    @ManyToOne
-    @JoinColumn(name = "enterprise_id")
+    @Transient
     private Enterprise enterprise;//所属企业
+
+    @Column(name = "enterprise_id")
+    private Long enterpriseId;//所属企业
 
     @Column(name = "is_show")
     private Integer isShow;//是否显示（1-是，0-否）
@@ -147,5 +149,13 @@ public class Route extends BaseEntity{
 
     public void setLineName(String lineName) {
         this.lineName = lineName;
+    }
+
+    public Long getEnterpriseId() {
+        return enterpriseId;
+    }
+
+    public void setEnterpriseId(Long enterpriseId) {
+        this.enterpriseId = enterpriseId;
     }
 }

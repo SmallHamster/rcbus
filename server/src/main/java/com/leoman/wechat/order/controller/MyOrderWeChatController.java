@@ -1,7 +1,9 @@
 package com.leoman.wechat.order.controller;
 
+import com.leoman.bus.entity.Route;
 import com.leoman.bus.entity.RouteOrder;
 import com.leoman.bus.service.RouteOrderService;
+import com.leoman.bus.service.RouteService;
 import com.leoman.bussend.entity.BusSend;
 import com.leoman.bussend.service.BusSendService;
 import com.leoman.carrental.entity.CarRental;
@@ -70,6 +72,9 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
     @Autowired
     private CouponOrderService couponOrderService;
 
+    @Autowired
+    private RouteService routeService;
+
     public final static String weixin_ticket_url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi";
 
     /**
@@ -116,6 +121,10 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
                 if (System.currentTimeMillis() >= DateUtils.stringToLong(time, "yyyy-MM-dd HH:mm")) {
                     routeOrderList.add(routeOrder);
                 }
+            }
+            for (RouteOrder ro:routeOrderList) {
+                Route route = routeService.queryByPK(ro.getRouteId());
+                ro.setRoute(route);
             }
             model.addAttribute("routeOrderList", routeOrderList);
         }
