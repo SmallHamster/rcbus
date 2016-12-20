@@ -23,6 +23,9 @@ public class Route extends BaseEntity{
     @Where(clause = "type = '1'")
     private Set<BusSend> busSends;
 
+    @Column(name = "line_name")
+    private String lineName;//线路名称
+
     @Column(name = "start_station")
     private String startStation;//起点站
 
@@ -136,5 +139,13 @@ public class Route extends BaseEntity{
 
     public void setTempTimes(List<RouteTime> tempTimes) {
         this.tempTimes = tempTimes;
+    }
+
+    public String getLineName() {
+        return lineName;
+    }
+
+    public void setLineName(String lineName) {
+        this.lineName = lineName;
     }
 }

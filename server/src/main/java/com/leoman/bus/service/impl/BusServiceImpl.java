@@ -53,13 +53,13 @@ public class BusServiceImpl extends GenericManagerImpl<Bus, BusDao> implements B
     public Result saveBus(Bus bus) {
         Long busId = bus.getId();
         if(busId == null){
-            Bus b = busDao.findByCarNo(bus.getCarNo());
-            if(b != null){
+            List<Bus> busList = busDao.findByCarNo(bus.getCarNo());
+            if(busList != null && busList.size() > 0){
                 return new Result().failure(ErrorType.ERROR_CODE_00032);//车牌已存在
             }
         }else{
-            Bus b = busDao.findByCarNoAndId(bus.getCarNo(), busId);
-            if(b != null){
+            List<Bus> busList = busDao.findByCarNoAndId(bus.getCarNo(), busId);
+            if(busList != null && busList.size() > 0){
                 return new Result().failure(ErrorType.ERROR_CODE_00032);//车牌已存在
             }
             Bus org = busDao.findOne(busId);
@@ -70,4 +70,10 @@ public class BusServiceImpl extends GenericManagerImpl<Bus, BusDao> implements B
         busDao.save(bus);
         return new Result().success();
     }
+
+    @Override
+    public List<Bus> findByCarNo(String carNo) {
+        return busDao.findByCarNo(carNo);
+    }
+
 }

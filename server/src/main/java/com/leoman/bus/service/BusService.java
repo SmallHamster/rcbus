@@ -20,4 +20,6 @@ public interface BusService extends GenericManager<Bus> {
 
     public Result saveBus(Bus bus);
 
+    public List<Bus> findByCarNo(String carNo);
+
 }

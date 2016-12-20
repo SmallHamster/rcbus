@@ -37,13 +37,20 @@ public class GpxTask {
                             Double curLat = (Double)loc.get("lat");//纬度
                             Double curLng = (Double)loc.get("lng");//经度
                             Bus bus = busService.findByUuid(uuid);
+                            //获取该车牌号对应的所有车辆，只留下当前uuid的，其他的删除
+                            List<Bus> bList = busService.findByCarNo(bus.getCarNo());
+                            for (Bus b:bList) {
+                                if(!b.getUuid().equals(uuid)){
+                                    busService.delete(b);
+                                }
+                            }
                             if(bus != null){
-//                                if(curLat != bus.getCurLat() || curLng != bus.getCurLng()){
+                                if(!curLat.equals(bus.getCurLat()) || !curLng.equals(bus.getCurLng())){
                                     double[] position = MathUtil.wgs2bd(curLat ,curLng);
                                     bus.setCurLat(position[0]);
                                     bus.setCurLng(position[1]);
                                     busService.save(bus);
-//                                }
+                                }
                             }else{
                                 bus = new Bus();
                                 bus.setUuid(String.valueOf(map.get("id")));//id

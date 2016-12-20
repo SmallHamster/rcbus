@@ -52,6 +52,13 @@
                                     </div>
                                 </div>
 
+                                <div class="form-group">
+                                    <label class="col-sm-1 control-label" ><span style="color: red;">* </span>所属路线：</label>
+                                    <div class="col-sm-2">
+                                        <input type="text" name="lineName" value="${route.lineName}" class="form-control" required maxlength="30"/>
+                                    </div>
+                                </div>
+
                                 <c:if test="${route.id == null}">
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >是否有返程：</label>

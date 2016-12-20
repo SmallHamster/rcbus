@@ -199,7 +199,7 @@
                 $leoman.alertConfirm("确定要删除吗？",function(){
                     $.post("${contextPath}/admin/route/delete",{'ids':JSON.stringify(ids)},function(result){
                         if(result.status == 0){
-                            $route.v.dTable.ajax.reload(null,false);
+                            $route.v.dTable.ajax.reload();
                         }else{
                             $leoman.alertMsg("删除错误");
                         }
@@ -217,7 +217,7 @@
                 $leoman.alertConfirm("您确定要执行此操作吗？",function(){
                     $.post("${contextPath}/admin/route/updateIsShow",{'id':id,'isShow':oper},function(result){
                         if(result.status == 0){
-                            $bus.v.dTable.ajax.reload(null,false);
+                            $route.v.dTable.ajax.reload();
                         }else{
                             $leoman.alertMsg("操作失败");
                         }

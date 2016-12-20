@@ -44,6 +44,13 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label class="col-sm-1 control-label" >所属路线：</label>
+                                    <div class="col-sm-1">
+                                        ${route.lineName}
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
                                     <label class="col-sm-1 control-label">线路：</label>
                                     <div class="col-sm-6">
                                         ${stationStr}

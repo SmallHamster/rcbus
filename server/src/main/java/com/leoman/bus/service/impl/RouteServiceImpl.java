@@ -75,6 +75,11 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
             return new Result().failure(ErrorType.ERROR_CODE_00030);//派遣班车不能为空
         }
 
+        List<Route> routeList = routeDao.findByLineName(route.getLineName());
+        if(routeList != null && routeList.size() > 2){
+            return Result.failure(ErrorType.ERROR_CODE_00034);//该所属路线已存在1或2个，请选择其他所属路线
+        }
+
         Long routeId = route.getId();
         //新增
         if(routeId == null){
@@ -229,7 +234,10 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         }
 
         //删除路线
-        routeDao.delete(routeId);
+        Route route =  routeDao.findOne(routeId);
+        if(route != null){
+            routeDao.delete(route);
+        }
     }
 
     /**
@@ -296,7 +304,7 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         if(type == 0 && user.getEnterprise() != null){
             sql.append("  AND e.`id` = "+user.getEnterprise().getId());
         }
-        sql.append(" ORDER BY IF(rc.`id` IS NULL, 0, 1) DESC ");
+        sql.append(" ORDER BY r.`line_name`, IF(rc.`id` IS NULL, 0, 1) DESC ");
         List<Route> list = queryBySql(sql.toString(), Route.class);
         return list;
     }
