@@ -118,13 +118,8 @@ public class UserLoginServiceImpl extends GenericManagerImpl<UserLogin, UserLogi
             request.getSession().setAttribute(Constant.SESSION_MEMBER_USER, user);
 
             // 登录成功后，写入cookies
-            try {
-                int loginMaxAge = 7 * 24 * 60 * 60; // 定义cookies的生命周期，这里是一个月。单位为秒
-                CookiesUtils.addCookie(response, "username", username, loginMaxAge);
-            } catch (Exception e) {
-                e.printStackTrace();
-                WebUtil.printJson(response,new com.leoman.common.core.bean.Result(false).msg(e.getMessage()));
-            }
+            int loginMaxAge = 7 * 24 * 60 * 60; // 定义cookies的生命周期，这里是一个月。单位为秒
+            CookiesUtils.addCookie(response, "username", username, loginMaxAge);
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -278,19 +278,21 @@ public class WechatIndexController extends CommonController {
      * @throws Exception
      */
     @RequestMapping("/register")
+    @ResponseBody
     public Result register(HttpServletRequest request,
                          HttpServletResponse response,
                          @RequestParam(required = true) String mobile,
                          @RequestParam(required = true) String password,
                            @RequestParam(required = true) String type) throws Exception {
-
+        Result result;
         try {
 
             UserInfo user = userService.findByMobile(mobile);
             //注册
             if("register".equals(type)){
                 if(user != null){
-                    WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0009));//用户已存在
+                    return new Result().failure(ErrorType.ERROR_CODE_0009);
+//                    WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0009));//用户已存在
                 }else{
                     //新增用户
                     userService.saveUser(mobile, Md5Util.md5(password),HttpRequestUtil.getUserIpByRequest(request));
@@ -299,7 +301,8 @@ public class WechatIndexController extends CommonController {
             //忘记密码
             else if("findPwd".equals(type)){
                 if(user == null){
-                    WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0003));//用户已存在
+                    return new Result().failure(ErrorType.ERROR_CODE_0003);
+//                    WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0003));//用户已存在
                 }else{
                     //修改密码
                     UserLogin login = loginService.findByUsername(mobile);
@@ -310,13 +313,14 @@ public class WechatIndexController extends CommonController {
                 }
             }
 
-            return loginService.loginWeixin(request, response, mobile, password);
+            result = loginService.loginWeixin(request, response, mobile, password);
 
 //            WebUtil.printJson(response,new Result().success());
         } catch (Exception e) {
             e.printStackTrace();
             return Result.failure();
         }
+        return result;
     }
 
 

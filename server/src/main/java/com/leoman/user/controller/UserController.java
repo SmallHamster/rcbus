@@ -87,6 +87,7 @@ public class UserController extends GenericEntityController<UserInfo, UserInfo, 
         query.like("mobile",userInfo.getMobile());
         query.eq("enterprise.id",enterpriseId);
         query.eq("type",userInfo.getType());
+        query.addOrder("id", "desc");
         Page<UserInfo> page = userService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
     }
