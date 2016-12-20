@@ -34,6 +34,7 @@
     </div>
 
     <div class="hd">
+        <span class="fancheng">查看返程</span>
         <span><img src="${contextPath}/wechat-html/images/road.png"/>发车线路</span>
         <em onclick="toPosition()">实时线路</em>
     </div>
