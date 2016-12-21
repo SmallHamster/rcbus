@@ -15,19 +15,21 @@ import javax.persistence.*;
 @Table(name = "t_route_collection")
 public class RouteCollection extends BaseEntity{
 
-    @ManyToOne
-    @JoinColumn(name = "route_id")
+    @Transient
     private Route route;//路线
+
+    @Column(name = "route_id")
+    private Long routeId;//路线
 
     @Column(name = "user_id")
     private Long userId;//用户id
 
-    public Route getRoute() {
-        return route;
+    public Long getRouteId() {
+        return routeId;
     }
 
-    public void setRoute(Route route) {
-        this.route = route;
+    public void setRouteId(Long routeId) {
+        this.routeId = routeId;
     }
 
     public Long getUserId() {
@@ -36,5 +38,13 @@ public class RouteCollection extends BaseEntity{
 
     public void setUserId(Long userId) {
         this.userId = userId;
+    }
+
+    public Route getRoute() {
+        return route;
+    }
+
+    public void setRoute(Route route) {
+        this.route = route;
     }
 }

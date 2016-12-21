@@ -6,6 +6,8 @@ import com.leoman.bus.service.BusService;
 import com.leoman.common.core.ErrorType;
 import com.leoman.common.core.Result;
 import com.leoman.common.service.impl.GenericManagerImpl;
+import com.leoman.image.dao.ImageDao;
+import com.leoman.image.entity.Image;
 import com.leoman.utils.ClassUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

@@ -63,7 +63,7 @@
 <!-- 车辆信息模板 -->
 <li id="busTemplate" style="display: none;">
     <div class="avatar">
-        <img src="${contextPath}/wechat-html/images/bus_avatar.jpg" />
+        <img src="" />
         <span></span>
     </div>
     <div class="detail">
@@ -131,7 +131,7 @@
             $(".slide ul").empty();
             for(var i=0; i<busList.length;i++){
                 var template = $("#busTemplate").clone().removeAttr("id");
-                template.find(".avatar img").attr("src",busList[i].image==null?'':busList[i].image.path);
+                template.find(".avatar img").attr("src",busList[i].image==null?'':busList[i].image.uploadUrl);
                 template.find(".avatar span").text(busList[i].carNo);
                 template.find(".detail span").eq(0).text(busList[i].driverName);
                 template.find(".detail span").eq(1).text(busList[i].driverPhone);

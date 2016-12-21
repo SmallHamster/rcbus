@@ -56,7 +56,7 @@ public final class Result {
         result.status = SUCCESS;
         result.msg = "";
         if (data instanceof List) {
-            result.data.put("list", BeanUtils.listToMap((List) data));
+            result.data.put("list", data);
         } else if (data instanceof Page) {
             Page page = (Page) data;
             List list = page.getContent();

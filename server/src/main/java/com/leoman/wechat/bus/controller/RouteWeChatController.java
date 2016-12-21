@@ -84,19 +84,13 @@ public class RouteWeChatController extends RouteBaseController {
                        Integer type,
                        Double userLat,
                        Double userLng) {
-        try {
 
-            UserInfo user = getSessionUser(request);
-            List<Route> list = routeService.findList(route.getStartStation(), route.getEndStation(), type, user.getId());
+        UserInfo user = getSessionUser(request);
+        List<Route> list = routeService.findList(route.getStartStation(), route.getEndStation(), type, user.getId());
 
-            //处理路线的最近车辆信息，收藏状态
-            handleRoute(list, userLat, userLng, user.getId());
-            WebUtil.printJson(response,new Result().success(createMap("list",list)));
-        } catch (Exception e) {
-            e.printStackTrace();
-            Result.failure();
-        }
-        return Result.success();
+        //处理路线的最近车辆信息，收藏状态
+        handleRoute(list, userLat, userLng, user.getId());
+        return Result.success(list);
     }
 
     /**
@@ -127,7 +121,7 @@ public class RouteWeChatController extends RouteBaseController {
         try {
             List<RouteStation> stationList = routeStationService.findByRouteId(routeId);
             List<RouteTime> timeList = routeTimeService.findByRouteId(routeId);
-            List<Bus> busList =  busService.findBusOrderByDistance(routeId,userLat,userLng);
+            List<Bus> busList = busService.findBusOrderByDistance(routeId,userLat,userLng);
 
             //设置当前班车所在站点
             super.handleBusCurStation(busList,stationList);
@@ -137,7 +131,9 @@ public class RouteWeChatController extends RouteBaseController {
             map.put("timeList",timeList);
             map.put("busList",busList);
 
-            WebUtil.printJson(response,new Result().success(createMap("map", map)));
+            return new Result().success(createMap("map", map));
+
+//            WebUtil.printJson(response,new Result().success(createMap("map", map)));
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();

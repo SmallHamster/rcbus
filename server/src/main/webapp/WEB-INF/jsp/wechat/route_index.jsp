@@ -182,7 +182,7 @@
     function search(){
         $.post("${contextPath}/wechat/route/list",$("#formId").serialize(),function(result){
             if(result.status == 0) {
-                var list = result.data.object.list;
+                var list = result.data.list;
                 $(".ui-list ul").empty();
                 if(list.length > 0){
                     $(".ui-list .hd").eq(0).text("全部路线");

@@ -338,24 +338,23 @@
 
     </dependencies>
 
-<!--    <profiles>
+    <profiles>
+
         <profile>
             <id>dev-localhost</id>
             <properties>
-                <pro.jdbc.url>jdbc:mysql://4.16.1.158:3306/leoman_rcbus?characterEncoding=UTF-8</pro.jdbc.url>
+                <pro.jdbc.url>jdbc:mysql://localhost:3306/rcbus?characterEncoding=UTF-8</pro.jdbc.url>
                 <pro.jdbc.username>root</pro.jdbc.username>
                 <pro.jdbc.password>root</pro.jdbc.password>
                 <pro.upload.url>http://127.0.0.1/files/upload/</pro.upload.url>
-                <pro.upload.path>D:/tomcat/apache-tomcat-7.0.69/webapps/files/upload/</pro.upload.path>
-                <base.url>http://www.whjcbs.com/leoman_rcbus/</base.url>
-                <base.domain>http://www.whjcbs.com</base.domain>
+                <pro.upload.path>D:/devsoftware/apache-tomcat-7.0.72/webapps/files/upload/</pro.upload.path>
+                <base.url>http://localhost/leoman_rcbus/</base.url>
+                <base.domain>http://localhost</base.domain>
             </properties>
         </profile>
-    </profiles>-->
 
-    <profiles>
         <profile>
-            <id>dev-localhost</id>
+            <id>dev-dev</id>
             <properties>
                 <pro.jdbc.url>jdbc:mysql://106.75.62.100:3306/rcbus?characterEncoding=UTF-8</pro.jdbc.url>
                 <pro.jdbc.username>root</pro.jdbc.username>

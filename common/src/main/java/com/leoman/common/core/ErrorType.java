@@ -5,7 +5,7 @@ package com.leoman.common.core;
  */
 public enum ErrorType {
 
-    ERROR_CODE_0001("参数不正确", 1),
+    ERROR_CODE_0001("系统忙，请稍后再试", 1),
     ERROR_CODE_0002("服务器异常", 2),
     ERROR_CODE_0003("找不到用户", 3),
     ERROR_CODE_0004("验证码错误", 4),

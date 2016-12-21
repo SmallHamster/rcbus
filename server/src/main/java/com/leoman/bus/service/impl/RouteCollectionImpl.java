@@ -1,6 +1,7 @@
 package com.leoman.bus.service.impl;
 
 import com.leoman.bus.dao.RouteCollectionDao;
+import com.leoman.bus.dao.RouteDao;
 import com.leoman.bus.entity.Route;
 import com.leoman.bus.entity.RouteCollection;
 import com.leoman.bus.service.RouteCollectionService;
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,9 +24,18 @@ public class RouteCollectionImpl extends GenericManagerImpl<RouteCollection, Rou
     @Autowired
     private RouteCollectionDao routeCollectionDao;
 
+    @Autowired
+    private RouteDao routeDao;
+
     @Override
     public List<Route> findByUser(Long userId) {
-        return routeCollectionDao.findByUser(userId);
+        List<Route> list = new ArrayList<>();
+        List<RouteCollection> rcList = routeCollectionDao.findByUser(userId);
+        for (RouteCollection rc:rcList) {
+            Route route = routeDao.findOne(rc.getRouteId());
+            list.add(route);
+        }
+        return list;
     }
 
     /**
@@ -41,7 +52,7 @@ public class RouteCollectionImpl extends GenericManagerImpl<RouteCollection, Rou
         if(isCollect){
             if(r == null){
                 RouteCollection rc = new RouteCollection();
-                rc.setRoute(new Route(routeId));
+                rc.setRouteId(routeId);
                 rc.setUserId(userId);
                 routeCollectionDao.save(rc);
             }

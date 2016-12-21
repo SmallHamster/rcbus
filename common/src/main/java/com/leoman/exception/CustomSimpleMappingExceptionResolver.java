@@ -1,5 +1,6 @@
 package com.leoman.exception;
 
+import com.leoman.common.core.Result;
 import com.leoman.common.log.service.LogService;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.common.log.entity.LogEntity;
@@ -78,7 +79,8 @@ public class CustomSimpleMappingExceptionResolver extends SimpleMappingException
                 }
                 return getModelAndView(viewName, ex, request);
             } else {// JSON格式返回
-                WebUtil.print(response,new com.leoman.common.core.bean.Result(false).msg(ex.getMessage()));
+//                WebUtil.print(response,new com.leoman.common.core.bean.Result(false).msg(ex.getMessage()));
+                WebUtil.print(response, Result.failure());//返回服务器异常
                 return null;
             }
         } else {
