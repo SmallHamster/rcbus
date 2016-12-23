@@ -26,4 +26,6 @@ public interface Constant {
 
     // 当前登录人姓名
     String CURRENT_USER_NAME = "session_member_name";
+
+    String EVENT_DEF_SUBSCRIBE_TEXT = "感谢关注!";
 }
