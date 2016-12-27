@@ -539,7 +539,15 @@ public class WechatIndexController extends CommonController {
             System.out.println("-------------------");
             System.out.println("in:" + inMessage);
             System.out.println("-------------------");
-            if ((inMessage.getEvent().equals("SCAN") || inMessage.getEvent().equals("subscribe")) && org.apache.commons.lang.StringUtils.isNotBlank(inMessage.getEventKey()) && org.apache.commons.lang.StringUtils.isNotBlank(inMessage.getTicket())) {
+//            System.out.println((inMessage.getEvent().equals("SCAN") || inMessage.getEvent().equals("subscribe")) && org.apache.commons.lang.StringUtils.isNotBlank(inMessage.getEventKey()) && org.apache.commons.lang.StringUtils.isNotBlank(inMessage.getTicket()));
+
+            WxMpXmlOutMessage outMessage = wxMpMessageRouter.route(inMessage);
+            if(outMessage != null){
+                WebUtil.print(response, outMessage.toXml());
+            }
+            System.out.println("-----------11--------");
+            /*if ((inMessage.getEvent().equals("SCAN") || inMessage.getEvent().equals("subscribe")) && org.apache.commons.lang.StringUtils.isNotBlank(inMessage.getEventKey()) && org.apache.commons.lang.StringUtils.isNotBlank(inMessage.getTicket())) {
+                System.out.println(" -- scan --- ");
                 System.out.println("==========================================:" + inMessage.getEventKey());
                 String eventKey = inMessage.getEventKey().toString();
                 eventKey = eventKey.replace("qrscene_", "");
@@ -559,9 +567,10 @@ public class WechatIndexController extends CommonController {
                 WxMpService wxMpService = (WxMpService) BeanUtils.getBean("wxMpService");
                 wxMpService.customMessageSend(news.build());
             } else {
+                System.out.println(" -- not scan --- ");
                 WxMpXmlOutMessage outMessage = wxMpMessageRouter.route(inMessage);
                 WebUtil.print(response, outMessage.toXml());
-            }
+            }*/
             return;
         }
     }

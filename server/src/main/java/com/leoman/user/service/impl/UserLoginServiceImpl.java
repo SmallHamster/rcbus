@@ -112,7 +112,6 @@ public class UserLoginServiceImpl extends GenericManagerImpl<UserLogin, UserLogi
                     user.setWeChatUser(wxUser);
                     userService.update(user);
                 }
-
             }
 
             request.getSession().setAttribute(Constant.SESSION_MEMBER_USER, user);

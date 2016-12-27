@@ -14,7 +14,6 @@ import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.coupon.entity.Coupon;
 import com.leoman.coupon.service.CouponService;
-import com.leoman.entity.Constant;
 import com.leoman.order.entity.Order;
 import com.leoman.order.service.OrderService;
 import com.leoman.order.service.impl.OrderServiceImpl;
@@ -24,10 +23,7 @@ import com.leoman.user.entity.UserInfo;
 import com.leoman.user.service.CouponOrderService;
 import com.leoman.user.service.UserCouponService;
 import com.leoman.utils.DateUtils;
-import com.leoman.utils.ehcache.EhcacheUtil;
-import com.leoman.utils.HttpRequestUtil;
 import me.chanjar.weixin.mp.api.WxMpConfigStorage;
-import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -37,13 +33,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
-import java.security.KeyManagementException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
 import java.text.ParseException;
-import java.util.*;
-import java.util.concurrent.ExecutionException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * 我的订单
@@ -75,7 +70,10 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
     @Autowired
     private RouteService routeService;
 
-    public final static String weixin_ticket_url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi";
+//    @Autowired
+//    private WxMpService wxMpService;
+
+//    public final static String weixin_ticket_url = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?access_token=ACCESS_TOKEN&type=jsapi";
 
     /**
      * 我的订单
@@ -89,7 +87,7 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
         UserInfo userInfo = new CommonController().getSessionUser(request);
         if (userInfo != null) {
             List<RouteOrder> routeOrders = routeOrderService.findList(userInfo.getId());
-            List<RouteOrder> routeOrderList = new ArrayList<>();
+            List<RouteOrder>    routeOrderList = new ArrayList<>();
             model.addAttribute("carRentalList", carRentalService.findList(userInfo.getId()));
             for (RouteOrder routeOrder : routeOrders) {
                 String time = DateUtils.longToString(routeOrder.getOrder().getCreateDate(), "yyyy-MM-dd") + " " + routeOrder.getDepartTime();
@@ -536,7 +534,8 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
     }
 
     public String getSignature(HttpServletRequest request, String noncestr, String timestamp, String url) throws Exception {
-        String jsApi_ticket = getTicket();
+        String jsApi_ticket = super.getTicket();
+//        String jsApi_ticket = wxMpService.getJsapiTicket();
         if(StringUtils.isNotBlank(jsApi_ticket)){
             return getSignature(jsApi_ticket, timestamp, noncestr, url);
         }
@@ -612,55 +611,57 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
         }
     }
 
-    /**
-     * 获取access_token
-     *
-     * @return
-     * @throws Exception
-     * @updateDate 2015年8月3日23:22:39 增加对缓存的处理
-     */
-    public String getAccessToken() throws Exception {
-        String accessToken = (String) EhcacheUtil.get("wxCache", "accessToken");
-        if (StringUtils.isBlank(accessToken)
-                || StringUtils.isEmpty(accessToken)) {
-            accessToken = wxMpConfigStorage.getAccessToken();
-            EhcacheUtil.put("wxCache", "accessToken", accessToken);
-
-        }
-        return accessToken;
-    }
-
-    /**
-     * 获得jsapi_ticket（有效期7200秒)
-     *
-     * @return
-     * @throws InterruptedException
-     * @throws ExecutionException
-     * @throws NoSuchAlgorithmException
-     * @throws KeyManagementException
-     * @throws IOException
-     * @throws NoSuchProviderException
-     * @updateDate 2015年8月4日00:00:46 z 增加对缓存的
-     */
-    public String getTicket() throws Exception {
-        String jsapi_ticket = null;
-        String accessToken = getAccessToken();
-        if(StringUtils.isNotBlank(accessToken)){
-            jsapi_ticket = (String) EhcacheUtil.get("wxCache", "jsapi_ticket");
-
-            if (StringUtils.isBlank(jsapi_ticket) || StringUtils.isEmpty(jsapi_ticket)) {
-                String urljson = weixin_ticket_url.replace("ACCESS_TOKEN", accessToken);
-                String result = HttpRequestUtil.sendGet(urljson);
-                JSONObject str = JSONObject.fromObject(result);
-                System.out.println("str = "+str);
-                jsapi_ticket = str.get("ticket").toString();
-                EhcacheUtil.put("wxCache", "jsapi_ticket", jsapi_ticket);
-            }
-        }
-
-        return jsapi_ticket;
-
-    }
+//    /**
+//     * 获取access_token
+//     *
+//     * @return
+//     * @throws Exception
+//     * @updateDate 2015年8月3日23:22:39 增加对缓存的处理
+//     */
+//    public String getAccessToken() throws Exception {
+//        String accessToken = (String) EhcacheUtil.get("wxCache", "accessToken");
+//        System.out.println("cache accessToken : "+accessToken);
+//        if (StringUtils.isBlank(accessToken)
+//                || StringUtils.isEmpty(accessToken)) {
+////            accessToken = wxMpConfigStorage.getAccessToken();
+//            accessToken = wxMpService.getAccessToken();
+//            EhcacheUtil.put("wxCache", "accessToken", accessToken);
+//            System.out.println("reget accessToken : "+accessToken);
+//        }
+//        return accessToken;
+//    }
+//
+//    /**
+//     * 获得jsapi_ticket（有效期7200秒)
+//     *
+//     * @return
+//     * @throws InterruptedException
+//     * @throws ExecutionException
+//     * @throws NoSuchAlgorithmException
+//     * @throws KeyManagementException
+//     * @throws IOException
+//     * @throws NoSuchProviderException
+//     * @updateDate 2015年8月4日00:00:46 z 增加对缓存的
+//     */
+//    public String getTicket() throws Exception {
+//        String jsapi_ticket = null;
+//        String accessToken = getAccessToken();
+//        if(StringUtils.isNotBlank(accessToken)){
+//            jsapi_ticket = (String) EhcacheUtil.get("wxCache", "jsapi_ticket");
+//
+//            if (StringUtils.isBlank(jsapi_ticket) || StringUtils.isEmpty(jsapi_ticket)) {
+//                String urljson = weixin_ticket_url.replace("ACCESS_TOKEN", accessToken);
+//                String result = HttpRequestUtil.sendGet(urljson);
+//                JSONObject str = JSONObject.fromObject(result);
+//                System.out.println("weixin_ticket result = "+str);
+//                jsapi_ticket = str.get("ticket").toString();
+//                EhcacheUtil.put("wxCache", "jsapi_ticket", jsapi_ticket);
+//            }
+//        }
+//
+//        return jsapi_ticket;
+//
+//    }
 
     /**
      * 将字节数组转换为十六进制字符串

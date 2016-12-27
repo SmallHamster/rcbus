@@ -66,6 +66,7 @@
                 };
                 locArr.push(loc);
             }
+            console.info(locArr);
 
             initMap();
         }

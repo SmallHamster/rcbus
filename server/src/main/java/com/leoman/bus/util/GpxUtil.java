@@ -23,7 +23,9 @@ public class GpxUtil {
 	private static String version = "1";
 
 	public static void main(String[] args) {
-		List list = getCurrentLoc("8309640", "34dc5e4abcf3066c2bb7fca78ee33315");
+
+//		getGroupsBus();
+		List list = getCurrentLoc("8370366", "d53c8fedd38d34726366faf9c9fb3093");
 		System.out.println(list);
 		Map loc = (Map)list.get(0);
 		Double lat = (Double) loc.get("lat");
@@ -79,6 +81,7 @@ public class GpxUtil {
 			Response result = HttpRequestUtil.sendPost(basicUrl,map);
 			if(result.getStatus()){
 				String body = result.getBody();
+				System.out.println(body);
 				Map resMap = JsonUtil.jsontoMap(body);
 				if(resMap.get("success").equals(true)){
 					List<Map> groups = (List<Map>)resMap.get("groups");
@@ -104,6 +107,7 @@ public class GpxUtil {
 		Response result = HttpRequestUtil.sendPost(basicUrl,map);
 		if(result.getStatus()){
 			String body = result.getBody();
+			System.out.println(body);
 			Map resMap = JsonUtil.jsontoMap(body);
 			if(resMap.get("success").equals(true)){
 				List<Map> locs = (List<Map>)resMap.get("locs");

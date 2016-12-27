@@ -313,7 +313,7 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         if(type == 0 && user.getEnterprise() != null){
             sql.append("  AND e.`id` = "+user.getEnterprise().getId());
         }
-        sql.append(" ORDER BY r.`line_name`, IF(rc.`id` IS NULL, 0, 1) DESC ");
+        sql.append(" ORDER BY IF(rc.`id` IS NULL, 0, 1) DESC, r.`line_name` ");
         List<Route> list = queryBySql(sql.toString(), Route.class);
         return list;
     }

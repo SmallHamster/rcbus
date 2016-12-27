@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface RouteOrderDao extends IBaseJpaRepository<RouteOrder>{
 
-    @Query("SELECT b FROM RouteOrder b WHERE b.order.id IN (SELECT a.id FROM Order a WHERE a.userInfo.id =?1) AND b.isDel = '0' ")
+    @Query("SELECT b FROM RouteOrder b WHERE b.order.id IN (SELECT a.id FROM Order a WHERE a.userInfo.id =?1) AND b.isDel = '0' order by b.id desc")
     public List<RouteOrder> findList(Long id);
 
     @Query("select count(a.id) from RouteOrder a where a.routeId = ?1 and a.departTime = ?2")

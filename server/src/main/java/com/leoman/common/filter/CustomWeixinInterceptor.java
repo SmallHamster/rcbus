@@ -56,6 +56,7 @@ public class CustomWeixinInterceptor extends HandlerInterceptorAdapter {
 
             // if (Constant.WEIXIN_STATE.equals(request.getParameter("state")) && StringUtils.isNotBlank(code)) {
             if (null == wxUserPlus && StringUtils.isNotBlank(code)) {
+                System.out.println("---- start get wxuser -----");
                 WxMpOAuth2AccessToken wxMpOAuth2AccessToken = wxMpService.oauth2getAccessToken(code);
 
                 WeChatUser wxUser = weChatUserService.getWxUserByToken(wxMpOAuth2AccessToken);

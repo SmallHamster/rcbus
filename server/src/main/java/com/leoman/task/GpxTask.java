@@ -21,7 +21,7 @@ public class GpxTask {
     @Autowired
     private BusService busService;
 
-/*    @Scheduled(cron="0/3 * * * * ? ")
+    @Scheduled(cron="0/3 * * * * ? ")
     public void Task(){
         List<Map> groups = GpxUtil.getGroupsBus();
         if(groups != null){
@@ -30,33 +30,45 @@ public class GpxTask {
                 for (Map map:busList) {
                     String vid = String.valueOf(map.get("id"));//车辆ID
                     String vKey = (String) map.get("vKey");//车辆授权码
+                    String name = (String) map.get("name");//车牌号
+
+                    Bus bus;
+
+                    List<Bus> bList = busService.findByCarNo(name);
+                    //若该车牌号不存在，则新增该车辆信息
+                    if(bList == null || bList.size() == 0){
+                        bus = new Bus();
+                        bus.setUuid(vid);//id
+                        bus.setCarNo(name);//车牌号
+                        bus.setVkey(vKey);//车辆授权码
+                        bus.setCarType(new CarType(1l));//类型为通勤班车
+                        busService.save(bus);
+                    }else{
+                        for (int i=0; i<bList.size(); i++) {
+                            //如果该车牌号有多辆车，则其他的都删除，只保留一辆
+                            if(i > 0){
+                                busService.delete(bList.get(i));
+                            }
+                        }
+                        //若车辆的vid和vkey修改了，则更新该车辆信息
+                        bus = bList.get(0);
+                        if(!vid.equals(bus.getUuid()) || !vKey.equals(bus.getVkey())){
+                            bus.setUuid(vid);
+                            bus.setVkey(vKey);
+                            busService.save(bus);
+                        }
+                    }
+
+                    //更新当前车辆信息
                     List<Map> locs = GpxUtil.getCurrentLoc(vid,vKey);
                     if(locs != null){
                         for (Map loc:locs) {
-                            String uuid = String.valueOf(loc.get("id"));
                             Double curLat = (Double)loc.get("lat");//纬度
                             Double curLng = (Double)loc.get("lng");//经度
-                            Bus bus = busService.findByUuid(uuid);
-                            //获取该车牌号对应的所有车辆，只留下当前uuid的，其他的删除
-                            List<Bus> bList = busService.findByCarNo(bus.getCarNo());
-                            for (Bus b:bList) {
-                                if(!b.getUuid().equals(uuid)){
-                                    busService.delete(b);
-                                }
-                            }
-                            if(bus != null){
-                                if(!curLat.equals(bus.getCurLat()) || !curLng.equals(bus.getCurLng())){
-                                    double[] position = MathUtil.wgs2bd(curLat ,curLng);
-                                    bus.setCurLat(position[0]);
-                                    bus.setCurLng(position[1]);
-                                    busService.save(bus);
-                                }
-                            }else{
-                                bus = new Bus();
-                                bus.setUuid(String.valueOf(map.get("id")));//id
-                                bus.setCarNo((String) map.get("name"));//车牌号
-                                bus.setVkey((String) map.get("vKey"));//车辆授权码
-                                bus.setCarType(new CarType(1l));//类型为通勤班车
+                            if(!curLat.equals(bus.getCurLat()) || !curLng.equals(bus.getCurLng())){
+                                double[] position = MathUtil.wgs2bd(curLat ,curLng);
+                                bus.setCurLat(position[0]);
+                                bus.setCurLng(position[1]);
                                 busService.save(bus);
                             }
                         }
@@ -64,6 +76,6 @@ public class GpxTask {
                 }
             }
         }
-    }*/
+    }
 
 }

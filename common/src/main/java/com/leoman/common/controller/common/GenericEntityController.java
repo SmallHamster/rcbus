@@ -17,7 +17,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GenericEntityController<V, T, M>  {
+public class GenericEntityController<V, T, M> extends CommonController {
 
 	/**
 	 * 获取Service实例

@@ -151,6 +151,10 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
             Order order = orderService.queryByPK(carRental.getOrder().getId());
             order.setStatus(1);
             orderService.save(order);
+
+            //若订单状态变为待付款，则提示用户尽快付款
+            String openId = carRental.getOrder().getUserInfo().getWeChatUser().getOpenId();
+            sendTextMessageToUser("你的订单已审核，请尽快付款",openId);
         }
 
         if(busIds.length>0){
