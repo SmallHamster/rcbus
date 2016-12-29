@@ -41,10 +41,10 @@
                                     <div class="col-sm-2">
                                         <select class="form-control input-sm" name="enterpriseId">
                                             <c:forEach items="${enterpriseList}" var="enterprise">
-                                                <c:if test="${enterprise.id == route.enterprise.id}">
+                                                <c:if test="${enterprise.id == route.enterpriseId}">
                                                     <option value="${enterprise.id}" selected>${enterprise.name}</option>
                                                 </c:if>
-                                                <c:if test="${enterprise.id != route.enterprise.id}">
+                                                <c:if test="${enterprise.id != route.enterpriseId}">
                                                     <option value="${enterprise.id}">${enterprise.name}</option>
                                                 </c:if>
                                             </c:forEach>
