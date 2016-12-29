@@ -55,9 +55,11 @@
     </div>
 
 
+    <c:if test="${type == 0}">
     <div class="button">
         <button type="button" class="ubtn ubtn-blue" id="submit" onclick="toOrder()">预定座位</button>
     </div>
+    </c:if>
 </section>
 
 <!-- 车辆信息模板 -->

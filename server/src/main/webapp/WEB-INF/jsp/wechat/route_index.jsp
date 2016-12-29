@@ -226,7 +226,7 @@
     }
 
     function toDetail(id){
-        location.href = "${contextPath}/wechat/route/detail?routeId="+id;
+        location.href = "${contextPath}/wechat/route/detail?type=${type}&routeId="+id;
     }
 
     function toPosition(id){

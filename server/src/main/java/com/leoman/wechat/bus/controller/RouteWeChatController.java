@@ -99,8 +99,9 @@ public class RouteWeChatController extends RouteBaseController {
      * @return
      */
     @RequestMapping(value = "/detail")
-    public String bus(Model model,Long routeId) {
-        model.addAttribute("routeId",routeId);
+    public String bus(Model model, Long routeId, Integer type) {
+        model.addAttribute("routeId", routeId);
+        model.addAttribute("type", type);
         return "wechat/route_detail";
     }
 
@@ -113,7 +114,7 @@ public class RouteWeChatController extends RouteBaseController {
      */
     @RequestMapping(value = "/other", method = RequestMethod.POST)
     @ResponseBody
-    public Result stations(HttpServletRequest request,
+    public Result other(HttpServletRequest request,
                         HttpServletResponse response,
                         Long routeId,
                            Double userLat,
