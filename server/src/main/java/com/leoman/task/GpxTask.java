@@ -62,21 +62,6 @@ public class GpxTask {
                             busService.save(bus);
                         }
                     }
-
-                    //更新当前车辆信息
-                    /*List<Map> locs = GpxUtil.getCurrentLoc(vid,vKey);
-                    if(locs != null){
-                        for (Map loc:locs) {
-                            Double curLat = (Double)loc.get("lat");//纬度
-                            Double curLng = (Double)loc.get("lng");//经度
-                            if(!curLat.equals(bus.getCurLat()) || !curLng.equals(bus.getCurLng())){
-                                double[] position = MathUtil.wgs2bd(curLat ,curLng);
-                                bus.setCurLat(position[0]);
-                                bus.setCurLng(position[1]);
-                                busService.save(bus);
-                            }
-                        }
-                    }*/
                 }
             }
         }
@@ -111,17 +96,5 @@ public class GpxTask {
         Date d2 = new Date();
         System.out.println("更新所有车的位置所需要的时间："+ (d2.getTime()-d1.getTime()) +"毫秒");
     }*/
-
-//    @Scheduled(cron="0/3 * * * * ? ")
-//    public void getLoc(){
-//        Date d1 = new Date();
-//        for (int i=0; i<4; i++){
-//            Thread thread = new Thread(new BusThread());
-//            thread.start();
-//        }
-//        Date d2 = new Date();
-//        System.out.println("更新所有车的位置所需要的时间："+ (d2.getTime()-d1.getTime()) +"毫秒");
-//    }
-
 
 }
