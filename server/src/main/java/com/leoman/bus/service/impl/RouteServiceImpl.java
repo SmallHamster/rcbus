@@ -198,7 +198,7 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         for (String busId:busIdArr) {
             if(!StringUtils.isEmpty(busId)){
                 BusSend bs = new BusSend();
-                bs.setBus(new Bus(Long.valueOf(busId)));
+                bs.setBusId(Long.valueOf(busId));
                 bs.setContactId(routeId);
                 bs.setType(1);//班车
                 busSendDao.save(bs);

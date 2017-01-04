@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -23,6 +24,7 @@ public class GpxTask {
 
     @Scheduled(cron="0/3 * * * * ? ")
     public void Task(){
+        Date d1 = new Date();
         List<Map> groups = GpxUtil.getGroupsBus();
         if(groups != null){
             for (Map group:groups) {
@@ -76,6 +78,8 @@ public class GpxTask {
                 }
             }
         }
+        Date d2 = new Date();
+        System.out.println("更新车的位置信息所需时间"+(d2.getTime() - d1.getTime()));
     }
 
 }

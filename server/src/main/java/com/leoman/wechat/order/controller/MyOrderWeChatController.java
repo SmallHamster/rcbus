@@ -1,7 +1,9 @@
 package com.leoman.wechat.order.controller;
 
+import com.leoman.bus.entity.Bus;
 import com.leoman.bus.entity.Route;
 import com.leoman.bus.entity.RouteOrder;
+import com.leoman.bus.service.BusService;
 import com.leoman.bus.service.RouteOrderService;
 import com.leoman.bus.service.RouteService;
 import com.leoman.bussend.entity.BusSend;
@@ -39,6 +41,7 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 /**
  * 我的订单
@@ -69,6 +72,9 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
 
     @Autowired
     private RouteService routeService;
+
+    @Autowired
+    private BusService busService;
 
 //    @Autowired
 //    private WxMpService wxMpService;
@@ -122,6 +128,15 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
             }
             for (RouteOrder ro:routeOrderList) {
                 Route route = routeService.queryByPK(ro.getRouteId());
+                if(route != null && route.getBusSends() != null){
+                    Set<BusSend> bsSet = route.getBusSends();
+                    for (BusSend bs:bsSet) {
+                        if(bs.getBusId() != null){
+                            Bus bus = busService.queryByPK(bs.getBusId());
+                            bs.setBus(bus);
+                        }
+                    }
+                }
                 ro.setRoute(route);
             }
             model.addAttribute("routeOrderList", routeOrderList);
@@ -195,7 +210,13 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
             model.addAttribute("signature", signature);
 
             if (!busSendService.findBus(id, 2).isEmpty() && busSendService.findBus(id, 2).size() > 0) {
-                model.addAttribute("modelNo", busSendService.findBus(id, 2).get(0).getBus().getModelNo());
+                String modelNo = "";
+                List<BusSend> busSendList = busSendService.findBus(id, 2);
+                if(busSendList.get(0).getBusId() != null){
+                    Bus bus = busService.queryByPK(busSendList.get(0).getBusId());
+                    modelNo = bus.getModelNo();
+                }
+                model.addAttribute("modelNo", modelNo);
             }
             //进行中
             return "wechat/orderdetail/order_detail_status2";
@@ -271,7 +292,12 @@ public class MyOrderWeChatController extends GenericEntityController<Order,Order
             List<BusSend> busSendList = busSendService.findBus(id, 2);
             model.addAttribute("busSend", busSendList);
             if (!busSendList.isEmpty() && busSendList.size() > 0) {
-                model.addAttribute("modelNo", busSendList.get(0).getBus().getModelNo());
+                String modelNo = "";
+                if(busSendList.get(0).getBusId() != null){
+                    Bus bus = busService.queryByPK(busSendList.get(0).getBusId());
+                    modelNo = bus.getModelNo();
+                }
+                model.addAttribute("modelNo", modelNo);
             }
 
             Integer index;

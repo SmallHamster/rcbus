@@ -24,8 +24,9 @@ public class GpxUtil {
 
 	public static void main(String[] args) {
 
-//		getGroupsBus();
-		List list = getCurrentLoc("8370366", "d53c8fedd38d34726366faf9c9fb3093");
+//		List<Map> list = getGroupsBus();
+//		System.out.println(list);
+		List list = getCurrentLoc("8309598", "9ba8b0b5ac532ae3faa3e38c12df2d78");
 		System.out.println(list);
 		Map loc = (Map)list.get(0);
 		Double lat = (Double) loc.get("lat");

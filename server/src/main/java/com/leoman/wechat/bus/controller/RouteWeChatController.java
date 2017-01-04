@@ -208,10 +208,11 @@ public class RouteWeChatController extends RouteBaseController {
      * @return
      */
     @RequestMapping(value = "/toPosition")
-    public String toPosition(Model model,Long routeId) {
+    public String toPosition(Model model, Long routeId, Integer type) {
         List<Bus> busList =  busService.findBusOrderByDistance(routeId,null,null);
         model.addAttribute("busList", JsonUtil.obj2Json(busList));
-        model.addAttribute("routeId",routeId);
+        model.addAttribute("routeId", routeId);
+        model.addAttribute("type", type);
         return "wechat/bus_position";
     }
 

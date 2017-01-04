@@ -12,6 +12,6 @@ import java.util.List;
 public interface BusSendDao extends IBaseJpaRepository<BusSend>{
 
     @Query("SELECT a FROM BusSend a WHERE a.contactId=?1 AND a.type=?2 ")
-    public List<BusSend> findBus(Long id,Integer type);
+    public List<BusSend> findBus(Long id, Integer type);
 
 }

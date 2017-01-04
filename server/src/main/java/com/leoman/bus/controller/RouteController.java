@@ -396,7 +396,7 @@ public class RouteController extends GenericEntityController<Route, Route, Route
             StringBuffer busIds = new StringBuffer();
             List<BusSend> bsList = busSendService.findBus(routeId,1);
             for (BusSend bs:bsList) {
-                Long busId = bs.getBus().getId();
+                Long busId = bs.getBusId();
                 busIds.append(busId+",");
                 busIdsStr = busIds.toString().substring(0,busIds.toString().length()-1);
             }

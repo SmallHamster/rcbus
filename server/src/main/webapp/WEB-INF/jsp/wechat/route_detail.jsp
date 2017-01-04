@@ -224,7 +224,7 @@
 
     function toPosition(){
 //        location.href = "http://221.234.42.20:89/Interface/findPosition.action?carNum=鄂ALB229";
-        location.href = "${contextPath}/wechat/route/toPosition?routeId=${routeId}";
+        location.href = "${contextPath}/wechat/route/toPosition?type=${type}&routeId=${routeId}";
     }
 
     //查看返程

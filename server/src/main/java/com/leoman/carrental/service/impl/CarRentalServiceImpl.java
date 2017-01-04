@@ -167,7 +167,7 @@ public class CarRentalServiceImpl extends GenericManagerImpl<CarRental,CarRental
             for (Long busId : busIds){
                 BusSend busSend = new BusSend();
                 busSend.setContactId(id);
-                busSend.setBus(busService.queryByPK(busId));
+                busSend.setBusId(busId);
                 //租车
                 busSend.setType(2);
                 busSendService.save(busSend);
