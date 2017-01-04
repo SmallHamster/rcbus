@@ -131,6 +131,7 @@
             //班车
             var busList = res.data.object.map.busList;
             $(".slide ul").empty();
+            sidArr = [];
             for(var i=0; i<busList.length;i++){
                 var template = $("#busTemplate").clone().removeAttr("id");
                 template.find(".avatar img").attr("src",busList[i].image==null?'':busList[i].image.uploadUrl);
@@ -140,6 +141,7 @@
                 template.find(".detail .col").eq(0).find("span").text(busList[i].brand);
                 template.find(".detail .col").eq(1).find("span").text(busList[i].modelNo);
                 sidArr.push(busList[i].stationId);
+                console.info(sidArr);
                 carNoArr.push(busList[i].carNo);
                 template.show();
                 $(".slide ul").append(template);
