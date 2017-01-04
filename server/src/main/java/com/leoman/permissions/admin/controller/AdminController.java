@@ -81,7 +81,7 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
         query.setPagenum(pagenum);
         query.setPagesize(length);
         query.like("username", username);
-        query.eq("enterprise.id",enterpriseId);
+        query.eq("enterpriseId",enterpriseId);
         Page<Admin> page = adminService.queryPage(query);
 
         List<Admin> list = page.getContent();
@@ -92,13 +92,11 @@ public class AdminController extends GenericEntityController<Admin, Admin, Admin
             }else {
                 a.setRoleName("");
             }
+            if(a.getEnterpriseId() != null){
+                Enterprise enterprise = enterpriseService.queryByPK(a.getEnterpriseId());
+                a.setEnterprise(enterprise);
+            }
         }
-//        try {
-//            page =
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//        Page<Admin> page = adminService.page(pagenum,length);
         return DataTableFactory.fitting(draw, page);
     }
 

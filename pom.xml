@@ -348,7 +348,7 @@
                 <pro.jdbc.password>root</pro.jdbc.password>
                 <pro.upload.url>http://localhost:8082/files/upload/</pro.upload.url>
                 <pro.upload.path>D:/devsoftware/apache-tomcat-7.0.72/webapps/files/upload/</pro.upload.path>
-                <base.url>http://localhost:8082/leoman_rcbus/</base.url>
+                <base.url>http://www.whjcbs.com/leoman_rcbus/</base.url>
                 <base.domain>http://localhost</base.domain>
             </properties>
         </profile>

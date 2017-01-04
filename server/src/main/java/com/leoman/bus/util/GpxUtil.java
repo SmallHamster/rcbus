@@ -26,7 +26,7 @@ public class GpxUtil {
 
 //		List<Map> list = getGroupsBus();
 //		System.out.println(list);
-		List list = getCurrentLoc("8309598", "9ba8b0b5ac532ae3faa3e38c12df2d78");
+		List list = getCurrentLoc("8365837", "f4cd02362491a44b2a2138840d0ab1c1");
 		System.out.println(list);
 		Map loc = (Map)list.get(0);
 		Double lat = (Double) loc.get("lat");
@@ -37,9 +37,6 @@ public class GpxUtil {
 		Double baidu_lng_xz = (Double)loc.get("baidu_lng_xz");//经度修正值
 		System.out.println(lat );
 		System.out.println(lng );
-		System.out.println("------------------");
-		System.out.println(lat + baidu_lat_xz);
-		System.out.println(lng + baidu_lng_xz);
 		System.out.println("------------------");
 		double[] position = MathUtil.wgs2bd(lat ,lng);
 		System.out.println(position[0]);
@@ -82,7 +79,6 @@ public class GpxUtil {
 			Response result = HttpRequestUtil.sendPost(basicUrl,map);
 			if(result.getStatus()){
 				String body = result.getBody();
-				System.out.println(body);
 				Map resMap = JsonUtil.jsontoMap(body);
 				if(resMap.get("success").equals(true)){
 					List<Map> groups = (List<Map>)resMap.get("groups");
@@ -108,7 +104,6 @@ public class GpxUtil {
 		Response result = HttpRequestUtil.sendPost(basicUrl,map);
 		if(result.getStatus()){
 			String body = result.getBody();
-			System.out.println(body);
 			Map resMap = JsonUtil.jsontoMap(body);
 			if(resMap.get("success").equals(true)){
 				List<Map> locs = (List<Map>)resMap.get("locs");

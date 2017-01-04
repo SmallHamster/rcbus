@@ -98,23 +98,25 @@
                 var list = res.data.object.routeList;
                 $(".ui-list ul").empty();
                 for(var i=0; i<list.length; i++){
-                    var template = $("#routeTemplate").clone().removeAttr("id");
-                    template.find("em").eq(0).text(list[i].startStation);
-                    template.find("em").eq(1).text(list[i].endStation);
-                    template.find("b").text(list[i].lineName==null?"":list[i].lineName);
-                    template.find(".fromto").attr('onclick','toDetail('+list[i].id+')');
-                    template.find(".fav").attr("val",list[i].id);
-                    template.find("[type=checkbox]").val(list[i].id);
-                    if(list[i].bus != null){
-                        template.find(".detail").find("span").eq(0).text((list[i].bus.modelNo==null)?'':(list[i].bus.modelNo));
-                        template.find(".detail").find("span").eq(2).text("车牌号："+list[i].bus.carNo);
-                        template.find(".bus").text(list[i].bus.stationName==null?'':list[i].bus.stationName);//当前站点名称
+                    if(list[i] != null){
+                        var template = $("#routeTemplate").clone().removeAttr("id");
+                        template.find("em").eq(0).text(list[i].startStation);
+                        template.find("em").eq(1).text(list[i].endStation);
+                        template.find("b").text(list[i].lineName==null?"":list[i].lineName);
+                        template.find(".fromto").attr('onclick','toDetail('+list[i].id+')');
+                        template.find(".fav").attr("val",list[i].id);
+                        template.find("[type=checkbox]").val(list[i].id);
+                        if(list[i].bus != null){
+                            template.find(".detail").find("span").eq(0).text((list[i].bus.modelNo==null)?'':(list[i].bus.modelNo));
+                            template.find(".detail").find("span").eq(2).text("车牌号："+list[i].bus.carNo);
+                            template.find(".bus").text(list[i].bus.stationName==null?'':list[i].bus.stationName);//当前站点名称
+                        }
+                        var times = list[i].tempTimes;
+                        template.find(".detail").find("span").eq(1).text("即将出发："+(times==null||times.length==0?"无":times[0].departTime));
+                        template.find(".detail").find("span").eq(3).text("预定人数："+(list[i].orderNum==null?0:list[i].orderNum));
+                        template.show();
+                        $(".ui-list ul").append(template);
                     }
-                    var times = list[i].tempTimes;
-                    template.find(".detail").find("span").eq(1).text("即将出发："+(times==null||times.length==0?"无":times[0].departTime));
-                    template.find(".detail").find("span").eq(3).text("预定人数："+(list[i].orderNum==null?0:list[i].orderNum));
-                    template.show();
-                    $(".ui-list ul").append(template);
                 }
 
                 initFav();

@@ -3,4 +3,5 @@
 	<persistence-unit name="service.jpa" transaction-type="RESOURCE_LOCAL">
 
     </persistence-unit>
+
 </persistence>

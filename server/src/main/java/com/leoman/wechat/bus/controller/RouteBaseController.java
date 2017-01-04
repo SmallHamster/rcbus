@@ -126,26 +126,27 @@ public class RouteBaseController extends CommonController {
      */
     public void handleRoute(List<Route> routeList, Double userLat, Double userLng, Long userId){
         for (Route route:routeList) {
+            if (route != null) {
+                Long routeId = route.getId();
 
-            Long routeId = route.getId();
+                //设置用户是否收藏
+                handleRouteIsCollect(route, userId);
 
-            //设置用户是否收藏
-            handleRouteIsCollect(route,userId);
+                //设置路线的最近一班车
+                List<Bus> busList = busService.findBusOrderByDistance(routeId, userLat, userLng);
+                if (busList != null && busList.size() >= 1) {
+                    Bus bus = busList.get(0);
+                    List<RouteStation> stationList = routeStationService.findByRouteId(routeId);
+                    handleBusCurStation(bus, stationList);//设置当前车在哪个站点
+                    route.setBus(busList.get(0));
+                }
 
-            //设置路线的最近一班车
-            List<Bus> busList =  busService.findBusOrderByDistance(routeId,userLat,userLng);
-            if(busList != null && busList.size() >= 1){
-                Bus bus = busList.get(0);
-                List<RouteStation> stationList = routeStationService.findByRouteId(routeId);
-                handleBusCurStation(bus,stationList);//设置当前车在哪个站点
-                route.setBus(busList.get(0));
-            }
-
-            //设置路线的预定人数
-            List<RouteTime> times = routeTimeService.findByCurrentTime(routeId);
-            if(times != null && times.size() > 0){
-                route.setTempTimes(times);
-                handleRouteOrderNum(route,times.get(0).getDepartTime());
+                //设置路线的预定人数
+                List<RouteTime> times = routeTimeService.findByCurrentTime(routeId);
+                if (times != null && times.size() > 0) {
+                    route.setTempTimes(times);
+                    handleRouteOrderNum(route, times.get(0).getDepartTime());
+                }
             }
         }
     }

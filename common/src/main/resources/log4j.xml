@@ -67,7 +67,7 @@
 	<root>
 		<priority value="INFO" />
 		<appender-ref ref="STDOUT" />
-		<appender-ref ref="INFO" />
+		<!--<appender-ref ref="INFO" />-->
 		<appender-ref ref="WARN" />
 		<appender-ref ref="ERROR" />
 	</root>

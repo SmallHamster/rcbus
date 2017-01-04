@@ -24,9 +24,11 @@ public class Admin extends BaseEntity {
     @Column(name = "password")
     private String password = "";
 
-    @ManyToOne
-    @JoinColumn(name = "enterprise_id")
+    @Transient
     private Enterprise enterprise;
+
+    @Column(name = "enterprise_id")
+    private Long enterpriseId;
 
     @Column(name = "last_login_date")
     private Long lastLoginDate;
@@ -66,14 +68,6 @@ public class Admin extends BaseEntity {
         this.lastLoginDate = lastLoginDate;
     }
 
-    public Enterprise getEnterprise() {
-        return enterprise;
-    }
-
-    public void setEnterprise(Enterprise enterprise) {
-        this.enterprise = enterprise;
-    }
-
     public String getRoleName() {
         return roleName;
     }
@@ -85,5 +79,21 @@ public class Admin extends BaseEntity {
     @Override
     public String toString() {
         return "username :" + this.username + "password:" + this.password;
+    }
+
+    public Long getEnterpriseId() {
+        return enterpriseId;
+    }
+
+    public void setEnterpriseId(Long enterpriseId) {
+        this.enterpriseId = enterpriseId;
+    }
+
+    public Enterprise getEnterprise() {
+        return enterprise;
+    }
+
+    public void setEnterprise(Enterprise enterprise) {
+        this.enterprise = enterprise;
     }
 }

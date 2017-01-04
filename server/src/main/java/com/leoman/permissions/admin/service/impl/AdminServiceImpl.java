@@ -90,8 +90,7 @@ public class AdminServiceImpl extends GenericManagerImpl<Admin, AdminDao> implem
             admin.setPassword(MD5Util.MD5Encode(admin.getPassword(),"UTF-8"));
 
             if(enterpriseId!=null){
-                Enterprise enterprise = enterpriseService.queryByPK(enterpriseId);
-                admin.setEnterprise(enterprise);
+                admin.setEnterpriseId(enterpriseId);
             }
             save(admin);
 
