@@ -5,6 +5,7 @@ import com.leoman.bus.entity.CarType;
 import com.leoman.bus.service.BusService;
 import com.leoman.bus.util.GpxUtil;
 import com.leoman.bus.util.MathUtil;
+import com.leoman.utils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Component;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  * Created by Daisy on 2016/9/20.
@@ -21,6 +25,8 @@ public class GpxTask {
 
     @Autowired
     private BusService busService;
+
+    final ExecutorService service = Executors.newFixedThreadPool(10);
 
     /**
      * 每天早上6:00获取所有车辆信息
@@ -70,9 +76,9 @@ public class GpxTask {
     /**
      * 每隔3s获取车的位置
      */
-/*    @Scheduled(cron="0/3 * * * * ? ")
+    @Scheduled(cron="0/3 * * * * ? ")
     public void getLoc(){
-        Date d1 = new Date();
+        /*Date d1 = new Date();
         //获取所有的车辆信息
         List<Bus> busList = busService.queryAll();
         for (Bus bus:busList) {
@@ -94,7 +100,46 @@ public class GpxTask {
             }
         }
         Date d2 = new Date();
-        System.out.println("更新所有车的位置所需要的时间："+ (d2.getTime()-d1.getTime()) +"毫秒");
-    }*/
+        System.out.println("更新所有车的位置所需要的时间："+ (d2.getTime()-d1.getTime()) +"毫秒");*/
+
+        Date d1 = new Date();
+        //获取所有的车辆信息
+        final BusService busService = (BusService) BeanUtils.getBean("busService");
+        List<Bus> busList = busService.queryAll();
+        for (final Bus bus:busList) {
+            final String vid = bus.getUuid();//车辆ID
+            final String vKey = bus.getVkey();//车辆授权码
+            //更新当前车辆信息
+            service.execute(new Runnable() {
+                @Override
+                public void run() {
+                    List<Map> locs = GpxUtil.getCurrentLoc(vid,vKey);
+                    if(locs != null){
+                        for (Map loc:locs) {
+                            Double curLat = (Double)loc.get("lat");//纬度
+                            Double curLng = (Double)loc.get("lng");//经度
+                            if(!curLat.equals(bus.getCurLat()) || !curLng.equals(bus.getCurLng())){
+                                double[] position = MathUtil.wgs2bd(curLat ,curLng);
+                                bus.setCurLat(position[0]);
+                                bus.setCurLng(position[1]);
+                                busService.save(bus);
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        /*int threadCount = ((ThreadPoolExecutor)service).getActiveCount();
+        while(threadCount!=0){
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            threadCount = ((ThreadPoolExecutor)service).getActiveCount();
+        }
+        Date d2 = new Date();
+        System.out.println("更新所有车的位置所需要的时间:"+(d2.getTime()-d1.getTime()));*/
+    }
 
 }
