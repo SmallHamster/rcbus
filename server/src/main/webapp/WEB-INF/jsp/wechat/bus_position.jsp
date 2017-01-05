@@ -68,8 +68,6 @@
                 };
                 locArr.push(loc);
             }
-            console.info(locArr);
-
             initMap();
         }
     });
@@ -85,9 +83,17 @@
             var p1 = new BMap.Point(stationArr[0].lng,stationArr[0].lat);
             var p2 = new BMap.Point(stationArr[stationArr.length-1].lng,stationArr[stationArr.length-1].lat);
 
+            /*var lab1 = new BMap.Label(stationArr[0].name,{position:p1});
+            map.addOverlay(lab1);
+
+            var lab2 = new BMap.Label(stationArr[stationArr.length-1].name,{position:p2});
+            map.addOverlay(lab2);*/
+
             var waypArr = [];
             for(var i=1 ; i<stationArr.length-1;i++){
                 var wayp = new BMap.Point(stationArr[i].lng,stationArr[i].lat);
+                /*var lab = new BMap.Label(stationArr[i].name,{position:wayp});
+                map.addOverlay(lab);*/
                 waypArr.push(wayp);
             }
 
