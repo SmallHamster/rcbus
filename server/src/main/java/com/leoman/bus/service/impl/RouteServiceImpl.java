@@ -313,7 +313,7 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         if (StringUtils.isBlank(startStation) && StringUtils.isBlank(endStation)) {
             System.out.println();
         } else if (StringUtils.isNotBlank(startStation) && StringUtils.isNotBlank(endStation)) {
-            sql.append("  AND r.id in (SELECT s.route_id FROM t_route_station s WHERE s.station_name LIKE '%" + startStation + "%' OR r.id in (SELECT s.route_id FROM t_route_station s WHERE s.station_name LIKE '%" + endStation + "%'))  ");
+            sql.append("  AND r.id in (SELECT s.route_id FROM t_route_station s WHERE s.station_name LIKE '%" + startStation + "%' AND r.id in (SELECT s.route_id FROM t_route_station s WHERE s.station_name LIKE '%" + endStation + "%'))  ");
         } else {
             if (StringUtils.isNotBlank(startStation)) {
                 sql.append("  AND r.id in (SELECT s.route_id FROM t_route_station s WHERE s.station_name LIKE '%" + startStation + "%')  ");
