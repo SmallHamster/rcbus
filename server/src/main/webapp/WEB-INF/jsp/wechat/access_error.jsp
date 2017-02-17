@@ -6,7 +6,7 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>江城巴士</title>
-    <link rel="stylesheet" type="text/css" href="${contextPath}/static/js/jquery-1.11.0.js"/>
+    <script type="text/javascript" src="${contextPath}/static/weixin/inviteCode/js/jquery-1.7.2.min.js"></script>
     <link rel="stylesheet" type="text/css" href="${contextPath}/static/weixin/inviteCode/css/style.css"/>
     <script type="text/javascript">
         (function () {
@@ -21,9 +21,8 @@
 <div class="text1">请输入企业邀请码成为企业员工</div>
 <input type="text" class="input-style" id="inviteCode" placeholder='请输入邀请码' maxlength="6"/>
 <div class="text2">输入成功后，您将成为企业员工，可<br>以享受对应通勤班车了！</div>
-<div class="btn-ok">确认</div>
+<div class="btn-ok" onclick="sendInfo()">确认</div>
 </body>
-</html>
 
 <script type="text/javascript">
     function sendInfo() {
@@ -49,3 +48,5 @@
         }
     }
 </script>
+
+</html>
