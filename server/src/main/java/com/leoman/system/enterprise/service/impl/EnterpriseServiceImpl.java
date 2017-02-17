@@ -1,6 +1,7 @@
 package com.leoman.system.enterprise.service.impl;
 
 import com.leoman.common.service.impl.GenericManagerImpl;
+import com.leoman.entity.Constant;
 import com.leoman.pay.util.MD5Util;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.permissions.admin.service.AdminService;
@@ -12,9 +13,13 @@ import com.leoman.system.enterprise.service.EnterpriseService;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.user.service.UserService;
 import com.leoman.utils.RandomUtil;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Created by Administrator on 2016/9/6.
@@ -95,5 +100,31 @@ public class EnterpriseServiceImpl extends GenericManagerImpl<Enterprise, Enterp
         }
 
         return "";
+    }
+
+    @Override
+    public Integer joinEnterprise(HttpServletRequest httpRequest, String code) {
+        if (StringUtils.isBlank(code)) {
+            return 0;
+        }
+
+        try {
+            List<Enterprise> list = enterpriseDao.findListByInviteCode(code);
+
+            if (null == list || list.size() == 0) {
+                return 0;
+            }
+
+            UserInfo userInfo = (UserInfo) httpRequest.getSession().getAttribute(Constant.SESSION_MEMBER_USER);
+            userInfo.setEnterprise(list.get(0));
+            userInfo.setType(1);
+            userService.save(userInfo);
+
+            return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
     }
 }

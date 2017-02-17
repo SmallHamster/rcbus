@@ -5,15 +5,9 @@ import com.leoman.common.controller.common.CommonController;
 import com.leoman.common.core.ErrorType;
 import com.leoman.common.core.Result;
 import com.leoman.common.core.UrlManage;
-import com.leoman.common.log.entity.Log;
 import com.leoman.entity.Configue;
 import com.leoman.entity.Constant;
-import com.leoman.index.service.LoginService;
-import com.leoman.pay.util.HttpClientUtil;
-import com.leoman.pay.util.MD5Util;
-import com.leoman.permissions.admin.entity.Admin;
-import com.leoman.permissions.module.entity.vo.ModuleVo;
-import com.leoman.permissions.module.service.ModuleService;
+import com.leoman.system.enterprise.service.EnterpriseService;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.user.entity.UserLogin;
 import com.leoman.user.service.UserLoginService;
@@ -23,10 +17,8 @@ import me.chanjar.weixin.common.api.WxConsts;
 import me.chanjar.weixin.common.bean.WxMenu;
 import me.chanjar.weixin.mp.api.WxMpMessageRouter;
 import me.chanjar.weixin.mp.api.WxMpService;
-import me.chanjar.weixin.mp.bean.WxMpCustomMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlMessage;
 import me.chanjar.weixin.mp.bean.WxMpXmlOutMessage;
-import me.chanjar.weixin.mp.bean.custombuilder.NewsBuilder;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,16 +26,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.PostConstruct;
-import javax.naming.spi.DirStateFactory;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -69,8 +62,12 @@ public class WechatIndexController extends CommonController {
     @Autowired
     private WxMpMessageRouter wxMpMessageRouter;
 
+    @Autowired
+    private EnterpriseService enterpriseService;
+
     /**
      * 首页 自定义，方便显示所有页面
+     *
      * @return
      */
     @RequestMapping(value = "/index")
@@ -81,6 +78,7 @@ public class WechatIndexController extends CommonController {
 
     /**
      * 跳转至登录
+     *
      * @param request
      * @param response
      * @param error
@@ -110,6 +108,7 @@ public class WechatIndexController extends CommonController {
 
     /**
      * 注销
+     *
      * @param request
      * @param response
      * @return
@@ -125,6 +124,7 @@ public class WechatIndexController extends CommonController {
 
     /**
      * 登录验证
+     *
      * @param username
      * @param password
      * @param request
@@ -140,7 +140,7 @@ public class WechatIndexController extends CommonController {
                              HttpServletResponse response,
                              ModelMap model) {
         try {
-            return loginService.loginWeixin(request,response,username,password);
+            return loginService.loginWeixin(request, response, username, password);
 //            UserInfo user = loginService.login(username,Md5Util.md5(password));
 //            if(user != null){
 //                request.getSession().setAttribute(Constant.SESSION_MEMBER_USER, user);
@@ -150,13 +150,14 @@ public class WechatIndexController extends CommonController {
 //            }
         } catch (Exception e) {
             e.printStackTrace();
-            WebUtil.printJson(response,new com.leoman.common.core.bean.Result(false).msg(e.getMessage()));
+            WebUtil.printJson(response, new com.leoman.common.core.bean.Result(false).msg(e.getMessage()));
             return Result.failure();
         }
     }
 
     /**
      * 跳转至注册页的第一步
+     *
      * @return
      */
     @RequestMapping(value = "/register1")
@@ -166,6 +167,7 @@ public class WechatIndexController extends CommonController {
 
     /**
      * 获取验证码
+     *
      * @param request
      * @param response
      * @param mobile
@@ -173,41 +175,42 @@ public class WechatIndexController extends CommonController {
     @RequestMapping(value = "/sms/code")
     @ResponseBody
     public Result smsCode(HttpServletRequest request,
-                        HttpServletResponse response,
-                        @RequestParam(required=true) String mobile,
-                        @RequestParam(required=true) String type){
+                          HttpServletResponse response,
+                          @RequestParam(required = true) String mobile,
+                          @RequestParam(required = true) String type) {
 
 
         UserInfo user = userService.findByMobile(mobile);
 
         //注册获取验证码
-        if("register".equals(type)){
-            if(user != null){
+        if ("register".equals(type)) {
+            if (user != null) {
                 return Result.failure(ErrorType.ERROR_CODE_0009);//用户已存在
             }
         }
         //忘记密码获取验证码
-        else if("findPwd".equals(type)){
-            if(user == null){
+        else if ("findPwd".equals(type)) {
+            if (user == null) {
                 return Result.failure(ErrorType.ERROR_CODE_0003);//找不到用户
             }
         }
 
         //发送验证码
         String code = SeqNoUtils.getVerCode(6);
-        logger.info("--------------------->"+code);
+        logger.info("--------------------->" + code);
 
         //发送短信
-        sendSms(mobile,code);
-        codeMap.put("CODE_"+mobile,code);
-        codeMap.put("SENDTIME_"+mobile, System.currentTimeMillis());
-        WebUtil.printJson(response,new Result().success(createMap("code",code)));
+        sendSms(mobile, code);
+        codeMap.put("CODE_" + mobile, code);
+        codeMap.put("SENDTIME_" + mobile, System.currentTimeMillis());
+        WebUtil.printJson(response, new Result().success(createMap("code", code)));
 
         return Result.success();
     }
 
     /**
      * 下一步：校验验证码
+     *
      * @param request
      * @param response
      * @param mobile
@@ -219,58 +222,59 @@ public class WechatIndexController extends CommonController {
                           HttpServletResponse response,
                           @RequestParam(required = true) String mobile,
                           @RequestParam(required = true) String code,
-                          @RequestParam(required=true) String type) throws Exception {
+                          @RequestParam(required = true) String type) throws Exception {
 
         UserInfo user = userService.findByMobile(mobile);
 
         //注册获取验证码
-        if("register".equals(type)){
-            if(user != null){
-                WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0009));//用户已存在
-                return ;
+        if ("register".equals(type)) {
+            if (user != null) {
+                WebUtil.printJson(response, new Result().failure(ErrorType.ERROR_CODE_0009));//用户已存在
+                return;
             }
         }
         //忘记密码获取验证码
-        else if("findPwd".equals(type)){
-            if(user == null){
-                WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0003));//用户已存在
-                return ;
+        else if ("findPwd".equals(type)) {
+            if (user == null) {
+                WebUtil.printJson(response, new Result().failure(ErrorType.ERROR_CODE_0003));//用户已存在
+                return;
             }
         }
 
-        String cacheCode = (String) codeMap.get("CODE_"+mobile);
-        Long cacheTime = (Long)codeMap.get("SENDTIME_"+mobile);
+        String cacheCode = (String) codeMap.get("CODE_" + mobile);
+        Long cacheTime = (Long) codeMap.get("SENDTIME_" + mobile);
 
-        if(StringUtils.isBlank(cacheCode)||!cacheCode.equals(code)){
-            WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0004));//验证码错误
+        if (StringUtils.isBlank(cacheCode) || !cacheCode.equals(code)) {
+            WebUtil.printJson(response, new Result().failure(ErrorType.ERROR_CODE_0004));//验证码错误
             return;
-        }else{
-            if(System.currentTimeMillis() - cacheTime > 10*60*1000){
-                WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_00028));//验证码超时
+        } else {
+            if (System.currentTimeMillis() - cacheTime > 10 * 60 * 1000) {
+                WebUtil.printJson(response, new Result().failure(ErrorType.ERROR_CODE_00028));//验证码超时
                 return;
             }
         }
         //新增用户
-        WebUtil.printJson(response,new Result().success());
+        WebUtil.printJson(response, new Result().success());
     }
 
     /**
      * 跳转只注册页的第二步
+     *
      * @param model
      * @param mobile
      * @return
      */
     @RequestMapping(value = "/register2")
     public String toRegister2(ModelMap model, String mobile, String type) {
-        model.addAttribute("mobile",mobile);
-        model.addAttribute("type",type);
+        model.addAttribute("mobile", mobile);
+        model.addAttribute("type", type);
         return "wechat/register2";
     }
 
 
-
     /**
      * 注册
+     *
      * @param request
      * @param response
      * @param mobile
@@ -280,33 +284,33 @@ public class WechatIndexController extends CommonController {
     @RequestMapping("/register")
     @ResponseBody
     public Result register(HttpServletRequest request,
-                         HttpServletResponse response,
-                         @RequestParam(required = true) String mobile,
-                         @RequestParam(required = true) String password,
+                           HttpServletResponse response,
+                           @RequestParam(required = true) String mobile,
+                           @RequestParam(required = true) String password,
                            @RequestParam(required = true) String type) throws Exception {
         Result result;
         try {
 
             UserInfo user = userService.findByMobile(mobile);
             //注册
-            if("register".equals(type)){
-                if(user != null){
+            if ("register".equals(type)) {
+                if (user != null) {
                     return new Result().failure(ErrorType.ERROR_CODE_0009);
 //                    WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0009));//用户已存在
-                }else{
+                } else {
                     //新增用户
-                    userService.saveUser(mobile, Md5Util.md5(password),HttpRequestUtil.getUserIpByRequest(request));
+                    userService.saveUser(mobile, Md5Util.md5(password), HttpRequestUtil.getUserIpByRequest(request));
                 }
             }
             //忘记密码
-            else if("findPwd".equals(type)){
-                if(user == null){
+            else if ("findPwd".equals(type)) {
+                if (user == null) {
                     return new Result().failure(ErrorType.ERROR_CODE_0003);
 //                    WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0003));//用户已存在
-                }else{
+                } else {
                     //修改密码
                     UserLogin login = loginService.findByUsername(mobile);
-                    if(login != null){
+                    if (login != null) {
                         login.setPassword(Md5Util.md5(password));
                         loginService.save(login);
                     }
@@ -326,6 +330,7 @@ public class WechatIndexController extends CommonController {
 
     /**
      * 跳转至修改密码页面
+     *
      * @return
      */
     @RequestMapping(value = "/toUpdPwd")
@@ -336,6 +341,7 @@ public class WechatIndexController extends CommonController {
 
     /**
      * 修改密码
+     *
      * @param request
      * @param response
      * @param oldPwd
@@ -345,17 +351,17 @@ public class WechatIndexController extends CommonController {
      */
     @RequestMapping("/updatePwd")
     public void updatePwd(HttpServletRequest request,
-                           HttpServletResponse response,
-                           String oldPwd,
-                           String newPwd) throws Exception {
+                          HttpServletResponse response,
+                          String oldPwd,
+                          String newPwd) throws Exception {
 
         try {
 
             UserInfo user = super.getSessionUser(request);
-            if(user != null){
+            if (user != null) {
                 UserLogin login = loginService.findByUsername(user.getMobile());
-                if(!login.getPassword().equals(Md5Util.md5(oldPwd))){
-                    WebUtil.printJson(response,new Result().failure(ErrorType.ERROR_CODE_0005));//旧密码错误
+                if (!login.getPassword().equals(Md5Util.md5(oldPwd))) {
+                    WebUtil.printJson(response, new Result().failure(ErrorType.ERROR_CODE_0005));//旧密码错误
                     return;
                 }
 
@@ -364,15 +370,16 @@ public class WechatIndexController extends CommonController {
                 loginService.save(login);
             }
 
-            WebUtil.printJson(response,new Result().success());
+            WebUtil.printJson(response, new Result().success());
         } catch (Exception e) {
             e.printStackTrace();
-            WebUtil.printJson(response,new Result().failure());
+            WebUtil.printJson(response, new Result().failure());
         }
     }
 
     /**
      * 跳转至忘记密码页面
+     *
      * @return
      */
     @RequestMapping(value = "/toFindPwd")
@@ -382,6 +389,7 @@ public class WechatIndexController extends CommonController {
 
     /**
      * 跳转至服务协议
+     *
      * @return
      */
     @RequestMapping(value = "/agreement")
@@ -391,6 +399,7 @@ public class WechatIndexController extends CommonController {
 
     /**
      * 跳转至服务协议
+     *
      * @return
      */
     @RequestMapping(value = "/help")
@@ -399,25 +408,31 @@ public class WechatIndexController extends CommonController {
     }
 
     @RequestMapping(value = "/error")
-    public String toError(Model model,String errorMsg) {
-        model.addAttribute("errorMsg",errorMsg);
+    public String toError(Model model, String errorMsg) {
+        model.addAttribute("errorMsg", errorMsg);
         return "wechat/access_error";
     }
 
+    @RequestMapping(value = "/inviteCode")
+    @ResponseBody
+    public Integer inviteCode(HttpServletRequest httpRequest, String inviteCode) {
+        return enterpriseService.joinEnterprise(httpRequest, inviteCode);
+    }
 
     /**
      * 发送短信验证码
+     *
      * @param phone
      * @param code
      */
-    public static void sendSms(String phone,String code){
+    public static void sendSms(String phone, String code) {
         String url = "https://sms.yunpian.com/v1/sms/send.json";
         String apikey = Configue.getSmsApiKey();
-        Map<String,String> map = new HashMap<>();
-        map.put("apikey",apikey);
-        map.put("mobile",phone);
-        map.put("text","【江城巴士】亲爱的您好，您的验证码是"+code+"。有效期为10分钟，请尽快验证");
-        HttpRequestUtil.sendPost(url,map);
+        Map<String, String> map = new HashMap<>();
+        map.put("apikey", apikey);
+        map.put("mobile", phone);
+        map.put("text", "【江城巴士】亲爱的您好，您的验证码是" + code + "。有效期为10分钟，请尽快验证");
+        HttpRequestUtil.sendPost(url, map);
     }
 
     @PostConstruct
@@ -542,7 +557,7 @@ public class WechatIndexController extends CommonController {
 //            System.out.println((inMessage.getEvent().equals("SCAN") || inMessage.getEvent().equals("subscribe")) && org.apache.commons.lang.StringUtils.isNotBlank(inMessage.getEventKey()) && org.apache.commons.lang.StringUtils.isNotBlank(inMessage.getTicket()));
 
             WxMpXmlOutMessage outMessage = wxMpMessageRouter.route(inMessage);
-            if(outMessage != null){
+            if (outMessage != null) {
                 WebUtil.print(response, outMessage.toXml());
             }
             System.out.println("-----------11--------");
