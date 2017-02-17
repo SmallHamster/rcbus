@@ -51,8 +51,9 @@
                                     <thead>
                                     <tr>
                                         <th style="width: 10%;!important;"><input type="checkbox" class="list-parent-check"
-                                                   onclick="$leoman.checkAll(this);"/></th>
+                                                                                  onclick="$leoman.checkAll(this);"/></th>
                                         <th style="width: 60%;!important;">企业名称</th>
+                                        <th style="width: 10%;!important;">邀请码</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
@@ -100,19 +101,26 @@
                         },
                         {
                             "data": "name",
-                            "sDefaultContent" : ""
+                            "sDefaultContent": ""
+                        },
+                        {
+                            "data": "inviteCode",
+                            "sDefaultContent": ""
                         },
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {
 
-                                    var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$enterprise.fn.add(\'" + data + "\')\">" +
-                                            "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
+                                var edit = "<button title='编辑' class='btn btn-primary btn-circle edit' onclick=\"$enterprise.fn.add(\'" + data + "\')\">" +
+                                        "<i class='fa fa-pencil-square-o'></i> 编辑</button>";
 
-                                    var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$enterprise.fn.del(\'" + data + "\')\">" +
-                                            "<i class='fa fa-trash-o'></i> 删除</button>";
+                                var del = "<button title='删除' class='btn btn-primary btn-circle edit' onclick=\"$enterprise.fn.del(\'" + data + "\')\">" +
+                                        "<i class='fa fa-trash-o'></i> 删除</button>";
 
-                                    return edit  + "&nbsp;" + del;
+                                var refresh = "<button title='刷新邀请码' class='btn btn-primary btn-circle edit' onclick=\"$enterprise.fn.refresh(\'" + data + "\')\">" +
+                                        "<i class='fa fa-refresh'></i> 刷新邀请码</button>";
+
+                                return edit + "&nbsp;" + del + "&nbsp;" + refresh;
 
                             }
                         }
@@ -135,21 +143,45 @@
                 $("#confirm").modal("show");
                 $('#showText').html('您确定要彻底删除所选的企业吗？');
                 $("#determine").off("click");
-                $("#determine").on("click",function(){
+                $("#determine").on("click", function () {
                     $.ajax({
                         "url": "${contextPath}/admin/enterprise/del",
                         "data": {
-                            id:id,
-                            ids:JSON.stringify(ids)
+                            id: id,
+                            ids: JSON.stringify(ids)
                         },
                         "dataType": "json",
                         "type": "POST",
                         success: function (result) {
-                            if (result==1) {
+                            if (result == 1) {
                                 $('#showText').html('删除错误');
-                            }else {
-                                $("#deleteBatch").css('display','none');
-                                $enterprise.v.dTable.ajax.reload(null,false);
+                            } else {
+                                $("#deleteBatch").css('display', 'none');
+                                $enterprise.v.dTable.ajax.reload(null, false);
+                            }
+                            $("#confirm").modal("hide");
+                        }
+                    });
+                })
+            },
+            refresh: function (id) {
+                $("#confirm").modal("show");
+                $('#showText').html('您确定要刷新所选企业的邀请码？');
+                $("#determine").off("click");
+                $("#determine").on("click", function () {
+                    $.ajax({
+                        "url": "${contextPath}/admin/enterprise/refreshCode",
+                        "data": {
+                            id: id
+                        },
+                        "dataType": "json",
+                        "type": "POST",
+                        success: function (result) {
+                            if (result == "") {
+                                $('#showText').html('刷新错误');
+                            } else {
+                                $("#deleteBatch").css('display', 'none');
+                                $enterprise.v.dTable.ajax.reload(null, false);
                             }
                             $("#confirm").modal("hide");
                         }

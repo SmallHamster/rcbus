@@ -4,16 +4,9 @@ import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
-import com.leoman.pay.util.MD5Util;
-import com.leoman.permissions.admin.entity.Admin;
-import com.leoman.permissions.admin.service.AdminService;
-import com.leoman.permissions.adminrole.entity.AdminRole;
-import com.leoman.permissions.adminrole.service.AdminRoleService;
-import com.leoman.system.enterprise.dao.EnterpriseDao;
 import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
 import com.leoman.system.enterprise.service.impl.EnterpriseServiceImpl;
-import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.JsonUtil;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -33,18 +25,19 @@ import java.util.Map;
  */
 @Controller
 @RequestMapping(value = "admin/enterprise")
-public class EnterpriseController extends GenericEntityController<Enterprise,Enterprise,EnterpriseServiceImpl> {
+public class EnterpriseController extends GenericEntityController<Enterprise, Enterprise, EnterpriseServiceImpl> {
 
     @Autowired
     private EnterpriseService enterpriseService;
 
     @RequestMapping(value = "/index")
-    public String index(){
+    public String index() {
         return "system/enterprise/list";
     }
 
     /**
      * 列表
+     *
      * @param draw
      * @param start
      * @param length
@@ -63,14 +56,15 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
 
     /**
      * 跳转新增页面
+     *
      * @param id
      * @param model
      * @return
      */
     @RequestMapping(value = "/add")
-    public String add(Long id, Model model){
-        if(id != null){
-            model.addAttribute("enterprise",enterpriseService.queryByPK(id));
+    public String add(Long id, Model model) {
+        if (id != null) {
+            model.addAttribute("enterprise", enterpriseService.queryByPK(id));
         }
         return "system/enterprise/add";
 
@@ -78,15 +72,16 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
 
     /**
      * 保存
+     *
      * @param id
      * @param name
      * @return
      */
     @RequestMapping(value = "/save", method = RequestMethod.POST)
     @ResponseBody
-    public Result save(Long id,String name,String userName,Integer type) {
+    public Result save(Long id, String name, String userName, Integer type) {
         try {
-            enterpriseService.save(id,name,userName,type);
+            enterpriseService.save(id, name, userName, type);
         } catch (Exception e) {
             e.printStackTrace();
             Result.failure();
@@ -96,21 +91,23 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
 
     /**
      * 删除
+     *
      * @param id
      * @param ids
      * @return
      */
     @RequestMapping(value = "/del", method = RequestMethod.POST)
     @ResponseBody
-    public Integer del(Long id,String ids) {
-        if (id==null && StringUtils.isBlank(ids)){
+    public Integer del(Long id, String ids) {
+        if (id == null && StringUtils.isBlank(ids)) {
             return 1;
         }
         try {
-            if(id!=null){
+            if (id != null) {
                 enterpriseService.delete(enterpriseService.queryByPK(id));
-            }else {
-                Long[] ss = JsonUtil.json2Obj(ids,Long[].class);
+            } else {
+                System.out.println();
+                Long[] ss = JsonUtil.json2Obj(ids, Long[].class);
                 for (Long _id : ss) {
                     enterpriseService.delete(enterpriseService.queryByPK(_id));
                 }
@@ -123,4 +120,16 @@ public class EnterpriseController extends GenericEntityController<Enterprise,Ent
     }
 
 
+    /**
+     * 刷新邀请码
+     */
+    @RequestMapping(value = "/refreshCode", method = RequestMethod.POST)
+    @ResponseBody
+    public String refreshCode(Long id) {
+        if (null == id) {
+            return "";
+        }
+
+        return enterpriseService.refreshInviteCode(id);
+    }
 }

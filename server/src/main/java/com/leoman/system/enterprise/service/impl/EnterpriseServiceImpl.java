@@ -11,6 +11,7 @@ import com.leoman.system.enterprise.entity.Enterprise;
 import com.leoman.system.enterprise.service.EnterpriseService;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.user.service.UserService;
+import com.leoman.utils.RandomUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,40 +20,43 @@ import org.springframework.transaction.annotation.Transactional;
  * Created by Administrator on 2016/9/6.
  */
 @Service
-public class EnterpriseServiceImpl extends GenericManagerImpl<Enterprise,EnterpriseDao> implements EnterpriseService{
+public class EnterpriseServiceImpl extends GenericManagerImpl<Enterprise, EnterpriseDao> implements EnterpriseService {
 
     @Autowired
     private EnterpriseDao enterpriseDao;
+
     @Autowired
     private AdminService adminService;
+
     @Autowired
     private AdminRoleService adminRoleService;
+
     @Autowired
     private UserService userService;
 
     @Override
     @Transactional
-    public void save(Long id, String name, String userName,Integer type) {
+    public void save(Long id, String name, String userName, Integer type) {
         Enterprise enterprise = null;
-        if(id!=null){
+        if (id != null) {
             enterprise = queryByPK(id);
         }
-        if(enterprise!=null){
+        if (enterprise != null) {
             enterprise.setName(name);
             save(enterprise);
-        }else {
+        } else {
             //新增企业
             enterprise = new Enterprise();
             enterprise.setName(name);
             enterprise.setType(type);
             save(enterprise);
             //如果新增的是企业
-            if(type==0){
+            if (type == 0) {
                 //新增一个企业管理员
                 Admin admin = new Admin();
                 admin.setEnterprise(enterprise);
                 admin.setUsername(userName);
-                admin.setPassword(MD5Util.MD5Encode("888888","UTF-8"));
+                admin.setPassword(MD5Util.MD5Encode("888888", "UTF-8"));
                 admin.setMobile("");
                 adminService.save(admin);
                 //设置权限
@@ -71,5 +75,25 @@ public class EnterpriseServiceImpl extends GenericManagerImpl<Enterprise,Enterpr
                 userService.save(userInfo);
             }
         }
+    }
+
+    @Override
+    public String refreshInviteCode(Long id) {
+        Enterprise enterprise = enterpriseDao.findOne(id);
+
+        if (null != enterprise) {
+            String newInviteCode = RandomUtil.getCode();
+
+            while (enterpriseDao.findListByInviteCode(newInviteCode).size() > 0) {
+                newInviteCode = RandomUtil.getCode();
+            }
+
+            enterprise.setInviteCode(newInviteCode);
+            enterpriseDao.save(enterprise);
+
+            return newInviteCode;
+        }
+
+        return "";
     }
 }
