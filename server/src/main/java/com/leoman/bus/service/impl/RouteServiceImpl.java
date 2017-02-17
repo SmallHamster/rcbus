@@ -4,7 +4,10 @@ import com.leoman.bus.dao.RouteDao;
 import com.leoman.bus.dao.RouteOrderDao;
 import com.leoman.bus.dao.RouteStationDao;
 import com.leoman.bus.dao.RouteTimeDao;
-import com.leoman.bus.entity.*;
+import com.leoman.bus.entity.Route;
+import com.leoman.bus.entity.RouteOrder;
+import com.leoman.bus.entity.RouteStation;
+import com.leoman.bus.entity.RouteTime;
 import com.leoman.bus.service.RouteService;
 import com.leoman.bus.util.MathUtil;
 import com.leoman.bussend.dao.BusSendDao;
@@ -20,10 +23,10 @@ import com.leoman.user.dao.UserInfoDao;
 import com.leoman.user.entity.UserInfo;
 import com.leoman.utils.ClassUtil;
 import com.leoman.utils.SeqNoUtils;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -62,6 +65,7 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
 
     /**
      * 保存路线
+     *
      * @param route
      * @param departTimes
      * @param backTimes
@@ -72,23 +76,23 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
     public Result saveRoute(Route route, String departTimes, String backTimes, String busIds, Integer isRoundTrip, List<Map> list) {
         Result result = Result.success();
 
-        if(StringUtils.isEmpty(departTimes)){
+        if (StringUtils.isEmpty(departTimes)) {
             return new Result().failure(ErrorType.ERROR_CODE_00029);//发车时间不能为空
         }
 
-        if(StringUtils.isEmpty(busIds)){
+        if (StringUtils.isEmpty(busIds)) {
             return new Result().failure(ErrorType.ERROR_CODE_00030);//派遣班车不能为空
         }
 
         List<Route> routeList = routeDao.findByLineName(route.getLineName());
-        if(routeList != null && routeList.size() > 2){
+        if (routeList != null && routeList.size() > 2) {
             return Result.failure(ErrorType.ERROR_CODE_00034);//该所属路线已存在1或2个，请选择其他所属路线
         }
 
         Long routeId = route.getId();
         //新增
-        if(routeId == null){
-            if(list == null){
+        if (routeId == null) {
+            if (list == null) {
                 return new Result().failure(ErrorType.ERROR_CODE_00031);//路线不能为空
             }
             //新增路线
@@ -105,22 +109,22 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
 
             //删除已有的发车时间
             List<RouteTime> timeList = routeTimeDao.findByRouteId(routeId);
-            for (RouteTime rt:timeList) {
+            for (RouteTime rt : timeList) {
                 routeTimeDao.delete(rt);
             }
 
             //如果重新上传了路线文件，则覆盖
-            if(list != null){
+            if (list != null) {
                 //删除已有的路线站点
                 List<RouteStation> stationList = routeStationDao.findByRouteId(routeId);
-                for (RouteStation rs:stationList) {
+                for (RouteStation rs : stationList) {
                     routeStationDao.delete(rs);
                 }
             }
 
             //删除已有的路线班车
-            List<BusSend> sendList = busSendDao.findBus(routeId,1);
-            for (BusSend bs:sendList) {
+            List<BusSend> sendList = busSendDao.findBus(routeId, 1);
+            for (BusSend bs : sendList) {
                 busSendDao.delete(bs);
             }
 
@@ -131,14 +135,14 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         saveRouteOther(routeId, departTimes, list, busIds);
 
         //如果有往返
-        if(isRoundTrip != null && isRoundTrip == 1){
+        if (isRoundTrip != null && isRoundTrip == 1) {
 
-            if(StringUtils.isEmpty(backTimes)){
+            if (StringUtils.isEmpty(backTimes)) {
                 return new Result().failure(ErrorType.ERROR_CODE_00033);//返程时间不能为空
             }
 
             Route backRoute = new Route();
-            ClassUtil.copyProperties(backRoute,route);
+            ClassUtil.copyProperties(backRoute, route);
             backRoute.setId(null);
             routeDao.save(backRoute);
 
@@ -152,16 +156,17 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
 
     /**
      * 保存路线相关
+     *
      * @param routeId
      * @param departTimes
      * @param list
      * @param busIds
      */
-    private void saveRouteOther(Long routeId, String departTimes, List<Map> list, String busIds){
+    private void saveRouteOther(Long routeId, String departTimes, List<Map> list, String busIds) {
         //路线时间点
-        String [] departTimeArr = departTimes.split("\\,");
-        for (String departTime:departTimeArr) {
-            if(!StringUtils.isEmpty(departTime)){
+        String[] departTimeArr = departTimes.split("\\,");
+        for (String departTime : departTimeArr) {
+            if (!StringUtils.isEmpty(departTime)) {
                 RouteTime routeTime = new RouteTime();
                 routeTime.setDepartTime(departTime);//发车时间
                 routeTime.setRouteId(routeId);//对应路线
@@ -170,11 +175,11 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         }
 
         //路线站点
-        if(list != null){
-            for (int i =0; i < list.size(); i++) {
+        if (list != null) {
+            for (int i = 0; i < list.size(); i++) {
                 Map map = list.get(i);
                 RouteStation routeStation = new RouteStation();
-                double[] position = MathUtil.wgs2bd(Double.valueOf(map.get("lat").toString()) ,Double.valueOf(map.get("lon").toString()));
+                double[] position = MathUtil.wgs2bd(Double.valueOf(map.get("lat").toString()), Double.valueOf(map.get("lon").toString()));
                 routeStation.setLat(position[0]);
                 routeStation.setLng(position[1]);
                 routeStation.setStationName((String) map.get("name"));
@@ -182,9 +187,9 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
                 routeStation.setRouteId(routeId);
 
                 Route r = routeDao.findOne(routeId);
-                if(i == 0){
+                if (i == 0) {
                     r.setStartStation(routeStation.getStationName());
-                } else if(i == (list.size() -1)){
+                } else if (i == (list.size() - 1)) {
                     r.setEndStation(routeStation.getStationName());
                 }
                 routeDao.save(r);
@@ -194,9 +199,9 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         }
 
         //路线发车
-        String [] busIdArr = busIds.split("\\,");
-        for (String busId:busIdArr) {
-            if(!StringUtils.isEmpty(busId)){
+        String[] busIdArr = busIds.split("\\,");
+        for (String busId : busIdArr) {
+            if (!StringUtils.isEmpty(busId)) {
                 BusSend bs = new BusSend();
                 bs.setBusId(Long.valueOf(busId));
                 bs.setContactId(routeId);
@@ -208,52 +213,54 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
 
     /**
      * 删除路线
+     *
      * @param routeId
      */
     @Override
     @Transactional
-    public void deleteRoute(Long routeId){
+    public void deleteRoute(Long routeId) {
 
         //删除已有的发车时间
         List<RouteTime> timeList = routeTimeDao.findByRouteId(routeId);
-        for (RouteTime rt:timeList) {
-            if(rt != null){
+        for (RouteTime rt : timeList) {
+            if (rt != null) {
                 routeTimeDao.delete(rt);
             }
         }
 
         //删除已有的路线站点
         List<RouteStation> stationList = routeStationDao.findByRouteId(routeId);
-        for (RouteStation rs:stationList) {
-            if(rs != null){
+        for (RouteStation rs : stationList) {
+            if (rs != null) {
                 routeStationDao.delete(rs);
             }
         }
 
         //删除已有的路线班车
-        List<BusSend> sendList = busSendDao.findBus(routeId,1);
-        for (BusSend bs:sendList) {
-            if(bs != null){
+        List<BusSend> sendList = busSendDao.findBus(routeId, 1);
+        for (BusSend bs : sendList) {
+            if (bs != null) {
                 busSendDao.delete(bs);
             }
         }
 
         //删除路线
-        Route route =  routeDao.findOne(routeId);
-        if(route != null){
+        Route route = routeDao.findOne(routeId);
+        if (route != null) {
             routeDao.delete(route);
         }
     }
 
     /**
      * 下订单
+     *
      * @param routeId
      * @param departTime
      * @param user
      */
     @Override
     @Transactional
-    public Result saveOrder(Long routeId, String departTime, UserInfo user){
+    public Result saveOrder(Long routeId, String departTime, UserInfo user) {
         //保存订单
         Order order = new Order();
         order.setType(1);
@@ -273,7 +280,7 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         routeOrder.setOrder(new Order(order.getId()));
         routeOrder.setDepartTime(departTime);
         routeOrder.setIsDel(0);
-        if(route.getEnterpriseId() != null){
+        if (route.getEnterpriseId() != null) {
             Enterprise enterprise = enterpriseDao.findOne(route.getEnterpriseId());
             routeOrder.setEnterpriseType(enterprise.getType());
         }
@@ -284,6 +291,7 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
 
     /**
      * 获取路线列表，若收藏，则放在前面
+     *
      * @param startStation
      * @param endStation
      * @param type
@@ -291,7 +299,7 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
      * @return
      */
     @Override
-    public List<Route> findList(String startStation, String endStation, Integer type, Long userId){
+    public List<Route> findList(String startStation, String endStation, Integer type, Long userId) {
         StringBuffer sql = new StringBuffer("SELECT \n" +
                 "  r.* \n" +
                 "FROM\n" +
@@ -300,37 +308,45 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
                 "    ON e.`id` = r.`enterprise_id` \n" +
                 "  LEFT JOIN t_route_collection rc \n" +
                 "    ON rc.`route_id` = r.`id` \n" +
-                "    AND rc.`user_id` = "+userId+" \n" +
-                "WHERE e.`type` = "+type);
-        if(!StringUtils.isEmpty(startStation)){
-            sql.append("  AND r.`start_station` LIKE '%"+startStation+"%'  ");
-        }
-        if(!StringUtils.isEmpty(endStation)){
-            sql.append("  AND r.`end_station` LIKE '%"+endStation+"%'  ");
+                "    AND rc.`user_id` = " + userId + " \n" +
+                "WHERE e.`type` = " + type);
+        if (StringUtils.isBlank(startStation) && StringUtils.isBlank(endStation)) {
+            System.out.println();
+        } else if (StringUtils.isNotBlank(startStation) && StringUtils.isNotBlank(endStation)) {
+            sql.append("  AND r.id in (SELECT s.route_id FROM t_route_station s WHERE s.station_name LIKE '%" + startStation + "%' OR r.id in (SELECT s.route_id FROM t_route_station s WHERE s.station_name LIKE '%" + endStation + "%'))  ");
+        } else {
+            if (StringUtils.isNotBlank(startStation)) {
+                sql.append("  AND r.id in (SELECT s.route_id FROM t_route_station s WHERE s.station_name LIKE '%" + startStation + "%')  ");
+            }
+            if (StringUtils.isNotBlank(endStation)) {
+                sql.append("  AND r.id in (SELECT s.route_id FROM t_route_station s WHERE s.station_name LIKE '%" + endStation + "%')  ");
+            }
         }
         //如果是通勤班车，且用户为员工，则只查看该员工所在企业的班车
-        UserInfo user =  userInfoDao.findOne(userId);
-        if(type == 0 && user.getEnterprise() != null){
-            sql.append("  AND e.`id` = "+user.getEnterprise().getId());
+        UserInfo user = userInfoDao.findOne(userId);
+        if (type == 0 && user.getEnterprise() != null) {
+            sql.append("  AND e.`id` = " + user.getEnterprise().getId());
         }
-        sql.append(" ORDER BY IF(rc.`id` IS NULL, 0, 1) DESC, r.`line_name` ");
+        sql.append(" ORDER BY IF(rc.`id` IS NULL, 0, 1) DESC, r.`line_name` ASC ");
+        System.out.println("sql：" + sql);
         List<Route> list = queryBySql(sql.toString(), Route.class);
         return list;
     }
 
     /**
      * 获取当前线路的返程路线
+     *
      * @param routeId
      * @return
      */
     @Override
-    public Result findBackRoute(Long routeId){
+    public Result findBackRoute(Long routeId) {
         Route route = routeDao.findOne(routeId);
-        if(route == null){
+        if (route == null) {
             return Result.failure();
         }
         Route backRoute = routeDao.findByLineNameAndId(route.getLineName(), route.getId());
-        if(backRoute == null){
+        if (backRoute == null) {
             return Result.failure(ErrorType.ERROR_CODE_00035);//该路线没有返程路线
         }
         return Result.success(backRoute);
