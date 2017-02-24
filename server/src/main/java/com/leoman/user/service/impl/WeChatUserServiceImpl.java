@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Created by wangbin on 2015/7/8.
@@ -66,6 +69,7 @@ public class WeChatUserServiceImpl extends GenericManagerImpl<WeChatUser,WeChatU
             try {
                 wxUser = new WeChatUser();
                 WxMpUser wxMpUser = wxMpService.oauth2getUserInfo(wxMpOAuth2AccessToken, null);
+                wxMpUser.setNickname(StringFilter(wxMpUser.getNickname()));
                 ClassUtil.copyProperties(wxUser, wxMpUser);
                 return save(wxUser);
             } catch (Exception e) {
@@ -81,4 +85,13 @@ public class WeChatUserServiceImpl extends GenericManagerImpl<WeChatUser,WeChatU
         WeChatUser weChatUser = (WeChatUser) request.getSession().getAttribute(Constant.SESSION_WEIXIN_WXUSER);
         return weChatUser;
     }
+
+    public static String StringFilter(String str) throws PatternSyntaxException {
+        // 过滤出字母、数字和中文的正则表达式
+        String regEx="[^(a-zA-Z0-9\\u4e00-\\u9fa5)]";
+        Pattern p = Pattern.compile(regEx);
+        Matcher m = p.matcher(str);
+        return m.replaceAll("").trim();
+    }
+
 }
