@@ -81,6 +81,7 @@
                                         <th>出发城市</th>
                                         <th>包车方式</th>
                                         <th>订单状态</th>
+                                        <th>下单时间</th>
                                         <th>操作</th>
                                     </tr>
                                     </thead>
@@ -204,7 +205,13 @@
                             },
                             "sDefaultContent" : ""
                         },
-
+                        {
+                            "data": "createDate",
+                            "render": function (data) {
+                                return new Date(data).format("yyyy-MM-dd hh:mm:ss");
+                            },
+                            "sDefaultContent" : ""
+                        },
                         {
                             "data": "id",
                             "render": function (data, type, row, meta) {

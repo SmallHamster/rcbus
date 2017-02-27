@@ -56,6 +56,7 @@ public class ReportController extends GenericEntityController<Report,Report,Repo
         if( StringUtils.isNotBlank(endDate)){
             query.le("createDate",DateUtils.stringToLong(endDate,"yyyy-MM-dd"));
         }
+        query.addOrder("id", "desc");
 
         Page<Report> page = reportService.queryPage(query);
         return DataTableFactory.fitting(draw, page);
