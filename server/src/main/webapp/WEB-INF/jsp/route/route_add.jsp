@@ -10,6 +10,7 @@
     <link rel="shortcut icon" href="#" type="image/png">
     <title>新增/编辑路线</title>
     <%@ include file="../inc/new2/css.jsp" %>
+    <link rel="stylesheet" type="text/css" href="${contextPath}/static/html/js/bootstrap-timepicker/css/timepicker.css" />
 </head>
 
 <body class="sticky-header">
@@ -194,7 +195,13 @@
     <div id="timeModal" style="display: none;margin-bottom: 10px;">
         <label class="col-sm-1 control-label"></label>
         <div class="col-sm-2">
-            <input type="text" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="">
+            <div class="input-group bootstrap-timepicker">
+                <input type="text" class="form-control timepicker-24" value="">
+                <span class="input-group-btn">
+                    <button class="btn btn-default" type="button"><i class="fa fa-clock-o"></i></button>
+                </span>
+            </div>
+            <%--<input type="text" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="">--%>
         </div>
         <button type="button" onclick="$route.fn.addRow(this)" class="btn btn-primary"><i class='fa fa-plus-circle'></i></button>
         <button type="button" onclick="$route.fn.removeRow(this)" class="btn btn-primary"><i class='fa fa-minus-circle'></i></button>
@@ -204,6 +211,8 @@
 </section>
 <%@ include file="../inc/new2/foot.jsp" %>
 <%@ include file="../confirm.jsp" %>
+<script type="text/javascript" src="${contextPath}/static/html/js/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
+
 <script>
     $route = {
         v: {
@@ -222,7 +231,7 @@
                 $route.fn.dataTableInit("dataTablesModal");
 
                 //时间控件初始化
-                $('.form_datetime').datetimepicker({
+                /*$('.form_datetime').datetimepicker({
                     language: 'zh-CN',
                     weekStart: 1,
                     todayBtn: 1,
@@ -232,6 +241,13 @@
                     forceParse: 0,
                     showMeridian: false,
                     format: 'hh:ii'
+                });*/
+
+                $('.timepicker-24').timepicker({
+                    autoclose: true,
+                    minuteStep: 1,
+                    showSeconds: false,
+                    showMeridian: false
                 });
 
                 //弹出框表格的查询和清空
@@ -337,7 +353,7 @@
             },
             //时间控件初始化
             datetimepickerInit : function(){
-                $('.form_datetime').datetimepicker({
+                /*$('.form_datetime').datetimepicker({
                     language: 'zh-CN',
                     weekStart: 1,
                     todayBtn: 1,
@@ -347,6 +363,13 @@
                     forceParse: 0,
                     showMeridian: false,
                     format: 'hh:ii'
+                });*/
+
+                $('.timepicker-24').timepicker({
+                    autoclose: true,
+                    minuteStep: 1,
+                    showSeconds: false,
+                    showMeridian: false
                 });
             },
             //初始化时间
@@ -360,6 +383,8 @@
                     model.find("input[type=text]").attr("name","departTimes");
                     model.show();
                     $("#departTimeDiv").append(model);
+                    //时间控件初始化
+                    $route.fn.datetimepickerInit();
                 }
                 //编辑
                 else{
@@ -376,11 +401,18 @@
                         model.find("input[type=text]").val(arr[i].departTime);
                         model.show();
                         $("#departTimeDiv").append(model);
+                        //时间控件初始化
+                        model.find("input[type=text]").timepicker({
+                            autoclose: true,
+                            minuteStep: 1,
+                            showSeconds: false,
+                            showMeridian: false,
+                            defaultTime: arr[i].departTime,
+                        });
+
                     }
                 }
 
-                //时间控件初始化
-                $route.fn.datetimepickerInit();
 
             },
             //添加时间行
