@@ -99,7 +99,13 @@
                                     <div style="margin-bottom: 10px;">
                                         <label class="col-sm-1 control-label">返程时间:</label>
                                         <div class="col-sm-2">
-                                            <input type="text" name="backTimes" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="">
+                                            <div class="input-group bootstrap-timepicker">
+                                                <input type="text" class="form-control timepicker-24" value="">
+                                                <span class="input-group-btn">
+                                                    <button class="btn btn-default" type="button"><i class="fa fa-clock-o"></i></button>
+                                                </span>
+                                            </div>
+                                            <%--<input type="text" name="backTimes" class="form-control input-append date form_datetime" style="width: 180px;" readonly maxlength="20" value="">--%>
                                         </div>
                                         <button type="button" onclick="$route.fn.addRow(this)" class="btn btn-primary"><i class='fa fa-plus-circle'></i></button>
                                     </div>
