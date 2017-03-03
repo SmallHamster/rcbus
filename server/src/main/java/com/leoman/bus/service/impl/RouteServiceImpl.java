@@ -85,7 +85,7 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
         }
 
         List<Route> routeList = routeDao.findByLineName(route.getLineName());
-        if (routeList != null && routeList.size() > 2) {
+        if (routeList != null && routeList.size() >= 2) {
             return Result.failure(ErrorType.ERROR_CODE_00034);//该所属路线已存在1或2个，请选择其他所属路线
         }
 
