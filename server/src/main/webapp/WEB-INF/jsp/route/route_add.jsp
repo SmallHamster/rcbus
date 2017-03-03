@@ -35,7 +35,6 @@
                                 <input type="hidden" id="routeId" name="id" value="${route.id}">
                                 <input type="hidden" name="isShow" value="${route.isShow}">
                                 <input type="hidden" id="busIds" name="busIds" value="${busIds}">
-                                <%--<input type="hidden" id="isRoundTrip" name="isRoundTrip" value="0">--%>
 
                                 <div class="form-group">
                                     <label class="col-sm-1 control-label" >所属企业：</label>
@@ -100,7 +99,7 @@
                                         <label class="col-sm-1 control-label">返程时间:</label>
                                         <div class="col-sm-2">
                                             <div class="input-group bootstrap-timepicker">
-                                                <input type="text" class="form-control timepicker-24" value="">
+                                                <input type="text" name="backTimes" class="form-control timepicker-24" value="">
                                                 <span class="input-group-btn">
                                                     <button class="btn btn-default" type="button"><i class="fa fa-clock-o"></i></button>
                                                 </span>
@@ -237,18 +236,6 @@
                 $route.fn.dataTableInit("dataTablesModal");
 
                 //时间控件初始化
-                /*$('.form_datetime').datetimepicker({
-                    language: 'zh-CN',
-                    weekStart: 1,
-                    todayBtn: 1,
-                    autoclose: 1,
-                    todayHighlight: 1,
-                    startView: 'hour',
-                    forceParse: 0,
-                    showMeridian: false,
-                    format: 'hh:ii'
-                });*/
-
                 $('.timepicker-24').timepicker({
                     autoclose: true,
                     minuteStep: 1,
@@ -359,17 +346,6 @@
             },
             //时间控件初始化
             datetimepickerInit : function(){
-                /*$('.form_datetime').datetimepicker({
-                    language: 'zh-CN',
-                    weekStart: 1,
-                    todayBtn: 1,
-                    autoclose: 1,
-                    todayHighlight: 1,
-                    startView: 'hour',
-                    forceParse: 0,
-                    showMeridian: false,
-                    format: 'hh:ii'
-                });*/
 
                 $('.timepicker-24').timepicker({
                     autoclose: true,

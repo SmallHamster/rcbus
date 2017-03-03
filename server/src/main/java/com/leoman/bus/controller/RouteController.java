@@ -15,6 +15,7 @@ import com.leoman.common.controller.common.GenericEntityController;
 import com.leoman.common.core.Result;
 import com.leoman.common.factory.DataTableFactory;
 import com.leoman.common.service.Query;
+import com.leoman.entity.Constant;
 import com.leoman.order.service.OrderService;
 import com.leoman.permissions.admin.entity.Admin;
 import com.leoman.system.enterprise.entity.Enterprise;
@@ -90,7 +91,6 @@ public class RouteController extends GenericEntityController<Route, Route, Route
                         Model model) {
 
         List<Enterprise> enterpriseList = this.getEnterpriseList(request);
-
         model.addAttribute("enterpriseList", enterpriseList);
         return "route/route_list";
     }
@@ -123,11 +123,12 @@ public class RouteController extends GenericEntityController<Route, Route, Route
      */
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @ResponseBody
-    public Map<String, Object> list(HttpServletRequest request,Route route, Long enterpriseId, Integer draw, Integer start, Integer length) {
+    public Map<String, Object> list(HttpServletRequest request, Route route,String lineName, Long enterpriseId, Integer draw, Integer start, Integer length) {
         int pagenum = getPageNum(start, length);
         Query query = Query.forClass(Route.class, routeService);
         query.setPagenum(pagenum);
         query.setPagesize(length);
+        query.like("lineName", lineName);
         query.like("startStation",route.getStartStation());
         query.like("endStation",route.getEndStation());
         if(enterpriseId != null && enterpriseId != 0){

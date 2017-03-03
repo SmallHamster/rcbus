@@ -179,9 +179,13 @@ public class RouteServiceImpl extends GenericManagerImpl<Route, RouteDao> implem
             for (int i = 0; i < list.size(); i++) {
                 Map map = list.get(i);
                 RouteStation routeStation = new RouteStation();
-                double[] position = MathUtil.wgs2bd(Double.valueOf(map.get("lat").toString()), Double.valueOf(map.get("lon").toString()));
+                /*double[] position = MathUtil.wgs2bd(Double.valueOf(map.get("lat").toString()), Double.valueOf(map.get("lon").toString()));
                 routeStation.setLat(position[0]);
-                routeStation.setLng(position[1]);
+                routeStation.setLng(position[1]);*/
+                Double lat = Double.valueOf(map.get("lat").toString());
+                Double lng = Double.valueOf(map.get("lon").toString());
+                routeStation.setLat(lat);
+                routeStation.setLng(lng);
                 routeStation.setStationName((String) map.get("name"));
                 routeStation.setStationOrder(i);
                 routeStation.setRouteId(routeId);

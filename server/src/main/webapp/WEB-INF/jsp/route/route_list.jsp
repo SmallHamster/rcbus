@@ -24,6 +24,9 @@
                     <section class="panel">
                         <div class="panel-body">
                             <div class="form-group col-sm-2">
+                                <input type="text" id="lineName" class="form-control" placeholder="所属路线">
+                            </div>
+                            <div class="form-group col-sm-2">
                                 <input type="text" id="startStation" class="form-control" placeholder="始发站">
                             </div>
                             <div class="form-group col-sm-2">
@@ -100,6 +103,7 @@
                 $("#c_clear").click(function () {
                     $(this).parents(".panel-body").find("input,select").val("");
                 });
+
             },
             dataTableInit: function () {
                 $route.v.dTable = $leoman.dataTable($('#dataTables'), {
@@ -170,9 +174,10 @@
                         }
                     ],
                     "fnServerParams": function (aoData) {
-                        aoData.startStation = $("#startStation").val();//车牌号
-                        aoData.endStation = $("#endStation").val();//车型
-                        aoData.enterpriseId = $("#enterpriseId").val();//车型
+                        aoData.lineName = $("#lineName").val();//所属路线
+                        aoData.startStation = $("#startStation").val();//起始站
+                        aoData.endStation = $("#endStation").val();//终点站
+                        aoData.enterpriseId = $("#enterpriseId").val();//企业
                     }
                 });
             },
@@ -184,9 +189,9 @@
                 window.location.href = "${contextPath}/admin/route/detail" + params;
             },
             add: function (id) {
-                var params = "";
+                var params = "?pageNo="+$route.v.dTable.page();
                 if (id != null && id != '') {
-                    params = "?id=" + id;
+                    params += "&id=" + id;
                 }
                 window.location.href = "${contextPath}/admin/route/add" + params;
             },
